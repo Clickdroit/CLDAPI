@@ -1,10 +1,9 @@
 package fr.clickdroit.api.utils;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
+import java.lang.reflect.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -72,13 +71,13 @@ public final class Reflection {
         }
     }
 
-    public static <T> T callMethod(Method method, Object instance, Object... parameters) {
+    public static Object callMethod(Method method, Object instance, Object... parameters) {
         if (method == null) {
             throw new RuntimeException("No such method");
         }
         method.setAccessible(true);
         try {
-            return (T) method.invoke(instance, parameters);
+            return method.invoke(instance, parameters);
         } catch (InvocationTargetException ex) {
             throw new RuntimeException(ex.getCause());
         } catch (Exception ex) {
@@ -92,13 +91,6 @@ public final class Reflection {
 
     public static Object invokeMethod(Object instance, Class<?> clazz, String methodName, Object... arguments) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException {
         return getMethod(clazz, methodName, DataType.getPrimitive(arguments)).invoke(instance, arguments);
-    }
-
-    // Fields
-    public static Field getField(Class<?> clazz, boolean declared, String fieldName) throws NoSuchFieldException, SecurityException {
-        Field field = declared ? clazz.getDeclaredField(fieldName) : clazz.getField(fieldName);
-        field.setAccessible(true);
-        return field;
     }
 
     public static Field makeField(Class<?> clazz, String name) {
@@ -135,21 +127,27 @@ public final class Reflection {
         }
     }
 
-    public static Object getValue(Object instance, Class<?> clazz, boolean declared, String fieldName) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
-        return getField(clazz, declared, fieldName).get(instance);
-    }
-
-    public static void setValue(Object instance, boolean declared, String fieldName, Object value) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
-        getField(instance.getClass(), declared, fieldName).set(instance, value);
-    }
-
-    public static void setFinalStatic(Field field, Object newValue) throws Exception {
+    public static Object getValue(Object instance, Class<?> clazz, boolean declared, String fieldName) throws NoSuchFieldException, IllegalAccessException {
+        Field field = declared ? clazz.getDeclaredField(fieldName) : clazz.getField(fieldName);
         field.setAccessible(true);
+        return field.get(instance);
+    }
+    public static Field getField(Class<?> clazz, boolean declared, String fieldName) throws NoSuchFieldException {
+        Field field = declared ? clazz.getDeclaredField(fieldName) : clazz.getField(fieldName);
+        field.setAccessible(true);
+        return field;
+    }
 
+    public static void setValue(Object instance, Class<?> clazz, boolean declared, String fieldName, Object value) throws NoSuchFieldException, IllegalAccessException {
+        Field field = declared ? clazz.getDeclaredField(fieldName) : clazz.getField(fieldName);
+        field.setAccessible(true);
+        field.set(instance, value);
+    }
+    public static void setFinalStatic(Field field, Object newValue) throws NoSuchFieldException, IllegalAccessException {
+        field.setAccessible(true);
         Field modifiersField = Field.class.getDeclaredField("modifiers");
         modifiersField.setAccessible(true);
         modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-
         field.set(null, newValue);
     }
 
@@ -326,12 +324,27 @@ public final class Reflection {
             return org.bukkit.Bukkit.getServer().getClass().getPackage().getName().substring(23);
         }
     }
-    public static Class<?> getNMSClass(String className) {
+    public static void sendPacket(Player player, Object packet) {
         try {
-            return PackageType.MINECRAFT_SERVER.getClass(className);
-        } catch (ClassNotFoundException e) {
+            Object handle = getHandle(player);
+            Object playerConnection = handle.getClass().getField("playerConnection").get(handle);
+            playerConnection.getClass().getMethod("sendPacket", getNMSClass("Packet")).invoke(playerConnection, packet);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Object getHandle(Player player) {
+        try {
+            return player.getClass().getMethod("getHandle").invoke(player);
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static Class<?> getNMSClass(String className) throws ClassNotFoundException {
+        String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+        return Class.forName("net.minecraft.server." + version + "." + className);
     }
 }

@@ -5,7 +5,6 @@ import fr.clickdroit.api.GamePlayer;
 import fr.clickdroit.api.game.GameManager;
 import fr.clickdroit.api.utils.CustomInventory;
 import fr.clickdroit.api.utils.ItemCreator;
-import java.util.function.Supplier;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -16,6 +15,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
 import java.util.function.Supplier;
 
 import static org.bukkit.Material.ENCHANTED_BOOK;
@@ -129,17 +129,17 @@ public class EnchantCommand implements CommandExecutor, CustomInventory {
         slots[3] = current;
         slots[5] = (new ItemCreator(Material.DIAMOND_AXE)).setName(": " + (current.getItemMeta().spigot().isUnbreakable() ? "": "")).getItem();
         int slot = 9;
-        for (EnchantEnum enchantEnum : EnchantEnum.values()) {
+        for (Enchants enchant : Enchants.values()) {
             int level = 0;
-            if (current.getEnchantments().containsKey(enchantEnum.getEnchantment()))
-                level = current.getEnchantmentLevel(enchantEnum.getEnchantment());
-            ItemCreator item = (new ItemCreator(ENCHANTED_BOOK)).setName(enchantEnum.getName());
+            if (current.getEnchantments().containsKey(enchant.getEnchantment()))
+                level = current.getEnchantmentLevel(enchant.getEnchantment());
+            ItemCreator item = (new ItemCreator(ENCHANTED_BOOK)).setName(enchant.getName());
             item.addLore("");
             item.addLore("  : + level");
             item.addLore("");
-            if (level < enchantEnum.getMax())
+            if (level < enchant.getMax())
                 item.addLore(" gauche : un niveau");
-            if (level > enchantEnum.getMin())
+            if (level > enchant.getMin())
                 item.addLore(" droit : un niveau");
             item.addLore("");
             item.setAmount(Integer.valueOf(level));
@@ -172,11 +172,11 @@ public class EnchantCommand implements CommandExecutor, CustomInventory {
             case ENCHANTED_BOOK:
                 item = player.getItemInHand();
                 if (clickType.equals(ClickType.LEFT)) {
-                    for (EnchantEnum enchantEnum : EnchantEnum.values()) {
-                        if (clickedItem.getItemMeta().getDisplayName().equalsIgnoreCase(enchantEnum.getName())) {
-                            int level = item.getEnchantmentLevel(enchantEnum.getEnchantment());
-                            if (level < enchantEnum.getMax()) {
-                                item.addUnsafeEnchantment(enchantEnum.getEnchantment(), level + 1);
+                    for (Enchants enchant : Enchants.values()) {
+                        if (clickedItem.getItemMeta().getDisplayName().equalsIgnoreCase(enchant.getName())) {
+                            int level = item.getEnchantmentLevel(enchant.getEnchantment());
+                            if (level < enchant.getMax()) {
+                                item.addUnsafeEnchantment(enchant.getEnchantment(), level + 1);
                                 this.gameManager.getApi().openInventory(player, getClass());
                             }
                         }
@@ -184,15 +184,15 @@ public class EnchantCommand implements CommandExecutor, CustomInventory {
                     break;
                 }
                 if (clickType.equals(ClickType.RIGHT))
-                    for (EnchantEnum enchantEnum : EnchantEnum.values()) {
-                        if (clickedItem.getItemMeta().getDisplayName().contains(enchantEnum.getName())) {
-                            int level = item.getEnchantmentLevel(enchantEnum.getEnchantment());
-                            if (level > enchantEnum.getMin())
+                    for (Enchants enchant : Enchants.values()) {
+                        if (clickedItem.getItemMeta().getDisplayName().contains(enchant.getName())) {
+                            int level = item.getEnchantmentLevel(enchant.getEnchantment());
+                            if (level > enchant.getMin())
                                 if (level == 1) {
-                                    item.removeEnchantment(enchantEnum.getEnchantment());
+                                    item.removeEnchantment(enchant.getEnchantment());
                                     this.gameManager.getApi().openInventory(player, getClass());
                                 } else {
-                                    item.addUnsafeEnchantment(enchantEnum.getEnchantment(), level - 1);
+                                    item.addUnsafeEnchantment(enchant.getEnchantment(), level - 1);
                                     this.gameManager.getApi().openInventory(player, getClass());
                                 }
                         }

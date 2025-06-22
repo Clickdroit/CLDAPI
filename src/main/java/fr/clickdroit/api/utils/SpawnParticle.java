@@ -10,6 +10,12 @@ public class SpawnParticle {
         EnumParticle particle = EnumParticle.valueOf(type);
         PacketPlayOutWorldParticles particles = new PacketPlayOutWorldParticles(particle, false, x, y, z, offsetX, offsetY, offsetZ, data, amount, new int[] { 1 });
         for (Player player : world.getPlayers())
-            Reflection.sendPacket(player, particles);
+            try {
+                Object handle = player.getClass().getMethod("getHandle").invoke(player);
+                Object playerConnection = handle.getClass().getField("playerConnection").get(handle);
+                playerConnection.getClass().getMethod("sendPacket", particles.getClass().getSuperclass()).invoke(playerConnection, particles);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
     }
 }

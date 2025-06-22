@@ -232,16 +232,12 @@ public final class ReflectionUtils {
         }
 
         public Class<?> getClass(String className) throws ClassNotFoundException {
-            return Class.forName(this + "." + className);
+            return Class.forName(this.path + "." + className);
         }
+    }
 
-        @Override
-        public String toString() {
-            return path;
-        }
-
-        private static String getServerVersion() {
-            return Bukkit.getServer().getClass().getPackage().getName().substring(23);
-        }
+    private static String getServerVersion() {
+        String name = Bukkit.getServer().getClass().getPackage().getName();
+        return name.substring(name.lastIndexOf('.') + 1);
     }
 }

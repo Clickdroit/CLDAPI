@@ -1,20 +1,16 @@
 package fr.clickdroit.api.utils.block;
 
 import fr.clickdroit.api.API;
-import fr.clickdroit.api.utils.jnbt.ByteArrayTag;
-import fr.clickdroit.api.utils.jnbt.CompoundTag;
-import fr.clickdroit.api.utils.jnbt.NBTInputStream;
-import fr.clickdroit.api.utils.jnbt.ShortTag;
-import fr.clickdroit.api.utils.jnbt.StringTag;
-import fr.clickdroit.api.utils.jnbt.Tag;
+import fr.clickdroit.api.utils.jnbt.*;
+import org.apache.commons.io.FileUtils;
+import org.bukkit.Location;
+import org.bukkit.block.Block;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
-import org.apache.commons.io.FileUtils;
-import org.bukkit.Location;
-import org.bukkit.block.Block;
 
 public class Schematic {
     private byte[] data;
@@ -127,7 +123,7 @@ public class Schematic {
             throw new IllegalArgumentException("Schematic file is missing a \"" + key + "\" tag");
         Tag tag = items.get(key);
         if (!expected.isInstance(tag))
-            throw new IllegalArgumentException(key + " tag is not of tag displayer " + expected.getName());
+            throw new IllegalArgumentException(key + " tag is not of tag type " + expected.getName());
         return expected.cast(tag);
     }
 
