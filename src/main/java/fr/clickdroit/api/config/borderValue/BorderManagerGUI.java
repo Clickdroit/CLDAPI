@@ -1,4 +1,4 @@
-package fr.clickdroit.api.config.common.borderValue;
+package fr.clickdroit.api.config.borderValue;
 
 import fr.clickdroit.api.config.ConfigMainGUI;
 import fr.clickdroit.api.config.GameConfig;
@@ -7,12 +7,13 @@ import fr.clickdroit.api.game.GameManager;
 import fr.clickdroit.api.utils.CommonString;
 import fr.clickdroit.api.utils.CustomInventory;
 import fr.clickdroit.api.utils.ItemCreator;
-import java.util.function.Supplier;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.function.Supplier;
 
 public class BorderManagerGUI implements CustomInventory {
     private final GameManager gameManager;

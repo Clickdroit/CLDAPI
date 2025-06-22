@@ -1,11 +1,11 @@
 package fr.clickdroit.api.utils.jnbt.v2;
 
-
-public class DataException extends Exception {
-    public DataException(String msg) {
-        super(msg);
+public class DataException extends RuntimeException {
+    public DataException(String message) {
+        super(message);
     }
 
-    public DataException() {}
+    public DataException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }
-

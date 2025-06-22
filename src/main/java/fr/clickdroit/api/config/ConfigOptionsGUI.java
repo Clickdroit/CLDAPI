@@ -18,12 +18,13 @@ import fr.clickdroit.api.game.GameManager;
 import fr.clickdroit.api.utils.CommonString;
 import fr.clickdroit.api.utils.CustomInventory;
 import fr.clickdroit.api.utils.ItemCreator;
-import java.util.function.Supplier;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.function.Supplier;
 
 public class ConfigOptionsGUI implements CustomInventory {
     private GameManager gameManager;
@@ -47,7 +48,7 @@ public class ConfigOptionsGUI implements CustomInventory {
         for (arrayOfInteger1 = glass, i = arrayOfInteger1.length, b = 0; b < i; ) {
             int j = arrayOfInteger1[b].intValue();
             slots[j] = (new ItemCreator(Material.STAINED_GLASS_PANE)).setDurability(Integer.valueOf(11)).setName("").getItem();
-                    b = (byte)(b + 1);
+            b = (byte)(b + 1);
         }
         slots[10] = OpenVar.PVP_TIME.getItem();
         slots[11] = OpenVar.BORDER_TIME.getItem();
@@ -62,41 +63,41 @@ public class ConfigOptionsGUI implements CustomInventory {
         slots[16] = (new ItemCreator(Material.ENCHANTED_BOOK)).setName("d'")
                 .addLore("")
                 .addLore("  permet de d")
-                        .addLore("  limite des tous")
-                        .addLore("  enchantements.")
-                        .addLore("")
-                        .addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage())
-                        .addLore("")
-                        .getItem();
+                .addLore("  limite des tous")
+                .addLore("  enchantements.")
+                .addLore("")
+                .addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage())
+                .addLore("")
+                .getItem();
         slots[18] = (new ItemCreator(Material.COMPASS)).setName("avant mort de ")
                 .addLore("")
                 .addLore("  permet de configurer")
                 .addLore("  temps necpour")
                 .addLore("  de d")
-                        .addLore("")
-                        .addLore(" "+ this.gameManager.getGameConfig().getDisconnectMinute() + " minute(s)")
-                                .addLore("")
-                                .addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage())
-                                .addLore("")
-                                .getItem();
+                .addLore("")
+                .addLore(" "+ this.gameManager.getGameConfig().getDisconnectMinute() + " minute(s)")
+                .addLore("")
+                .addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage())
+                .addLore("")
+                .getItem();
         slots[22] = (new ItemCreator(Material.CHEST)).setName("par ")
                 .addLore("")
                 .addLore("  permet de d")
-                        .addLore("  par )
-                                .addLore("  en dde partie.")
-                                .addLore("")
-                                .addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage())
-                                .addLore("")
-                                .getItem();
+                .addLore("  par ")
+                .addLore("  en dde partie.")
+                .addLore("")
+                .addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage())
+                .addLore("")
+                .getItem();
         slots[26] = (new ItemCreator(Material.CHEST)).setName("de ")
                 .addLore("")
                 .addLore("  permet de d")
-                        .addLore("  de ")
-                                .addLore("  lors d'une ")
-                                        .addLore("")
-                                        .addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage())
-                                        .addLore("")
-                                        .getItem();
+                .addLore("  de ")
+                .addLore("  lors d'une ")
+                .addLore("")
+                .addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage())
+                .addLore("")
+                .getItem();
         slots[28] = OpenVar.CYCLE_DURATION.getItemCycle();
         slots[29] = (new ItemCreator(Material.POTION)).setName("de ")
                 .addLore("")
@@ -106,15 +107,15 @@ public class ConfigOptionsGUI implements CustomInventory {
                 .addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage())
                 .addLore("")
                 .getItem();
-        slots[33] = (new ItemCreator(Material.PAPER)).setName(")
+        slots[33] = (new ItemCreator(Material.PAPER)).setName("")
                 .addLore("")
-                .addLore("  permet de d)
-                        .addLore("  rpour la partie.")
-                        .addLore("")
-                        .addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage())
-                        .addLore("")
-                        .getItem();
-        slots[34] = (new ItemCreator(Material.APPLE)).setName("de )
+                .addLore("  permet de d")
+                .addLore("  rpour la partie.")
+                .addLore("")
+                .addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage())
+                .addLore("")
+                .getItem();
+        slots[34] = (new ItemCreator(Material.APPLE)).setName("de ")
                 .addLore("")
                 .addLore("  permet de modifier les")
                 .addLore("  de drop de certains objets.")

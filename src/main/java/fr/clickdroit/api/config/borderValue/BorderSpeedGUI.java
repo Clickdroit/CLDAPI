@@ -1,16 +1,17 @@
-package fr.clickdroit.api.config.common.borderValue;
+package fr.clickdroit.api.config.borderValue;
 
 import fr.clickdroit.api.config.GameConfig;
 import fr.clickdroit.api.game.GameManager;
 import fr.clickdroit.api.utils.CustomInventory;
 import fr.clickdroit.api.utils.ItemCreator;
-import java.util.function.Supplier;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.function.Supplier;
 
 public class BorderSpeedGUI implements CustomInventory {
     private final GameManager gameManager;
@@ -28,14 +29,14 @@ public class BorderSpeedGUI implements CustomInventory {
 
     public Supplier<ItemStack[]> getContents(Player player) {
         ItemStack[] slots = new ItemStack[getSlots()];
-        slots[0] = (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(1)).setName(").getItem();
-                slots[1] = (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(14)).setName(").getItem();
-                        slots[2] = (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(11)).setName(").getItem();
-                                slots[4] = (new ItemCreator(Material.WATCH)).setName("de la bordure " + this.gameConfig.getBorderBlocksPerSecond() + " bloc(s)/s").getItem();
-        slots[6] = (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(12)).setName(").getItem();
-                slots[7] = (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(10)).setName(").getItem();
-                        slots[8] = (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(2)).setName(").getItem();
-                                slots[13] = (new ItemCreator(Material.ARROW)).setName("en arri).getItem();
+        slots[0] = (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(1)).setName("").getItem();
+        slots[1] = (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(14)).setName("").getItem();
+        slots[2] = (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(11)).setName("").getItem();
+        slots[4] = (new ItemCreator(Material.WATCH)).setName("de la bordure " + this.gameConfig.getBorderBlocksPerSecond() + " bloc(s)/s").getItem();
+        slots[6] = (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(12)).setName("").getItem();
+        slots[7] = (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(10)).setName("").getItem();
+        slots[8] = (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(2)).setName("").getItem();
+        slots[13] = (new ItemCreator(Material.ARROW)).setName("en arri").getItem();
         return () -> slots;
     }
 

@@ -1,26 +1,23 @@
 package fr.clickdroit.api.utils.particles;
 
+import org.bukkit.Bukkit;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-import org.bukkit.Bukkit;
 
 public final class ReflectionUtils {
+
+    // Constructeurs
     public static Constructor<?> getConstructor(Class<?> clazz, Class<?>... parameterTypes) throws NoSuchMethodException {
         Class<?>[] primitiveTypes = DataType.getPrimitive(parameterTypes);
-        Constructor[] arrayOfConstructor;
-        int i;
-        byte b;
-        for (arrayOfConstructor = (Constructor[])clazz.getConstructors(), i = arrayOfConstructor.length, b = 0; b < i; ) {
-            Constructor<?> constructor = arrayOfConstructor[b];
-            if (!DataType.compare(DataType.getPrimitive(constructor.getParameterTypes()), primitiveTypes)) {
-                b = (byte)(b + 1);
-                continue;
+        for (Constructor<?> constructor : clazz.getConstructors()) {
+            if (DataType.compare(DataType.getPrimitive(constructor.getParameterTypes()), primitiveTypes)) {
+                return constructor;
             }
-            return constructor;
         }
         throw new NoSuchMethodException("There is no such constructor in this class with the specified parameter types");
     }
@@ -37,18 +34,14 @@ public final class ReflectionUtils {
         return instantiateObject(packageType.getClass(className), arguments);
     }
 
+    // Méthodes
     public static Method getMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) throws NoSuchMethodException {
         Class<?>[] primitiveTypes = DataType.getPrimitive(parameterTypes);
-        Method[] arrayOfMethod;
-        int i;
-        byte b;
-        for (arrayOfMethod = clazz.getMethods(), i = arrayOfMethod.length, b = 0; b < i; ) {
-            Method method = arrayOfMethod[b];
-            if (!method.getName().equals(methodName) || !DataType.compare(DataType.getPrimitive(method.getParameterTypes()), primitiveTypes)) {
-                b = (byte)(b + 1);
-                continue;
+        for (Method method : clazz.getMethods()) {
+            if (method.getName().equals(methodName) &&
+                    DataType.compare(DataType.getPrimitive(method.getParameterTypes()), primitiveTypes)) {
+                return method;
             }
-            return method;
         }
         throw new NoSuchMethodException("There is no such method in this class with the specified name and parameter types");
     }
@@ -69,6 +62,7 @@ public final class ReflectionUtils {
         return invokeMethod(instance, packageType.getClass(className), methodName, arguments);
     }
 
+    // Fields
     public static Field getField(Class<?> clazz, boolean declared, String fieldName) throws NoSuchFieldException, SecurityException {
         Field field = declared ? clazz.getDeclaredField(fieldName) : clazz.getField(fieldName);
         field.setAccessible(true);
@@ -87,10 +81,6 @@ public final class ReflectionUtils {
         return getValue(instance, packageType.getClass(className), declared, fieldName);
     }
 
-    public static Object getValue(Object instance, boolean declared, String fieldName) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
-        return getValue(instance, instance.getClass(), declared, fieldName);
-    }
-
     public static void setValue(Object instance, Class<?> clazz, boolean declared, String fieldName, Object value) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
         getField(clazz, declared, fieldName).set(instance, value);
     }
@@ -103,65 +93,20 @@ public final class ReflectionUtils {
         setValue(instance, instance.getClass(), declared, fieldName, value);
     }
 
-    public enum PackageType {
-        MINECRAFT_SERVER("net.minecraft.server." + getServerVersion()),
-        CRAFTBUKKIT("org.bukkit.craftbukkit." + getServerVersion()),
-        CRAFTBUKKIT_BLOCK("block"),
-        CRAFTBUKKIT_CHUNKIO("chunkio"),
-        CRAFTBUKKIT_COMMAND("command"),
-        CRAFTBUKKIT_CONVERSATIONS("conversations"),
-        CRAFTBUKKIT_ENCHANTMENS("enchantments"),
-        CRAFTBUKKIT_ENTITY("entity"),
-        CRAFTBUKKIT_EVENT("event"),
-        CRAFTBUKKIT_GENERATOR("generator"),
-        CRAFTBUKKIT_HELP("help"),
-        CRAFTBUKKIT_INVENTORY("inventory"),
-        CRAFTBUKKIT_MAP("map"),
-        CRAFTBUKKIT_METADATA("metadata"),
-        CRAFTBUKKIT_POTION("potion"),
-        CRAFTBUKKIT_PROJECTILES("projectiles"),
-        CRAFTBUKKIT_SCHEDULER("scheduler"),
-        CRAFTBUKKIT_SCOREBOARD("scoreboard"),
-        CRAFTBUKKIT_UPDATER("updater"),
-        CRAFTBUKKIT_UTIL("util");
-
-        private final String path;
-
-        PackageType(String path) {
-            this.path = path;
-        }
-
-        public String getPath() {
-            return this.path;
-        }
-
-        public Class<?> getClass(String className) throws ClassNotFoundException {
-            return Class.forName(this + "." + className);
-        }
-
-        public String toString() {
-            return this.path;
-        }
-
-        public static String getServerVersion() {
-            return Bukkit.getServer().getClass().getPackage().getName().substring(23);
-        }
-    }
-
+    // Enum pour les types de données
     public enum DataType {
-        BYTE((String)byte.class, Byte.class),
-        SHORT((String)short.class, Short.class),
-        INTEGER((String)int.class, Integer.class),
-        LONG((String)long.class, Long.class),
-        CHARACTER((String)char.class, Character.class),
-        FLOAT((String)float.class, Float.class),
-        DOUBLE((String)double.class, Double.class),
-        BOOLEAN((String)boolean.class, Boolean.class);
+        BYTE(byte.class, Byte.class),
+        SHORT(short.class, Short.class),
+        INTEGER(int.class, Integer.class),
+        LONG(long.class, Long.class),
+        CHARACTER(char.class, Character.class),
+        FLOAT(float.class, Float.class),
+        DOUBLE(double.class, Double.class),
+        BOOLEAN(boolean.class, Boolean.class);
 
         private static final Map<Class<?>, DataType> CLASS_MAP = new HashMap<>();
 
         private final Class<?> primitive;
-
         private final Class<?> reference;
 
         static {
@@ -177,11 +122,11 @@ public final class ReflectionUtils {
         }
 
         public Class<?> getPrimitive() {
-            return this.primitive;
+            return primitive;
         }
 
         public Class<?> getReference() {
-            return this.reference;
+            return reference;
         }
 
         public static DataType fromClass(Class<?> clazz) {
@@ -190,59 +135,113 @@ public final class ReflectionUtils {
 
         public static Class<?> getPrimitive(Class<?> clazz) {
             DataType type = fromClass(clazz);
-            return (type == null) ? clazz : type.getPrimitive();
+            return type == null ? clazz : type.getPrimitive();
         }
 
         public static Class<?> getReference(Class<?> clazz) {
             DataType type = fromClass(clazz);
-            return (type == null) ? clazz : type.getReference();
+            return type == null ? clazz : type.getReference();
         }
 
         public static Class<?>[] getPrimitive(Class<?>[] classes) {
-            int length = (classes == null) ? 0 : classes.length;
+            int length = classes == null ? 0 : classes.length;
             Class<?>[] types = new Class[length];
-            for (int index = 0; index < length; index++)
+            for (int index = 0; index < length; index++) {
                 types[index] = getPrimitive(classes[index]);
+            }
             return types;
         }
 
         public static Class<?>[] getReference(Class<?>[] classes) {
-            int length = (classes == null) ? 0 : classes.length;
+            int length = classes == null ? 0 : classes.length;
             Class<?>[] types = new Class[length];
-            for (int index = 0; index < length; index++)
+            for (int index = 0; index < length; index++) {
                 types[index] = getReference(classes[index]);
+            }
             return types;
         }
 
         public static Class<?>[] getPrimitive(Object[] objects) {
-            int length = (objects == null) ? 0 : objects.length;
+            int length = objects == null ? 0 : objects.length;
             Class<?>[] types = new Class[length];
-            for (int index = 0; index < length; index++)
+            for (int index = 0; index < length; index++) {
                 types[index] = getPrimitive(objects[index].getClass());
+            }
             return types;
         }
 
         public static Class<?>[] getReference(Object[] objects) {
-            int length = (objects == null) ? 0 : objects.length;
+            int length = objects == null ? 0 : objects.length;
             Class<?>[] types = new Class[length];
-            for (int index = 0; index < length; index++)
+            for (int index = 0; index < length; index++) {
                 types[index] = getReference(objects[index].getClass());
+            }
             return types;
         }
 
         public static boolean compare(Class<?>[] primary, Class<?>[] secondary) {
-            if (primary == null || secondary == null || primary.length != secondary.length)
-                return false;
-            for (int index = 0; index < primary.length; ) {
-                Class<?> primaryClass = primary[index];
-                Class<?> secondaryClass = secondary[index];
-                if (primaryClass.equals(secondaryClass) || primaryClass.isAssignableFrom(secondaryClass)) {
-                    index++;
-                    continue;
-                }
+            if (primary == null || secondary == null || primary.length != secondary.length) {
                 return false;
             }
+            for (int index = 0; index < primary.length; index++) {
+                Class<?> primaryClass = primary[index];
+                Class<?> secondaryClass = secondary[index];
+                if (!primaryClass.equals(secondaryClass) && !primaryClass.isAssignableFrom(secondaryClass)) {
+                    return false;
+                }
+            }
             return true;
+        }
+    }
+
+    // Enum pour les types de packages
+    public enum PackageType {
+        MINECRAFT_SERVER("net.minecraft.server." + getServerVersion()),
+        CRAFTBUKKIT("org.bukkit.craftbukkit." + getServerVersion()),
+        CRAFTBUKKIT_BLOCK(CRAFTBUKKIT, "block"),
+        CRAFTBUKKIT_CHUNKIO(CRAFTBUKKIT, "chunkio"),
+        CRAFTBUKKIT_COMMAND(CRAFTBUKKIT, "command"),
+        CRAFTBUKKIT_CONVERSATIONS(CRAFTBUKKIT, "conversations"),
+        CRAFTBUKKIT_ENCHANTMENTS(CRAFTBUKKIT, "enchantments"),
+        CRAFTBUKKIT_ENTITY(CRAFTBUKKIT, "entity"),
+        CRAFTBUKKIT_EVENT(CRAFTBUKKIT, "event"),
+        CRAFTBUKKIT_GENERATOR(CRAFTBUKKIT, "generator"),
+        CRAFTBUKKIT_HELP(CRAFTBUKKIT, "help"),
+        CRAFTBUKKIT_INVENTORY(CRAFTBUKKIT, "inventory"),
+        CRAFTBUKKIT_MAP(CRAFTBUKKIT, "map"),
+        CRAFTBUKKIT_METADATA(CRAFTBUKKIT, "metadata"),
+        CRAFTBUKKIT_POTION(CRAFTBUKKIT, "potion"),
+        CRAFTBUKKIT_PROJECTILES(CRAFTBUKKIT, "projectiles"),
+        CRAFTBUKKIT_SCHEDULER(CRAFTBUKKIT, "scheduler"),
+        CRAFTBUKKIT_SCOREBOARD(CRAFTBUKKIT, "scoreboard"),
+        CRAFTBUKKIT_UPDATER(CRAFTBUKKIT, "updater"),
+        CRAFTBUKKIT_UTIL(CRAFTBUKKIT, "util");
+
+        private final String path;
+
+        PackageType(String path) {
+            this.path = path;
+        }
+
+        PackageType(PackageType parent, String suffix) {
+            this.path = parent.path + "." + suffix;
+        }
+
+        public String getPath() {
+            return path;
+        }
+
+        public Class<?> getClass(String className) throws ClassNotFoundException {
+            return Class.forName(this + "." + className);
+        }
+
+        @Override
+        public String toString() {
+            return path;
+        }
+
+        private static String getServerVersion() {
+            return Bukkit.getServer().getClass().getPackage().getName().substring(23);
         }
     }
 }

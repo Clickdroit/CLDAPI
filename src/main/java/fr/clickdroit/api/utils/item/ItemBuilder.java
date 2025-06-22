@@ -1,189 +1,159 @@
 package fr.clickdroit.api.utils.item;
 
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
-import com.mojang.authlib.properties.PropertyMap;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-import org.apache.commons.codec.binary.Base64;
 import org.bukkit.Color;
-import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.material.Dye;
-import org.bukkit.material.MaterialData;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ItemBuilder {
     private ItemStack is;
 
-    public ItemBuilder(Material m) {
-        this(m, 1);
+    public ItemBuilder(Material material) {
+        this.is = new ItemStack(material);
     }
 
-    public ItemBuilder(ItemStack is) {
-        this.is = is;
+    public ItemBuilder(ItemStack itemStack) {
+        this.is = itemStack.clone();
     }
 
-    public ItemBuilder(Material m, int amount) {
-        this.is = new ItemStack(m, amount);
-    }
-
-    public ItemBuilder(Material m, int amount, short meta) {
-        this.is = new ItemStack(m, amount, meta);
-    }
-
-    public ItemBuilder setHead(String paramString1) {
-        SkullMeta localSkullMeta = (SkullMeta)this.is.getItemMeta();
-        GameProfile localGameProfile = new GameProfile(UUID.randomUUID(), null);
-        PropertyMap localPropertyMap = localGameProfile.getProperties();
-        localPropertyMap.put("textures", new Property("textures", paramString1));
-        try {
-            Field localField = localSkullMeta.getClass().getDeclaredField("profile");
-            localField.setAccessible(true);
-            localField.set(localSkullMeta, localGameProfile);
-        } catch (NoSuchFieldException|IllegalAccessException localNoSuchFieldException) {
-            localNoSuchFieldException.printStackTrace();
+    public ItemBuilder setDisplayName(String name) {
+        ItemMeta meta = this.is.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName(name);
+            this.is.setItemMeta(meta);
         }
-        this.is.setItemMeta((ItemMeta)localSkullMeta);
         return this;
     }
 
-    public ItemBuilder setSkullURL(String url) {
-        if (url.isEmpty())
-            return this;
-        SkullMeta headMeta = (SkullMeta)this.is.getItemMeta();
-        GameProfile profile = new GameProfile(UUID.randomUUID(), null);
-        byte[] encodedData = Base64.encodeBase64(String.format("{textures:{SKIN:{url:\"%s\"}}}", new Object[] { url }).getBytes());
-        profile.getProperties().put("textures", new Property("textures", new String(encodedData)));
-        Field profileField = null;
-        try {
-            profileField = headMeta.getClass().getDeclaredField("profile");
-            profileField.setAccessible(true);
-            profileField.set(headMeta, profile);
-        } catch (NoSuchFieldException|IllegalArgumentException|IllegalAccessException e1) {
-            e1.printStackTrace();
-        }
-        this.is.setItemMeta((ItemMeta)headMeta);
+    public ItemBuilder setAmount(int amount) {
+        this.is.setAmount(amount);
         return this;
     }
 
-    public ItemBuilder clone() {
-        return new ItemBuilder(this.is);
-    }
-
-    public ItemBuilder setDurability(short dur) {
-        this.is.setDurability(dur);
+    public ItemBuilder setDurability(short durability) {
+        this.is.setDurability(durability);
         return this;
     }
 
-    public ItemBuilder setDyeColor(DyeColor color) {
-        Dye dye = new Dye();
-        dye.setColor(color);
-        this.is.setData((MaterialData)dye);
-        return this;
-    }
-
-    public ItemBuilder setName(String name) {
-        ItemMeta im = this.is.getItemMeta();
-        im.setDisplayName(name);
-        this.is.setItemMeta(im);
-        return this;
-    }
-
-    public ItemBuilder addUnsafeEnchantment(Enchantment ench, int level) {
-        this.is.addUnsafeEnchantment(ench, level);
-        return this;
-    }
-
-    public ItemBuilder removeEnchantment(Enchantment ench) {
-        this.is.removeEnchantment(ench);
-        return this;
-    }
-
-    public ItemBuilder setSkullOwner(String owner) {
-        try {
-            SkullMeta im = (SkullMeta)this.is.getItemMeta();
-            im.setOwner(owner);
-            this.is.setItemMeta((ItemMeta)im);
-        } catch (ClassCastException classCastException) {}
-        return this;
-    }
-
-    public ItemBuilder addEnchant(Enchantment ench, int level) {
-        ItemMeta im = this.is.getItemMeta();
-        im.addEnchant(ench, level, true);
-        this.is.setItemMeta(im);
-        return this;
-    }
-
-    public ItemBuilder setInfinityDurability() {
-        this.is.getItemMeta().spigot().setUnbreakable(true);
-        return this;
-    }
-
-    public ItemBuilder setLore(String... lore) {
-        ItemMeta im = this.is.getItemMeta();
-        im.setLore(Arrays.asList(lore));
-        this.is.setItemMeta(im);
+    public ItemBuilder addEnchantment(Enchantment enchantment, int level) {
+        this.is.addUnsafeEnchantment(enchantment, level);
         return this;
     }
 
     public ItemBuilder addLore(String lore) {
         ItemMeta meta = this.is.getItemMeta();
-        ArrayList<String> lores = (ArrayList<String>)meta.getLore();
-        if (lores == null)
-            lores = new ArrayList<>();
-        if (lore != null) {
-            lores.add(lore);
-        } else {
-            lores.add(" ");
+        if (meta != null) {
+            List<String> lores = meta.getLore();
+            if (lores == null) {
+                lores = new ArrayList<>();
+            }
+            if (lore != null) {
+                lores.add(lore);
+            } else {
+                lores.add(" ");
+            }
+            meta.setLore(lores);
+            this.is.setItemMeta(meta);
         }
-        meta.setLore(lores);
-        this.is.setItemMeta(meta);
         return this;
     }
 
     public ItemBuilder setLore(List<String> lore2, String... lore1) {
-        ItemMeta im = this.is.getItemMeta();
-        List<String> finalList = Arrays.asList(lore1);
-        finalList.addAll(lore2);
-        im.setLore(finalList);
-        this.is.setItemMeta(im);
+        ItemMeta meta = this.is.getItemMeta();
+        if (meta != null) {
+            List<String> finalList = new ArrayList<>(Arrays.asList(lore1));
+            if (lore2 != null) {
+                finalList.addAll(lore2);
+            }
+            meta.setLore(finalList);
+            this.is.setItemMeta(meta);
+        }
         return this;
     }
 
     public ItemBuilder setLore(List<String> lore) {
-        ItemMeta im = this.is.getItemMeta();
-        lore.forEach(s -> im.getLore().add(s));
-        this.is.setItemMeta(im);
+        ItemMeta meta = this.is.getItemMeta();
+        if (meta != null) {
+            List<String> newLore = new ArrayList<>();
+            if (lore != null) {
+                newLore.addAll(lore);
+            }
+            meta.setLore(newLore);
+            this.is.setItemMeta(meta);
+        }
+        return this;
+    }
+
+    public ItemBuilder setLore(String... lore) {
+        ItemMeta meta = this.is.getItemMeta();
+        if (meta != null) {
+            meta.setLore(Arrays.asList(lore));
+            this.is.setItemMeta(meta);
+        }
         return this;
     }
 
     public ItemBuilder setLeatherArmorColor(Color color) {
         try {
-            LeatherArmorMeta im = (LeatherArmorMeta)this.is.getItemMeta();
-            im.setColor(color);
-            this.is.setItemMeta((ItemMeta)im);
-        } catch (ClassCastException classCastException) {}
+            if (this.is.getItemMeta() instanceof LeatherArmorMeta) {
+                LeatherArmorMeta leatherMeta = (LeatherArmorMeta) this.is.getItemMeta();
+                leatherMeta.setColor(color);
+                this.is.setItemMeta(leatherMeta);
+            }
+        } catch (ClassCastException e) {
+            // Ignorer si ce n'est pas une armure en cuir
+        }
         return this;
     }
 
-    public ItemBuilder addFlag(ItemFlag... flag) {
-        ItemMeta im = this.is.getItemMeta();
-        im.addItemFlags(flag);
-        this.is.setItemMeta(im);
+    public ItemBuilder addFlag(ItemFlag... flags) {
+        ItemMeta meta = this.is.getItemMeta();
+        if (meta != null) {
+            meta.addItemFlags(flags);
+            this.is.setItemMeta(meta);
+        }
+        return this;
+    }
+
+    public ItemBuilder removeFlag(ItemFlag... flags) {
+        ItemMeta meta = this.is.getItemMeta();
+        if (meta != null) {
+            meta.removeItemFlags(flags);
+            this.is.setItemMeta(meta);
+        }
+        return this;
+    }
+
+    public ItemBuilder addAllFlags() {
+        ItemMeta meta = this.is.getItemMeta();
+        if (meta != null) {
+            meta.addItemFlags(ItemFlag.values());
+            this.is.setItemMeta(meta);
+        }
+        return this;
+    }
+
+    public ItemBuilder setUnbreakable(boolean unbreakable) {
+        ItemMeta meta = this.is.getItemMeta();
+        if (meta != null) {
+            meta.spigot().setUnbreakable(unbreakable);
+            this.is.setItemMeta(meta);
+        }
         return this;
     }
 
     public ItemStack toItemStack() {
+        return this.is;
+    }
+
+    public ItemStack build() {
         return this.is;
     }
 }

@@ -5,7 +5,7 @@ import fr.clickdroit.api.API;
 import fr.clickdroit.api.GamePlayer;
 import fr.clickdroit.api.config.borderValue.BorderManagerGUI;
 import fr.clickdroit.api.config.intValue.SlotsGUI;
-import fr.clickdroit.api.config.teamValue.TeamManagerGUI;
+import fr.clickdroit.api.config.teamvalue.TeamManagerGUI;
 import fr.clickdroit.api.config.value.OpenVar;
 import fr.clickdroit.api.game.GameManager;
 import fr.clickdroit.api.game.GameState;
@@ -13,15 +13,16 @@ import fr.clickdroit.api.module.ModuleType;
 import fr.clickdroit.api.utils.CommonString;
 import fr.clickdroit.api.utils.CustomInventory;
 import fr.clickdroit.api.utils.ItemCreator;
-import fr.clickdroit.api.worlds.BiomeChanger;
 import fr.clickdroit.api.utils.Title;
-import java.util.function.Supplier;
+import fr.clickdroit.api.worlds.BiomeChanger;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.function.Supplier;
 
 public class ConfigMainGUI implements CustomInventory {
     private final API api;
@@ -37,7 +38,7 @@ public class ConfigMainGUI implements CustomInventory {
     }
 
     public String getName() {
-        return ";
+        return "";
     }
 
     public Supplier<ItemStack[]> getContents(Player player) {
@@ -51,21 +52,21 @@ public class ConfigMainGUI implements CustomInventory {
             int j = arrayOfInteger1[b].intValue();
             slots[j] = (new ItemCreator(Material.STAINED_GLASS_PANE)).setDurability(Integer.valueOf(14)).setName("").getItem();
         }
-        slots[2] = (new ItemCreator(Material.RED_ROSE)).setName("d').addLore("").addLore(" ).addLore("").addLore("  d'acceder au").addLore("  d').addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
-                slots[4] = (new ItemCreator(Material.SAPLING)).setName(").addLore("").addLore(" ).addLore("").addLore("  de pr).addLore("  la ).addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
+        slots[2] = (new ItemCreator(Material.RED_ROSE)).setName("d'").addLore("").addLore(" ").addLore("").addLore("  d'acceder au").addLore("  d'").addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
+                slots[4] = (new ItemCreator(Material.SAPLING)).setName("").addLore("").addLore(" ").addLore("").addLore("  de pr").addLore("  la ").addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
         GameConfig.WaitingTeleportationState waitingState = this.gameConfig.getTeleportationState();
-        slots[6] = (new ItemCreator(waitingState.equals(GameConfig.WaitingTeleportationState.IN_ROOM) ? Material.EYE_OF_ENDER : Material.ENDER_PEARL)).setName(waitingState.equals(GameConfig.WaitingTeleportationState.IN_ROOM) ? "au : "la des r).addLore("").addLore(" ).addLore("").addLore("  de teleporter les ).addLore("  + (waitingState.equals(GameConfig.WaitingTeleportationState.IN_ROOM) ? "au point d'apparition" : "dans la salle des r) + ").addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
+        slots[6] = (new ItemCreator(waitingState.equals(GameConfig.WaitingTeleportationState.IN_ROOM) ? Material.EYE_OF_ENDER : Material.ENDER_PEARL)).setName(waitingState.equals(GameConfig.WaitingTeleportationState.IN_ROOM) ? "au ": "la des r").addLore("").addLore(" ").addLore("").addLore("  de teleporter les" ).addLore(" " + (waitingState.equals(GameConfig.WaitingTeleportationState.IN_ROOM) ? "au point d'apparition" : "dans la salle des r") + "").addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
         slots[10] = OpenVar.SLOTS.getItem();
         if (this.gameManager.getModuleManager().getCurrentModule().hasTeam())
             slots[25] = (new ItemCreator(Material.BANNER)).setName("des ").setDurability(Integer.valueOf(15)).addLore("").addLore(" ").addLore("").addLore("  de gles").addLore("  ").addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
                     slots[11] = (new ItemCreator(Material.BARRIER)).setName("le serveur").setDurability(Integer.valueOf(15)).addLore("").addLore("" ).addLore("").addLore("  de stopper").addLore(" " ).addLore("").addLore(CommonString.CLICK_HERE_TO_ACTIVATE.getMessage()).addLore("").getItem();
-        slots[15] = (new ItemCreator(Material.EYE_OF_ENDER)).setName("").addLore("").addLore(" ").addLore(" " + (this.gameConfig.isSpectators() ? ": ")).addLore("").addLore("  d'ou la pr").addLore("  spectateurs dans la ").addLore("").addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage()).addLore("").getItem();
-        slots[16] = (new ItemCreator(Material.NETHERRACK)).setName("").addLore("").addLore(" ").addLore(" " + (this.gameConfig.isNether() ? ": ")).addLore("").addLore("  d'ou ").addLore("  joueurs aller dans le ").addLore("").addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage()).addLore("").getItem();
+        slots[15] = (new ItemCreator(Material.EYE_OF_ENDER)).setName("").addLore("").addLore(" ").addLore(" " + (this.gameConfig.isSpectators() ? "": "")).addLore("").addLore("  d'ou la pr").addLore("  spectateurs dans la ").addLore("").addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage()).addLore("").getItem();
+        slots[16] = (new ItemCreator(Material.NETHERRACK)).setName("").addLore("").addLore(" ").addLore(" " + (this.gameConfig.isNether() ? "": "")).addLore("").addLore("  d'ou ").addLore("  joueurs aller dans le ").addLore("").addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage()).addLore("").getItem();
         slots[22] = (new ItemCreator(Material.ITEM_FRAME)).setName("de la ").addLore("").addLore(" ").addLore("").addLore("  d'accaux").addLore("  de la partie").addLore("").addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage()).addLore("").getItem();
         if (!this.gameManager.getModuleManager().getCurrentModule().equals(ModuleType.UHC))
             slots[31] = (new ItemCreator(Material.PRISMARINE_SHARD)).setName("de ").addLore("").addLore(" ).addLore(" + this.gameManager.getModuleManager().getCurrentModule().getName()).addLore("").addLore("  de modifer les options").addLore("  au mode de jeu" ).addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
-        slots[37] = (new ItemCreator(Material.STAINED_GLASS)).setDurability(Integer.valueOf(9)).setName("de la ).addLore("").addLore(""" ).addLore("").addLore("  de modifer la ").addLore("  la de la ").addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
-        slots[43] = (new ItemCreator(Material.BOOK)).setName("des ").addLore("").addLore("" ).addLore("").addLore("  d'des sc").addLore("  dynamiseront la"" ).addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
+        slots[37] = (new ItemCreator(Material.STAINED_GLASS)).setDurability(Integer.valueOf(9)).setName("de la ").addLore("").addLore("" ).addLore("").addLore("  de modifer la ").addLore("  la de la ").addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
+        slots[43] = (new ItemCreator(Material.BOOK)).setName("des ").addLore("").addLore("" ).addLore("").addLore("  d'des sc").addLore("  dynamiseront la" ).addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
         slots[47] = (new ItemCreator(Material.WATCH)).setName("de la ").addLore("").addLore(" ").addLore(" " + this.gameConfig.getGameAccess().getMessage()).addLore("").addLore("  de l'accessibilit").addLore("  la partie pour les ").addLore("").addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage()).addLore("").getItem();
         if (this.gameManager.getModuleManager().getCurrentModule().equals(ModuleType.DEMONSLAYER)) {
             slots[51] = (new ItemCreator(Material.PAPER)).setName("").addLore("").addLore(" ").addLore("").addLore("  d'acc").addLore(" " ).addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
@@ -105,7 +106,7 @@ public class ConfigMainGUI implements CustomInventory {
                     player.sendMessage("venez de prde la map.");
                     break;
                 }
-                player.sendMessage("serveur est dou est );
+                player.sendMessage("serveur est dou est" );
                 break;
             case RED_ROSE:
                 if (GamePlayer.getPlayer(player.getUniqueId()).isHeadStaff()) {
@@ -129,7 +130,7 @@ public class ConfigMainGUI implements CustomInventory {
                     this.api.getGameManager().setGameState(GameState.WAITING);
                     player.closeInventory();
                     Bukkit.getOnlinePlayers().forEach(players -> {
-                        Title.sendTitle(players, 10, 40, 10, ", "annul:c");
+                        Title.sendTitle(players, 10, 40, 10, "", "annul:c");
                         players.setLevel(0);
                         players.setExp(0.0F);
                     });
@@ -155,7 +156,7 @@ public class ConfigMainGUI implements CustomInventory {
             case BOOK:
                 this.api.getCommon().getScenariosGUI().openInventory(player, 1);
             case WATCH:
-                player.sendMessage("devez la map avant d'ouvrir la );
+                player.sendMessage("devez la map avant d'ouvrir la ");
                         player.closeInventory();
                 break;
         }

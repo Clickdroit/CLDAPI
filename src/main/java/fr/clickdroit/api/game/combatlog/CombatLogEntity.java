@@ -1,7 +1,6 @@
 package fr.clickdroit.api.game.combatlog;
 
 
-import java.util.UUID;
 import net.minecraft.server.v1_8_R3.Entity;
 import net.minecraft.server.v1_8_R3.EntityLiving;
 import net.minecraft.server.v1_8_R3.NBTTagCompound;
@@ -10,6 +9,8 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
+
+import java.util.UUID;
 
 public class CombatLogEntity {
     private final UUID uuid;
