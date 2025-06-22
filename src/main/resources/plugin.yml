@@ -1,0 +1,35 @@
+name: APIUHC
+main: fr.clickdroit.api.API
+version: 1.0
+author: clickdroit
+commands:
+  enchant:
+  finish:
+  helpop:
+  vanish:
+  host:
+    aliases: [ h ]
+  inv:
+    aliases: [ inventory ]
+  revive:
+  rules:
+  scenario:
+    aliases: [ scenarios ]
+  tc:
+    aliases: [ teamcoords ]
+  view:
+    aliases: [ invsee ]
+  vote:
+  preload:
+  tprandom:
+  alerts:
+  whitelist:
+    aliases: [ wl ]
+  tphere:
+  health:
+  viewoffline:
+  disperse:
+  groupe:
+    aliases: [ groupes ]
+  near:
+    aliases: [ playersnear,playernear ]

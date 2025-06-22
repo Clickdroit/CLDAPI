@@ -1,0 +1,48 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+group = 'fr.clickdroit.uhc'
+version = '1.0'
+description = 'UHC Plugin'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+repositories {
+    mavenCentral()
+
+    // Spigot (ou CraftBukkit) via BuildTools
+    maven {
+        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+    }
+
+    maven {
+        url = 'https://oss.sonatype.org/content/repositories/snapshots/'
+    }
+
+    maven {
+        url = 'https://repo.aikar.co/content/groups/aikar/'
+    }
+}
+
+dependencies {
+    implementation 'com.google.code.findbugs:jsr305:3.0.2'
+    implementation 'commons-io:commons-io:2.15.1'
+    implementation 'org.slf4j:slf4j-api:2.0.13'
+    implementation 'ch.qos.logback:logback-classic:1.4.14' // backend Logback
+    compileOnly 'org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+jar {
+    archiveBaseName.set('UHC')
+}
+shadowJar {
+    archiveBaseName.set('UHC') // Remplacez par le nom de votre plugin
+    archiveClassifier.set('')
+}
