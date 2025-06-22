@@ -203,7 +203,34 @@ public class ItemCreator {
     public ItemCreator setSkull(String textureValue) {
         if (this.item.getType() == Material.SKULL_ITEM) {
             SkullMeta skullMeta = (SkullMeta) this.item.getItemMeta();
-            GameProfile gameProfile = new GameProfile(UUID.randomUUID(), "domei_heads");
+            GameProfile gameProfile = new GameProfile(UUID.randomUUID(), "custom_head");
+            gameProfile.getProperties().put("textures", new Property("textures", textureValue));
+
+            try {
+                Field profileField = skullMeta.getClass().getDeclaredField("profile");
+                profileField.setAccessible(true);
+                profileField.set(skullMeta, gameProfile);
+                this.item.setItemMeta(skullMeta);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return this;
+    }
+
+    private String createTextureValue(String url) {
+        String json = "{\"textures\":{\"SKIN\":{\"url\":\"" + url + "\"}}}";
+        return Base64.getEncoder().encodeToString(json.getBytes());
+    }
+
+    public ItemCreator setSkullURL(String url) {
+        if (this.item.getType() == Material.SKULL_ITEM) {
+            SkullMeta skullMeta = (SkullMeta) this.item.getItemMeta();
+
+            // Créer la texture value à partir de l'URL
+            String textureValue = createTextureValue(url);
+
+            GameProfile gameProfile = new GameProfile(UUID.randomUUID(), "custom_head");
             gameProfile.getProperties().put("textures", new Property("textures", textureValue));
 
             try {

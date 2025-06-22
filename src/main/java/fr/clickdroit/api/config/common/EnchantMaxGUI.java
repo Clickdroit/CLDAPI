@@ -1,7 +1,5 @@
 package fr.clickdroit.api.config.common;
 
-import java.util.function.Supplier;
-
 import fr.clickdroit.api.API;
 import fr.clickdroit.api.config.ConfigOptionsGUI;
 import fr.clickdroit.api.config.value.CommonItems;
@@ -14,6 +12,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.function.Supplier;
 
 public class EnchantMaxGUI implements CustomInventory {
     public String getName() {
@@ -76,40 +76,36 @@ public class EnchantMaxGUI implements CustomInventory {
     }
 
     public enum Enchants {
-        PROTECTION_ENVIRONMENTAL((String)Enchantment.PROTECTION_ENVIRONMENTAL, "", 0, 50, 4),
-        FIRE_PROTECTION((String)Enchantment.PROTECTION_FIRE, "Protection", 0, 50, 4),
-        FEATHER_FALLING((String)Enchantment.PROTECTION_FALL, "Falling", 0, 50, 4),
-        BLAST_PROTECTION((String)Enchantment.PROTECTION_EXPLOSIONS, "Protection", 0, 50, 4),
-        PROJECTILE_PROTECTION((String)Enchantment.PROTECTION_PROJECTILE, "Protection", 0, 50, 4),
-        RESPIRATION((String)Enchantment.OXYGEN, "", 0, 50, 3),
-        AQUA_AFFINITY((String)Enchantment.WATER_WORKER, "Affinity", 0, 50, 1),
-        THORNS((String)Enchantment.THORNS, "", 0, 50, 3),
-        DEPTH_STRIDERS((String)Enchantment.DEPTH_STRIDER, "Strider", 0, 50, 3),
-        SHARPNESS((String)Enchantment.DAMAGE_ALL, "", 0, 50, 5),
-        SMITE((String)Enchantment.DAMAGE_UNDEAD, "", 0, 50, 5),
-        BANE_OF_ARTHROPODS((String)Enchantment.DAMAGE_ARTHROPODS, "of Arthropods", 0, 50, 5),
-        KNOCKBACK((String)Enchantment.KNOCKBACK, "", 0, 50, 2),
-        FIRE_ASPECT((String)Enchantment.FIRE_ASPECT, "Aspect", 0, 50, 2),
-        LOOTING((String)Enchantment.LOOT_BONUS_MOBS, "", 0, 50, 3),
-        POWER((String)Enchantment.ARROW_DAMAGE, "", 0, 50, 5),
-        PUNCH((String)Enchantment.ARROW_KNOCKBACK, "", 0, 50, 2),
-        FLAME((String)Enchantment.ARROW_FIRE, "", 0, 1, 1),
-        INFINITY((String)Enchantment.ARROW_INFINITE, "", 0, 1, 1),
-        EFFICIENCY((String)Enchantment.DIG_SPEED, "", 0, 50, 5),
-        SILK_TOUCH((String)Enchantment.SILK_TOUCH, "Touch", 0, 1, 1),
-        UNBREAKING((String)Enchantment.DURABILITY, "", 0, 50, 3),
-        FORTUNE((String)Enchantment.LOOT_BONUS_BLOCKS, "", 0, 50, 3),
-        LUCK_OF_THE_SEA((String)Enchantment.LUCK, "of the Sea", 0, 100, 3),
-        LURE((String)Enchantment.LURE, "", 0, 100, 3);
+        PROTECTION_ENVIRONMENTAL(Enchantment.PROTECTION_ENVIRONMENTAL, "Protection", 0, 50, 4),
+        FIRE_PROTECTION(Enchantment.PROTECTION_FIRE, "Fire Protection", 0, 50, 4),
+        FEATHER_FALLING(Enchantment.PROTECTION_FALL, "Feather Falling", 0, 50, 4),
+        BLAST_PROTECTION(Enchantment.PROTECTION_EXPLOSIONS, "Blast Protection", 0, 50, 4),
+        PROJECTILE_PROTECTION(Enchantment.PROTECTION_PROJECTILE, "Projectile Protection", 0, 50, 4),
+        RESPIRATION(Enchantment.OXYGEN, "Respiration", 0, 50, 3),
+        AQUA_AFFINITY(Enchantment.WATER_WORKER, "Aqua Affinity", 0, 50, 1),
+        THORNS(Enchantment.THORNS, "Thorns", 0, 50, 3),
+        DEPTH_STRIDERS(Enchantment.DEPTH_STRIDER, "Depth Strider", 0, 50, 3),
+        SHARPNESS(Enchantment.DAMAGE_ALL, "Sharpness", 0, 50, 5),
+        SMITE(Enchantment.DAMAGE_UNDEAD, "Smite", 0, 50, 5),
+        BANE_OF_ARTHROPODS(Enchantment.DAMAGE_ARTHROPODS, "Bane of Arthropods", 0, 50, 5),
+        KNOCKBACK(Enchantment.KNOCKBACK, "Knockback", 0, 50, 2),
+        FIRE_ASPECT(Enchantment.FIRE_ASPECT, "Fire Aspect", 0, 50, 2),
+        LOOTING(Enchantment.LOOT_BONUS_MOBS, "Looting", 0, 50, 3),
+        POWER(Enchantment.ARROW_DAMAGE, "Power", 0, 50, 5),
+        PUNCH(Enchantment.ARROW_KNOCKBACK, "Punch", 0, 50, 2),
+        FLAME(Enchantment.ARROW_FIRE, "Flame", 0, 1, 1),
+        INFINITY(Enchantment.ARROW_INFINITE, "Infinity", 0, 1, 1),
+        EFFICIENCY(Enchantment.DIG_SPEED, "Efficiency", 0, 50, 5),
+        SILK_TOUCH(Enchantment.SILK_TOUCH, "Silk Touch", 0, 1, 1),
+        UNBREAKING(Enchantment.DURABILITY, "Unbreaking", 0, 50, 3),
+        FORTUNE(Enchantment.LOOT_BONUS_BLOCKS, "Fortune", 0, 50, 3),
+        LUCK_OF_THE_SEA(Enchantment.LUCK, "Luck of the Sea", 0, 100, 3),
+        LURE(Enchantment.LURE, "Lure", 0, 100, 3);
 
         private final Enchantment enchantment;
-
         private final String name;
-
         private final int min;
-
         private final int max;
-
         private int configValue;
 
         Enchants(Enchantment enchantment, String name, int min, int max, int configValue) {

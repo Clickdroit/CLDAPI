@@ -26,17 +26,17 @@ import fr.clickdroit.api.module.standard.UHCFinisherGame;
 import fr.clickdroit.api.module.standard.UHCStandard;
 import fr.clickdroit.api.utils.InventoryAPI;
 import fr.clickdroit.api.utils.TabHandler;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class GameManager {
     private final API api;
@@ -397,5 +397,38 @@ public class GameManager {
     public boolean hasHostAccess(Player player) {
         return ((this.gameHost != null && this.gameHost.equals(player.getUniqueId())) || player.isOp() || getHosts().contains(player.getUniqueId()));
     }
-}
 
+    public void broadcast(String message) {
+        Bukkit.broadcastMessage(message);
+    }
+
+    public void broadcastToAlivePlayers(String message) {
+        for (UUID uuid : this.inGamePlayers) {
+            Player player = Bukkit.getPlayer(uuid);
+            if (player != null && player.isOnline()) {
+                GamePlayer gamePlayer = GamePlayer.getPlayer(uuid);
+                if (gamePlayer != null && gamePlayer.isAlive()) {
+                    player.sendMessage(message);
+                }
+            }
+        }
+    }
+
+    public void broadcastToAll(String message) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.sendMessage(message);
+        }
+    }
+
+    public void broadcastToSpectators(String message) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            GamePlayer gamePlayer = GamePlayer.getPlayer(player.getUniqueId());
+            if (gamePlayer != null && !gamePlayer.isAlive()) {
+                player.sendMessage(message);
+            }
+        }
+    }
+    public void broadcastWithPrefix(String message) {
+        broadcast("§8[§6UHC§8] §f" + message);
+    }
+}

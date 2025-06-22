@@ -50,6 +50,6 @@ public class HealthCommand implements CommandExecutor {
     }
 
     public void sendHelp(Player sender) {
-        sender.sendMessage("de syntaxe: /health <joueur> <add:remove> <quantit);
+        sender.sendMessage("de syntaxe: /health <joueur> <add:remove> <quantit");
     }
 }

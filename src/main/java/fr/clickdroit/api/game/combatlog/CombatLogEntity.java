@@ -1,7 +1,5 @@
 package fr.clickdroit.api.game.combatlog;
 
-
-import net.minecraft.server.v1_8_R3.Entity;
 import net.minecraft.server.v1_8_R3.EntityLiving;
 import net.minecraft.server.v1_8_R3.NBTTagCompound;
 import org.bukkit.Location;
@@ -14,12 +12,9 @@ import java.util.UUID;
 
 public class CombatLogEntity {
     private final UUID uuid;
-
     private final String name;
-
     private final Location location;
-
-    private Entity entity;
+    private Villager entity;
 
     public CombatLogEntity(Player player) {
         this.uuid = player.getUniqueId();
@@ -29,19 +24,71 @@ public class CombatLogEntity {
     }
 
     public void spawnVillager() {
-        Entity entity = this.location.getWorld().spawnEntity(this.location, EntityType.VILLAGER);
-        Villager villager = (Villager)entity;
-        setEntityNoAI((Entity)villager);
-        villager.setCustomNameVisible(true);
-        villager.setCustomName(""+ this.name);
+        // Spawn du villager pour Minecraft 1.8
+        this.entity = (Villager) this.location.getWorld().spawnEntity(this.location, EntityType.VILLAGER);
+
+        // Configuration spécifique 1.8
+        setEntityNoAI(this.entity);
+        this.entity.setCustomNameVisible(true);
+        this.entity.setCustomName("§c" + this.name);
+
+        // En 1.8, pas de setProfession(Profession.NITWIT), on utilise l'ID
+        this.entity.setProfession(Villager.Profession.FARMER); // ou autre profession disponible en 1.8
     }
 
-    private void setEntityNoAI(Entity entity) {
-        Entity nms = ((CraftEntity)entity).getHandle();
-        NBTTagCompound tag = new NBTTagCompound();
-        nms.c(tag);
-        tag.setBoolean("NoAI", true);
-        EntityLiving entitys = (EntityLiving)nms;
-        entitys.a(tag);
+    private void setEntityNoAI(org.bukkit.entity.Entity entity) {
+        try {
+            net.minecraft.server.v1_8_R3.Entity nms = ((CraftEntity) entity).getHandle();
+            NBTTagCompound tag = new NBTTagCompound();
+            nms.c(tag); // Méthode pour écrire dans NBT en 1.8
+            tag.setBoolean("NoAI", true);
+            tag.setBoolean("Silent", true);
+            tag.setBoolean("Invulnerable", false);
+            tag.setBoolean("PersistenceRequired", true); // Empêche le despawn
+            ((EntityLiving) nms).a(tag); // Méthode pour lire depuis NBT en 1.8
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Getters
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public Villager getEntity() {
+        return entity;
+    }
+
+    // Méthode pour supprimer l'entité
+    public void remove() {
+        if (entity != null && !entity.isDead()) {
+            entity.remove();
+        }
+    }
+
+    // Méthodes spécifiques pour Minecraft 1.8
+    public void setHealth(double health) {
+        if (entity != null) {
+            entity.setHealth(health);
+        }
+    }
+
+    public void damage(double damage) {
+        if (entity != null) {
+            entity.damage(damage);
+        }
+    }
+
+    public boolean isDead() {
+        return entity == null || entity.isDead();
     }
 }

@@ -326,4 +326,12 @@ public final class Reflection {
             return org.bukkit.Bukkit.getServer().getClass().getPackage().getName().substring(23);
         }
     }
+    public static Class<?> getNMSClass(String className) {
+        try {
+            return PackageType.MINECRAFT_SERVER.getClass(className);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
