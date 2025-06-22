@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class AdminPanelGUI implements CustomInventory {
     public String getName() {
-        return ";
+        return "";
     }
 
     public Supplier<ItemStack[]> getContents(Player player) {

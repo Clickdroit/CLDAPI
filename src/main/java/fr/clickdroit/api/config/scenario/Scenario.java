@@ -1,5 +1,6 @@
 package fr.clickdroit.api.config.scenario;
 
+import fr.clickdroit.api.config.scenario.special.*;
 import fr.clickdroit.api.game.GameUtils;
 import fr.clickdroit.api.utils.item.ItemCreator;
 import org.bukkit.Material;
@@ -108,7 +109,7 @@ public enum Scenario {
     }
 
     public ItemStack getItem() {
-        ItemCreator item = (new ItemCreator(this.material)).setDurability(Integer.valueOf(this.data)).setTableauLores(this.lore).setName("+ this.name + " + (isEnabled() ? ": ")).addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        ItemCreator item = (new ItemCreator(this.material)).setDurability(Integer.valueOf(this.data)).setTableauLores(this.lore).setName("+ this.name + " + (isEnabled() ? "": "")).addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         if (isEnabled()) {
             item.addEnchantment(Enchantment.DURABILITY, Integer.valueOf(1));
             item.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -152,8 +153,8 @@ public enum Scenario {
             item.addLore(" utiliser ce ");
         }
         item.addLore("");
-        item.addLore(" pour " + (!isEnabled() ? ": ") + "");
-                item.addLore("");
+        item.addLore(" pour " + (!isEnabled() ? "": "") + "");
+        item.addLore("");
         return item.getItem();
     }
 
