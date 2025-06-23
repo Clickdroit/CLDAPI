@@ -89,106 +89,106 @@ public class PlayerJoinListener implements Listener {
                     (new InteractiveMessage())
                             .add((new TextComponentBuilder("  §8• §f[§aAvoir un §lmumble§f]"))
                                     .setHoverMessage(new String[] { "§8§l> §fCliquez ici pour avoir un."}).setClickAction(ClickEvent.Action.RUN_COMMAND, "/mumble create").build())
-                                            .sendMessage(new Player[] { player });
+                            .sendMessage(new Player[] { player });
                     player.sendMessage("");
-        } else {
-                        BaseComponent[] components = TextComponent.fromLegacyText("  §8• §fRejoignez le mumble avec §c/mumble");
-                        for (BaseComponent component : components)
-                            component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/mumble"));
-                        player.spigot().sendMessage(components);
-                        player.sendMessage("");
-                    }
-                    player.sendMessage("  §8• §fPour toutes questions appelez un §9§lModérateur§f.");
-                            player.sendMessage("");
-                    (new InteractiveMessage())
-                            .add(" §f[§6NOUVEAU§f] §8 > §eGestion des ")
-                            .add((new TextComponentBuilder("§e§l§nbans/kick"))
-                                    .setHoverMessage(new String[] { "§8§l> §f/h §8[§7kick§8/§7ban§8/§7unban§8/§7banlist§8]"}).setClickAction(ClickEvent.Action.SUGGEST_COMMAND, "/h add").build())
-                                            .add(" §e!")
-                                            .sendMessage(new Player[] { player });
-                    if (!this.api.getGameManager().getVanishList().contains(uuid))
-                        Bukkit.getOnlinePlayers().forEach(players -> Title.sendActionBar(players, "§a"+ player.getName() + " §fa rejoint la partie §8(§e"+ GameUtils.getPlayerAmount() + "§8/§e"+ this.api.getGameManager().getGameConfig().getGameSlot() + "§8)"));
-                    GameUtils.startPlayer(player, GameMode.ADVENTURE);
-                    PlayerUtils.giveDefaultItems(player);
+                } else {
+                    BaseComponent[] components = TextComponent.fromLegacyText("  §8• §fRejoignez le mumble avec §c/mumble");
+                    for (BaseComponent component : components)
+                        component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/mumble"));
+                    player.spigot().sendMessage(components);
+                    player.sendMessage("");
+                }
+                player.sendMessage("  §8• §fPour toutes questions appelez un §9§lModérateur§f.");
+                player.sendMessage("");
+                (new InteractiveMessage())
+                        .add(" §f[§6NOUVEAU§f] §8 > §eGestion des ")
+                        .add((new TextComponentBuilder("§e§l§nbans/kick"))
+                                .setHoverMessage(new String[] { "§8§l> §f/h §8[§7kick§8/§7ban§8/§7unban§8/§7banlist§8]"}).setClickAction(ClickEvent.Action.SUGGEST_COMMAND, "/h add").build())
+                        .add(" §e!")
+                        .sendMessage(new Player[] { player });
+                if (!this.api.getGameManager().getVanishList().contains(uuid))
+                    Bukkit.getOnlinePlayers().forEach(players -> Title.sendActionBar(players, "§a"+ player.getName() + " §fa rejoint la partie §8(§e"+ GameUtils.getPlayerAmount() + "§8/§e"+ this.api.getGameManager().getGameConfig().getGameSlot() + "§8)"));
+                GameUtils.startPlayer(player, GameMode.ADVENTURE);
+                PlayerUtils.giveDefaultItems(player);
+                break;
+            case PLAYING:
+                if (this.api.getGameManager().getInGamePlayers().contains(uuid)) {
+                    this.api.getGameManager().getApi().getModules().onPlayerReconnect(player);
+                    event.setJoinMessage("§f[§a§l?§f] §a"+ player.getName() + " §fs'est reconnecté");
+                    this.api.getGameManager().getOfflinePlayers().remove(uuid);
+                    TabHandler.removePrefixFor(player);
                     break;
-                    case PLAYING:
-                        if (this.api.getGameManager().getInGamePlayers().contains(uuid)) {
-                            this.api.getGameManager().getApi().getModules().onPlayerReconnect(player);
-                            event.setJoinMessage("§f[§a§l?§f] §a"+ player.getName() + " §fs'est reconnecté");
-                            this.api.getGameManager().getOfflinePlayers().remove(uuid);
-                            TabHandler.removePrefixFor(player);
-                            break;
-                        }
-                        event.setJoinMessage(null);
-                        player.sendMessage("§f[§fSpectateurs§f] §fLa partie a déjà commencée, vous êtes spectateur.");
-                        GameUtils.startPlayer(player, GameMode.SPECTATOR);
-                        random = new Random();
-                        list = new ArrayList<>(Bukkit.getOnlinePlayers());
-                        randomPlayer = list.get(random.nextInt(list.size()));
-                        if (randomPlayer == null) {
-                            player.teleport(this.api.getGameManager().getApi().getLobbyPopulator().getCenter());
-                            break;
-                        }
-                        player.teleport((Entity)randomPlayer);
-                        break;
-                    case FINISH:
-                    case TELEPORTATION:
-                        event.setJoinMessage(null);
-                        break;
-    }
-                    if (this.api.getGameManager().getVanishList().contains(uuid))
-                        for (Player p : Bukkit.getOnlinePlayers()) {
-                            if (!this.api.getGameManager().getVanishList().contains(p.getUniqueId()))
-                                p.hidePlayer(player);
-                        }
                 }
-
-                @EventHandler
-                private void PlayerQuitEvent(PlayerQuitEvent event) {
-                Player player = event.getPlayer();
-                final UUID uuid = player.getUniqueId();
-                if (this.api.getGameManager().getBanList().contains(player.getName().toLowerCase())) {
-                    event.setQuitMessage("");
-                    return;
+                event.setJoinMessage(null);
+                player.sendMessage("§f[§fSpectateurs§f] §fLa partie a déjà commencée, vous êtes spectateur.");
+                GameUtils.startPlayer(player, GameMode.SPECTATOR);
+                random = new Random();
+                list = new ArrayList<>(Bukkit.getOnlinePlayers());
+                randomPlayer = list.get(random.nextInt(list.size()));
+                if (randomPlayer == null) {
+                    player.teleport(this.api.getGameManager().getApi().getLobbyPopulator().getCenter());
+                    break;
                 }
-                switch (this.api.getGameManager().getGameState()) {
-                    case WAITING:
-                    case STARTING:
-                        event.setQuitMessage("");
-                        if (!this.api.getGameManager().getVanishList().contains(uuid))
-                            Bukkit.getOnlinePlayers().forEach(players -> Title.sendActionBar(players, ""+ player.getName() + " quittla partie "+ (GameUtils.getPlayerAmount() - 1) + "+ this.api.getGameManager().getGameConfig().getGameSlot() + "));
-                        break;
-                    case PLAYING:
-                        if (this.api.getGameManager().getInGamePlayers().contains(uuid)) {
-                            GamePlayer.getPlayer(uuid).setLastLocation(player.getLocation());
-                            this.api.getGameManager().getApi().getModules().onPlayerDisconnect(player);
-                            event.setQuitMessage("§f[§a§l?§f] §a"+ player.getName() + " §fs'est déconnecté, il dispose de §b"+ this.api
-                                    .getGameManager().getGameConfig().getDisconnectMinute() + " minute(s) se reconnecter ou alors il sera éliminé." );
-                            this.api.getGameManager().getOfflinePlayers().add(uuid);
-                            TabHandler.removePrefixFor(player);
-                            (new BukkitRunnable() {
-                                int time = 0;
-
-                                public void run() {
-                                    this.time++;
-                                    if (!PlayerJoinListener.this.api.getGameManager().getOfflinePlayers().contains(uuid)) {
-                                        cancel();
-                                        return;
-                                    }
-                                    if (this.time >= PlayerJoinListener.this.api.getGameManager().getGameConfig().getDisconnectMinute()) {
-                                        PlayerJoinListener.this.api.getGameManager().getApi().getModules().onPlayerDieByDisconnect(uuid);
-                                        cancel();
-                                    }
-                                }
-                            }).runTaskTimer((Plugin)API.getAPI(), 1200L, 1200L);
-                            break;
-                        }
-                        event.setQuitMessage("");
-                        break;
-                    case FINISH:
-                    case TELEPORTATION:
-                        event.setQuitMessage("");
-                        break;
-                }
-            }
+                player.teleport((Entity)randomPlayer);
+                break;
+            case FINISH:
+            case TELEPORTATION:
+                event.setJoinMessage(null);
+                break;
         }
+        if (this.api.getGameManager().getVanishList().contains(uuid))
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                if (!this.api.getGameManager().getVanishList().contains(p.getUniqueId()))
+                    p.hidePlayer(player);
+            }
+    }
+
+    @EventHandler
+    private void PlayerQuitEvent(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+        final UUID uuid = player.getUniqueId();
+        if (this.api.getGameManager().getBanList().contains(player.getName().toLowerCase())) {
+            event.setQuitMessage("");
+            return;
+        }
+        switch (this.api.getGameManager().getGameState()) {
+            case WAITING:
+            case STARTING:
+                event.setQuitMessage("");
+                if (!this.api.getGameManager().getVanishList().contains(uuid))
+                    Bukkit.getOnlinePlayers().forEach(players -> Title.sendActionBar(players, ""+ player.getName() + " quittla partie "+ (GameUtils.getPlayerAmount() - 1) + "+ this.api.getGameManager().getGameConfig().getGameSlot() + "));
+                break;
+            case PLAYING:
+                if (this.api.getGameManager().getInGamePlayers().contains(uuid)) {
+                    GamePlayer.getPlayer(uuid).setLastLocation(player.getLocation());
+                    this.api.getGameManager().getApi().getModules().onPlayerDisconnect(player);
+                    event.setQuitMessage("§f[§a§l?§f] §a"+ player.getName() + " §fs'est déconnecté, il dispose de §b"+ this.api
+                            .getGameManager().getGameConfig().getDisconnectMinute() + " minute(s) se reconnecter ou alors il sera éliminé." );
+                    this.api.getGameManager().getOfflinePlayers().add(uuid);
+                    TabHandler.removePrefixFor(player);
+                    (new BukkitRunnable() {
+                        int time = 0;
+
+                        public void run() {
+                            this.time++;
+                            if (!PlayerJoinListener.this.api.getGameManager().getOfflinePlayers().contains(uuid)) {
+                                cancel();
+                                return;
+                            }
+                            if (this.time >= PlayerJoinListener.this.api.getGameManager().getGameConfig().getDisconnectMinute()) {
+                                PlayerJoinListener.this.api.getGameManager().getApi().getModules().onPlayerDieByDisconnect(uuid);
+                                cancel();
+                            }
+                        }
+                    }).runTaskTimer((Plugin)API.getAPI(), 1200L, 1200L);
+                    break;
+                }
+                event.setQuitMessage("");
+                break;
+            case FINISH:
+            case TELEPORTATION:
+                event.setQuitMessage("");
+                break;
+        }
+    }
+}

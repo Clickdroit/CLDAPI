@@ -30,11 +30,13 @@ public class SlotsGUI implements CustomInventory {
 
     public Supplier<ItemStack[]> getContents(Player player) {
         ItemStack[] slots = new ItemStack[getSlots()];
-        slots[0] = (new ItemCreator(Material.BANNER)).setName("§c-5").setDurability(Integer.valueOf(14)).getItem();
-        slots[1] = (new ItemCreator(Material.BANNER)).setName("§c-1").setDurability(Integer.valueOf(11)).getItem();
+        slots[1] = (new ItemCreator(Material.BANNER)).setName("§c-10").setDurability(Integer.valueOf(16)).getItem();
+        slots[2] = (new ItemCreator(Material.BANNER)).setName("§c-5").setDurability(Integer.valueOf(14)).getItem();
+        slots[3] = (new ItemCreator(Material.BANNER)).setName("§c-1").setDurability(Integer.valueOf(11)).getItem();
         slots[4] = OpenVar.SLOTS.getItem();
-        slots[7] = (new ItemCreator(Material.BANNER)).setName("§a+1").setDurability(Integer.valueOf(12)).getItem();
-        slots[8] = (new ItemCreator(Material.BANNER)).setName("§a+5").setDurability(Integer.valueOf(10)).getItem();
+        slots[5] = (new ItemCreator(Material.BANNER)).setName("§a+1").setDurability(Integer.valueOf(12)).getItem();
+        slots[6] = (new ItemCreator(Material.BANNER)).setName("§a+5").setDurability(Integer.valueOf(10)).getItem();
+        slots[7] = (new ItemCreator(Material.BANNER)).setName("§a+10").setDurability(Integer.valueOf(15)).getItem();
         slots[13] = (new ItemCreator(Material.ARROW)).setName("§fRevenir en arriere").getItem();
         return () -> slots;
     }
@@ -50,6 +52,10 @@ public class SlotsGUI implements CustomInventory {
                     this.gameConfig.setGameSlot(this.gameConfig.getGameSlot() + 1);
                 } else if (clickedItem.getDurability() == 10) {
                     this.gameConfig.setGameSlot(this.gameConfig.getGameSlot() + 5);
+                } else if (clickedItem.getDurability() == 15) {
+                    this.gameConfig.setGameSlot(this.gameConfig.getGameSlot() + 10);
+                } else if (clickedItem.getDurability() == 16) {
+                    this.gameConfig.setGameSlot(this.gameConfig.getGameSlot() - 10);
                 }
                 if (this.gameConfig.getGameSlot() > 1000) {
                     this.gameConfig.setGameSlot(1000);

@@ -9,6 +9,8 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
+import java.lang.reflect.Field;
+
 public enum OpenVar {
     SLOTS("gameSlot", Material.SKULL_ITEM, 3, "§8| §fSlots",
             new String[] { "", "  §8| §fVous permet de §cmodifier", "  §8| §fle nombre de §cjoueurs§f autorisés", "  §8| §fà se §aconnecter§f à la §cpartie§f.", "" },
@@ -72,7 +74,10 @@ public enum OpenVar {
                 .addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
         try {
-            int amount = GameConfig.class.getField(this.var).getInt(API.getAPI().getGameManager().getGameConfig());
+            // Correction : utiliser getDeclaredField au lieu de getField
+            Field field = GameConfig.class.getDeclaredField(this.var);
+            field.setAccessible(true);
+            int amount = field.getInt(API.getAPI().getGameManager().getGameConfig());
 
             itemCreator.addLore(" §8> §fAccès §f: §6§lHost");
             itemCreator.addLore(" §8> §fConfiguration: §c" + (this.toDigital ? Chrono.timeToDigitalString(amount) : String.valueOf(amount)));
@@ -81,7 +86,6 @@ public enum OpenVar {
             itemCreator.addLore("");
 
             if (this.stack && amount > 0) {
-                // Correction : utiliser Math.min et Math.max au lieu de casts incorrects
                 int stackAmount = Math.min(Math.max(amount, 1), 64);
                 itemCreator.setAmount(stackAmount);
             }

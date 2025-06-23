@@ -49,7 +49,7 @@ public class PlayerUtils {
                 API.getAPI().getGameManager().getGameHost().equals(player.getUniqueId()) ||
                         API.getAPI().getGameManager().getHosts().contains(player.getUniqueId())))
             player.getInventory().setItem(4, (new ItemCreator(Material.REDSTONE_COMPARATOR))
-                    .setName("§b§lConfigurer la partie §8§l• §f§lClic-droit")
+                    .setName("§b§lConfigurer la partie §8§l• §f§lClique-droit")
                     .addEnchantment(Enchantment.DURABILITY, Integer.valueOf(1))
                     .addItemFlags(ItemFlag.HIDE_ENCHANTS).getItem());
     }
