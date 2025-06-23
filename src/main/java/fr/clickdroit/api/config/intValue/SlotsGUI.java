@@ -1,9 +1,11 @@
 package fr.clickdroit.api.config.intValue;
 
+import fr.clickdroit.api.API;
 import fr.clickdroit.api.config.ConfigMainGUI;
 import fr.clickdroit.api.config.GameConfig;
-import fr.clickdroit.api.config.value.OpenVar;
+import fr.clickdroit.api.config.value.CommonItems;
 import fr.clickdroit.api.game.GameManager;
+import fr.clickdroit.api.utils.CommonString;
 import fr.clickdroit.api.utils.CustomInventory;
 import fr.clickdroit.api.utils.ItemCreator;
 import java.util.function.Supplier;
@@ -28,14 +30,21 @@ public class SlotsGUI implements CustomInventory {
         this.gameConfig = gameManager.getGameConfig();
     }
 
+    @Override
     public String getName() {
-        return "Slots";
+        return "Configuration des slots";
     }
 
-    public Supplier<ItemStack[]> getContents(Player player) {
-        ItemStack[] slots = new ItemStack[getSlots()];
+    @Override
+    public int getSlots() {
+        return 27;
+    }
 
-        // Remplir avec du verre gris pour faire le fond
+    @Override
+    public Supplier<ItemStack[]> getContents(Player player) {
+        ItemStack[] slots = new ItemStack[27];
+
+        // Remplir d'abord avec du verre gris pour la bordure
         fillWithGlass(slots);
 
         // Ligne du haut - Têtes pour diminuer (-10, -5, -1)
@@ -43,8 +52,19 @@ public class SlotsGUI implements CustomInventory {
         slots[11] = createRedMinusHead("-5", "§7Diminuer de 5 slots");
         slots[12] = createRedMinusHead("-1", "§7Diminuer de 1 slot");
 
-        // Item central (configuration des slots)
-        slots[13] = OpenVar.SLOTS.getItem();
+        // Item central - BOUSSOLE (au lieu d'une tête)
+        slots[13] = new ItemCreator(Material.COMPASS)
+                .setName("§8| §fSlots")
+                .addLore("")
+                .addLore("  §8| §fVous permet de §cmodifier")
+                .addLore("  §8| §fle nombre de §cjoueurs§f autorisés")
+                .addLore("  §8| §fà se §aconnecter§f à la §cpartie§f.")
+                .addLore("")
+                .addLore(" §8> §fConfiguration: §c" + this.gameConfig.getGameSlot() + " slot(s)")
+                .addLore("")
+                .addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage())
+                .addLore("")
+                .getItem();
 
         // Ligne du haut - Têtes pour augmenter (+1, +5, +10)
         slots[14] = createGreenPlusHead("+1", "§7Augmenter de 1 slot");
@@ -58,7 +78,7 @@ public class SlotsGUI implements CustomInventory {
     }
 
     /**
-     * Remplit les slots vides avec du verre coloré
+     * Remplit les slots vides avec du verre coloré pour la bordure
      */
     private void fillWithGlass(ItemStack[] slots) {
         ItemStack glassPane = new ItemCreator(Material.STAINED_GLASS_PANE)
@@ -124,8 +144,9 @@ public class SlotsGUI implements CustomInventory {
                 .getItem();
     }
 
+    @Override
     public void onClick(Player player, Inventory inventory, ItemStack clickedItem, int slot, ClickType clickType) {
-        // Gérer les clics sur les têtes personnalisées
+        // Gestion des têtes personnalisées
         if (clickedItem.getType() == Material.SKULL_ITEM) {
             String itemName = clickedItem.getItemMeta().getDisplayName();
 
@@ -135,7 +156,7 @@ public class SlotsGUI implements CustomInventory {
             } else if (itemName.contains("§c§l-5")) {
                 this.gameConfig.setGameSlot(this.gameConfig.getGameSlot() - 5);
             } else if (itemName.contains("§c§l-10")) {
-                this.gameConfig.setGameSlot(this.gameConfig.getGameSlot() - 010);
+                this.gameConfig.setGameSlot(this.gameConfig.getGameSlot() - 10);
             }
             // Gestion des têtes d'augmentation (vertes)
             else if (itemName.contains("§a§l+1")) {
@@ -143,7 +164,7 @@ public class SlotsGUI implements CustomInventory {
             } else if (itemName.contains("§a§l+5")) {
                 this.gameConfig.setGameSlot(this.gameConfig.getGameSlot() + 5);
             } else if (itemName.contains("§a§l+10")) {
-                this.gameConfig.setGameSlot(this.gameConfig.getGameSlot() + 010);
+                this.gameConfig.setGameSlot(this.gameConfig.getGameSlot() + 10);
             }
             // Gestion du retour
             else if (itemName.contains("§fRevenir en arrière")) {
@@ -169,19 +190,9 @@ public class SlotsGUI implements CustomInventory {
             // Actualiser l'inventaire
             this.gameManager.getApi().openInventory(player, getClass());
         }
-
-        if (this.gameConfig.getGameSlot() > 1000) {
-            this.gameConfig.setGameSlot(1000);
-            player.playSound(player.getLocation(), Sound.VILLAGER_NO, 10.0F, 1.0F);
-        }
-        if (this.gameConfig.getGameSlot() < 1) {
-            this.gameConfig.setGameSlot(1);
-            player.playSound(player.getLocation(), Sound.VILLAGER_NO, 10.0F, 1.0F);
-        }
-        this.gameManager.getApi().openInventory(player, getClass());
     }
 
-    // Gestion de la flèche normale (ancien système)
+    @Override
     public int getRows() {
         return 3; // 27 slots (3 rangées de 9)
     }

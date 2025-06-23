@@ -102,6 +102,13 @@ public class ConfigMainGUI implements CustomInventory {
                 }
             return;
         }
+
+        if (slot == 10 && clickedItem.getType() == Material.COMPASS) {
+            // Clic sur l'item Slots (boussole au slot 10)
+            this.api.openInventory(player, SlotsGUI.class);
+            return;
+        }
+
         switch (clickedItem.getType()) {
             case SAPLING:
                 player.closeInventory();
@@ -164,7 +171,6 @@ public class ConfigMainGUI implements CustomInventory {
                 player.sendMessage("§fVous devez §cpré-charger§f la map avant d'ouvrir la §cpartie§f.");
                 player.closeInventory();
                 break;
-
         }
     }
 
