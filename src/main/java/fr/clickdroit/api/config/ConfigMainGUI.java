@@ -4,6 +4,7 @@ package fr.clickdroit.api.config;
 import fr.clickdroit.api.API;
 import fr.clickdroit.api.GamePlayer;
 import fr.clickdroit.api.config.borderValue.BorderManagerGUI;
+import fr.clickdroit.api.config.common.GameAccess;
 import fr.clickdroit.api.config.intValue.SlotsGUI;
 import fr.clickdroit.api.config.teamvalue.TeamManagerGUI;
 import fr.clickdroit.api.config.value.OpenVar;
@@ -70,7 +71,33 @@ public class ConfigMainGUI implements CustomInventory {
             slots[31] = (new ItemCreator(Material.PRISMARINE_SHARD)).setName("§8| §fMode de §cjeu").addLore("").addLore(" §8> §fAccès §f: §6§lHost").addLore(" §8> §fMode §f: §6§l"+ this.gameManager.getModuleManager().getCurrentModule().getName()).addLore("").addLore("  §8| §fPermet de modifier les options").addLore("  §8| §cliées§f au mode de jeu §aactif§f" ).addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
         slots[37] = (new ItemCreator(Material.STAINED_GLASS)).setDurability(Integer.valueOf(9)).setName("§8| §fGestion de la §cbordure").addLore("").addLore(" §8> §fAccès §f: §6§lHost").addLore("").addLore("  §8| §fPermet de modifier la §ataille").addLore("  §8| §fet la §bvitesse de la §cbordure§f.").addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
         slots[43] = (new ItemCreator(Material.BOOK)).setName("§8| §fGestion des §cscénarios").addLore("").addLore(" §8> §fAccès §f: §6§lHost").addLore("").addLore("  §8| §fPermet d'§aajouter§f des scénarios").addLore("  §8| §fquidynamiseront la §cpartie§f." ).addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
-        slots[47] = (new ItemCreator(Material.WATCH)).setName("§8| §fAccessibilité de la §cpartie").addLore("").addLore(" §8> §fAccès §f: §6§lHost").addLore(" §8> §fStatut §f: " + this.gameConfig.getGameAccess().getMessage()).addLore("").addLore("  §8| §fPermet de §cmodifier§f l'accessibilité").addLore("  §8| §fà la partie pour les §cjoueurs§f.").addLore("").addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage()).addLore("").getItem();
+        GameAccess currentAccess = this.gameConfig.getGameAccess();
+        ItemCreator accessItem = new ItemCreator(Material.WATCH)
+                .setName("§8| §fAccessibilité de la §cpartie")
+                .addLore("")
+                .addLore(" §8> §fAccès §f: §6§lHost")
+                .addLore(" §8> §fStatut §f: " + currentAccess.getMessage())
+                .addLore("");
+
+        if (currentAccess == GameAccess.OPEN) {
+            accessItem.addLore("  §8| §fLa partie est §aouverte§f à tous")
+                    .addLore("  §8| §fles joueurs. Ils peuvent rejoindre")
+                    .addLore("  §8| §flibrementle serveur.")
+                    .addLore("")
+                    .addLore("  §8| §e§lClic §8» §cFermer la partie");
+        } else {
+            accessItem.addLore("  §8| §fLa partie est §cfermée§f. Seuls")
+                    .addLore("  §8| §fles §6administrateurs§f, §6hosts§f et")
+                    .addLore("  §8| §fjoueurs §awhitelistés§f peuvent rejoindre.")
+                    .addLore("")
+                    .addLore("  §8| §e§lClic §8» §aOuvrir la partie");
+        }
+
+        accessItem.addLore("")
+                .addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage())
+                .addLore("");
+
+        slots[47] = accessItem.getItem();
 
         if (this.gameManager.getModuleManager().getCurrentModule().equals(ModuleType.DEMONSLAYER)) {
             slots[51] = (new ItemCreator(Material.PAPER)).setName("§8| §fPré-Config §f(§c§lDEMONSLAYER§f)").addLore("").addLore(" ").addLore("").addLore("  d'acc").addLore(" " ).addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
@@ -116,10 +143,22 @@ public class ConfigMainGUI implements CustomInventory {
                     this.gameManager.setPreload(true);
                     BiomeChanger.addSapling();
                     player.sendMessage("§fVous venez de §alancer §fla prégénération de la map.");
+
+                    Bukkit.getScheduler().runTaskLater(this.api, () -> {
+                        if (this.gameManager.isPreloadFinished()) {
+                            player.sendMessage("§aLa prégénération de la map est terminée !");
+                        }
+                    }, 20L * 5);
+
                     break;
                 }
-                player.sendMessage("§fLe serveur est §cchargé§f ou est §centrain§f..." );
+                if (this.gameManager.isPreloadFinished()) {
+                    player.sendMessage("§aLa map est déjà pré-chargée !");
+                } else {
+                    player.sendMessage("§fLe serveur est §cchargé§f ou est §centrain§f de pré-charger...");
+                }
                 break;
+
             case RED_ROSE:
                 if (GamePlayer.getPlayer(player.getUniqueId()).isOp()) {
                     this.api.openInventory(player, AdminPanelGUI.class);
@@ -167,11 +206,36 @@ public class ConfigMainGUI implements CustomInventory {
                 break;
             case BOOK:
                 this.api.getCommon().getScenariosGUI().openInventory(player, 1);
+                break;
             case WATCH:
-                player.sendMessage("§fVous devez §cpré-charger§f la map avant d'ouvrir la §cpartie§f.");
-                player.closeInventory();
+                GameAccess currentAccess = this.gameConfig.getGameAccess();
+                String playerCount = String.valueOf(Bukkit.getOnlinePlayers().size());
+
+                if (currentAccess == GameAccess.OPEN) {
+                    this.gameConfig.setGameAccess(GameAccess.CLOSE);
+                    player.sendMessage("");
+                    player.sendMessage("§c§l✗ Partie fermée !");
+                    player.sendMessage("§fSeuls les administrateurs, hosts et joueurs");
+                    player.sendMessage("§fwhitelistés peuvent maintenant rejoindre.");
+                    player.sendMessage("§f(" + playerCount + " joueurs actuellement connectés)");
+                    player.sendMessage("");
+                    player.playSound(player.getLocation(), Sound.ANVIL_LAND, 0.5F, 1.0F);
+                } else {
+                    this.gameConfig.setGameAccess(GameAccess.OPEN);
+                    player.sendMessage("");
+                    player.sendMessage("§a§l✓ Partie ouverte !");
+                    player.sendMessage("§fTous les joueurs peuvent maintenant rejoindre");
+                    player.sendMessage("§fle serveur librement.");
+                    player.sendMessage("§f(" + playerCount + " joueurs actuellement connectés)");
+                    player.sendMessage("");
+                    player.playSound(player.getLocation(), Sound.ORB_PICKUP, 1.0F, 1.0F);
+                }
+
+                // Rafraîchir l'inventaire pour montrer le nouveau statut
+                this.api.openInventory(player, getClass());
                 break;
         }
+
     }
 
     public int getRows() {

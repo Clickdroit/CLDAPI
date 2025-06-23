@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class GameManager {
@@ -81,7 +82,7 @@ public class GameManager {
 
     private boolean preload;
 
-    private final boolean preloadFinished;
+    private boolean preloadFinished;
 
     private int groupe;
 
@@ -263,10 +264,49 @@ public class GameManager {
         return this.preloadFinished;
     }
 
-    public void setPreloadFinished(boolean preloadFinished) {}
+    public void setPreloadFinished(boolean preloadFinished) {
+        this.preloadFinished = preloadFinished;
+
+        // Si la prégénération vient de se terminer
+        if (preloadFinished && !this.preload) {
+            // Log pour le serveur
+            getLogger().info("Map pregeneration completed successfully!");
+
+            // Notification aux administrateurs/hosts
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                if (hasHostAccess(player)) {
+                    player.sendMessage("");
+                    player.sendMessage("§a§l✓ PRÉGÉNÉRATION TERMINÉE");
+                    player.sendMessage("§fLa map est maintenant prête pour la partie !");
+                    player.sendMessage("§fVous pouvez configurer les scénarios et lancer la partie.");
+                    player.sendMessage("");
+                }
+            }
+
+            // Réinitialiser le flag de prégénération en cours
+            this.preload = false;
+        }
+    }
+    private Logger getLogger() {
+        return this.api.getLogger();
+    }
+
+    public boolean isPreloadRequired() {
+        return !isPreloadFinished();
+    }
 
     public boolean isPreload() {
         return this.preload;
+    }
+
+    public String getPreloadStatus() {
+        if (isPreloadFinished()) {
+            return "§aTerminée";
+        } else if (isPreload()) {
+            return "§eEn cours...";
+        } else {
+            return "§cNon démarrée";
+        }
     }
 
     public void setPreload(boolean preload) {

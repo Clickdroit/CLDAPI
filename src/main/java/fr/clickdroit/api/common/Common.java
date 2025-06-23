@@ -14,6 +14,7 @@ import fr.clickdroit.api.config.borderValue.BorderManagerGUI;
 import fr.clickdroit.api.config.borderValue.BorderSpeedGUI;
 import fr.clickdroit.api.config.borderValue.BorderStartSizeGUI;
 import fr.clickdroit.api.config.common.CycleManagerGUI;
+import fr.clickdroit.api.listener.GameAccessListener;
 import fr.clickdroit.api.config.common.DefaultDeathInvGUI;
 import fr.clickdroit.api.config.common.DefaultInvGUI;
 import fr.clickdroit.api.config.common.EnchantMaxGUI;
@@ -122,8 +123,9 @@ public class Common {
 
     private void registerListeners() {
         PluginManager pluginManager = this.main.getServer().getPluginManager();
+        pluginManager.registerEvents((Listener)new GameAccessListener(this.gameManager), this.main);
         pluginManager.registerEvents((Listener)new PlayerJoinListener(this.main), (Plugin)this.main);
-        pluginManager.registerEvents(new CommonListener(this), (Plugin)this.main);
+        pluginManager.registerEvents((Listener)new CommonListener(this), (Plugin)this.main);
         pluginManager.registerEvents((Listener)new GameListener(this.gameManager), (Plugin)this.main);
         pluginManager.registerEvents((Listener)new PlayerChatListener(this.gameManager), (Plugin)this.main);
         pluginManager.registerEvents((Listener)new PlayerInteractListener(this.gameManager), (Plugin)this.main);

@@ -237,7 +237,20 @@ public class GameConfig {
         return this.gameAccess;
     }
 
-    public void setGameAccess(GameAccess gameAccess) {}
+    public void setGameAccess(GameAccess gameAccess) {
+        this.gameAccess = gameAccess;
+        System.out.println("Game access changed to: " + gameAccess.getMessage());
+    }
+    public void toggleGameAccess() {
+        if (this.gameAccess == GameAccess.OPEN) {
+            setGameAccess(GameAccess.CLOSE);
+        } else {
+            setGameAccess(GameAccess.OPEN);
+        }
+    }
+    public boolean isGameOpen() {
+        return this.gameAccess == GameAccess.OPEN;
+    }
 
     public boolean isChat() {
         return this.chat;

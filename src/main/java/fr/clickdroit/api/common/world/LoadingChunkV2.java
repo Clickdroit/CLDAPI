@@ -3,10 +3,7 @@ package fr.clickdroit.api.common.world;
 import fr.clickdroit.api.API;
 import fr.clickdroit.api.utils.Title;
 import fr.clickdroit.api.utils.msg.ProgressBar;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
@@ -60,8 +57,28 @@ public class LoadingChunkV2 {
                         if (this.x >= LoadingChunkV2.this.size) {
                             LoadingChunkV2.this.task.cancel();
                             int calculedTime = Math.round((float)((System.currentTimeMillis() - LoadingChunkV2.this.startTime) / 1000L));
+
                             System.out.println("Finished preload after " + calculedTime + "s");
                             API.getAPI().getGameManager().setPreloadFinished(true);
+
+                            // Notification améliorée aux joueurs
+                            for (Player player : Bukkit.getOnlinePlayers()) {
+                                if (API.getAPI().getGameManager().hasHostAccess(player)) {
+                                    // Message dans le chat
+                                    player.sendMessage("§a✓ Prégénération terminée en " + calculedTime + "s !");
+                                    player.sendMessage("§fVous pouvez maintenant configurer la partie.");
+
+                                    // Action bar pour un feedback visuel immédiat
+                                    Title.sendActionBar(player, ChatColor.GREEN + "✓ Prégénération terminée !");
+
+                                    // Son de confirmation
+                                    player.playSound(player.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+                                } else {
+                                    // Message pour les joueurs non-host
+                                    Title.sendActionBar(player, ChatColor.GREEN + "✓ Map prête !");
+                                }
+                            }
+
                             return;
                         }
                         LoadingChunkV2.this.nChunk++;
