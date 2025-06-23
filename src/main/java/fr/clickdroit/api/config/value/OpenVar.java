@@ -4,7 +4,7 @@ import fr.clickdroit.api.API;
 import fr.clickdroit.api.config.GameConfig;
 import fr.clickdroit.api.utils.Chrono;
 import fr.clickdroit.api.utils.CommonString;
-import fr.clickdroit.api.utils.item.ItemCreator;
+import fr.clickdroit.api.utils.ItemCreator; // Utiliser cette version qui a setSkullURL
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import java.lang.reflect.Field;
 
 public enum OpenVar {
-    SLOTS("gameSlot", Material.SKULL_ITEM, 3, "§8| §fSlots",
+    SLOTS("gameSlot", "http://textures.minecraft.net/texture/3b2c7b4f8a0c6d6e6a2f2b1a1c1b1a1b1a1b1a1b1a1b1a1b1a1b1a1b1a1b1a1b", 3, "§8| §fSlots",
             new String[] { "", "  §8| §fVous permet de §cmodifier", "  §8| §fle nombre de §cjoueurs§f autorisés", "  §8| §fà se §aconnecter§f à la §cpartie§f.", "" },
             false, true),
 
@@ -28,7 +28,7 @@ public enum OpenVar {
             new String[] { "", "  §8| §fVous permet de §cmodifier", "  §8| §fle temps avant l'activation", "  §8| §fde la réduction de la", "  §8| §fbordure durant la partie.", "" },
             true, false),
 
-    CYCLE_DURATION("dayNightDuration", Material.WATCH, 0, "§8| §fDurée du cycle jour/nuit",
+    CYCLE_DURATION("dayNightDuration", "http://textures.minecraft.net/texture/b89042082bb7a7618b784ee7605a134c58834e21e374c888937161057f6c7", 0, "§8| §fDurée du cycle jour/nuit",
             new String[] { "", "  §8| §fVous permet de §cmodifier", "  §8| §fla durée du cycle", "  §8| §fjour/nuit de la §cpartie.", "  §8| §fLe temps du §bjour§f ou de la ", "  §8| §cnuit§f sera égal à la §cmoitié§f de", "  §8| §fla valeur choisie.", "" },
             false, true),
 
@@ -42,15 +42,30 @@ public enum OpenVar {
 
     private final String var;
     private final Material material;
+    private final String textureUrl; // Nouvelle propriété pour les URLs
     private final int data;
     private final String itemName;
     private final String[] itemDescription;
     private final boolean toDigital;
     private final boolean stack;
 
+    // Constructeur pour les items avec texture personnalisée (têtes)
+    OpenVar(String var, String textureUrl, int data, String itemName, String[] itemDescription, boolean toDigital, boolean stack) {
+        this.var = var;
+        this.material = Material.SKULL_ITEM; // Force le matériel à être une tête
+        this.textureUrl = textureUrl;
+        this.data = data;
+        this.itemName = itemName;
+        this.itemDescription = itemDescription;
+        this.toDigital = toDigital;
+        this.stack = stack;
+    }
+
+    // Constructeur pour les items normaux (sans texture)
     OpenVar(String var, Material material, int data, String itemName, String[] itemDescription, boolean toDigital, boolean stack) {
         this.var = var;
         this.material = material;
+        this.textureUrl = null; // Pas de texture personnalisée
         this.data = data;
         this.itemName = itemName;
         this.itemDescription = itemDescription;
@@ -66,73 +81,48 @@ public enum OpenVar {
         return this.data;
     }
 
+    public String getTextureUrl() {
+        return this.textureUrl;
+    }
+
+    public boolean hasCustomTexture() {
+        return this.textureUrl != null && !this.textureUrl.isEmpty();
+    }
+
     public ItemStack getItem() {
         ItemCreator itemCreator = new ItemCreator(this.material)
                 .setDurability(this.data)
                 .setName(this.itemName)
-                .setTableauLores(this.itemDescription)
                 .addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
+        // Ajouter les lores de description
+        for (String lore : this.itemDescription) {
+            itemCreator.addLore(lore);
+        }
+
+        // Si l'item a une texture personnalisée, l'appliquer
+        if (hasCustomTexture()) {
+            itemCreator.setSkullURL(this.textureUrl);
+        }
+
         try {
-            // Correction : utiliser getDeclaredField au lieu de getField
             Field field = GameConfig.class.getDeclaredField(this.var);
             field.setAccessible(true);
             int amount = field.getInt(API.getAPI().getGameManager().getGameConfig());
 
             itemCreator.addLore(" §8> §fAccès §f: §6§lHost");
-            itemCreator.addLore(" §8> §fConfiguration: §c" + (this.toDigital ? Chrono.timeToDigitalString(amount) : String.valueOf(amount)));
+            itemCreator.addLore(" §8> §fConfiguration: §c" + (this.toDigital ?
+                    Chrono.timeToDigitalString(amount) : String.valueOf(amount)));
             itemCreator.addLore("");
-            itemCreator.addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage());
-            itemCreator.addLore("");
+            itemCreator.addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage());
 
-            if (this.stack && amount > 0) {
-                int stackAmount = Math.min(Math.max(amount, 1), 64);
-                itemCreator.setAmount(stackAmount);
+            if (this.stack) {
+                itemCreator.setAmount(Math.max(1, Math.min(64, amount)));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return itemCreator.getItem();
-    }
-    public ItemStack getItemCycle() {
-        ItemCreator itemCreator = new ItemCreator(this.material)
-                .setDurability(this.data)
-                .setName(this.itemName)
-                .setTableauLores(this.itemDescription);
-
-        long value = API.getAPI().getGameManager().getGameConfig().getDayNightDuration();
-        int result = Chrono.getCycleDurationTime(value);
-
-        itemCreator.addLore(" §8> §fConfiguration: §c" + result + " minute" + (result > 1 ? "s" : ""));
-        itemCreator.addLore("");
-        itemCreator.addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage());
-        itemCreator.addLore("");
-
-        if (this.stack && result > 0) {
-            int stackAmount = Math.min(Math.max(result, 1), 64);
-            itemCreator.setAmount(stackAmount);
-        }
-        return itemCreator.getItem();
-    }
-
-    public String getVar() {
-        return var;
-    }
-
-    public String getItemName() {
-        return itemName;
-    }
-
-    public String[] getItemDescription() {
-        return itemDescription;
-    }
-
-    public boolean isToDigital() {
-        return toDigital;
-    }
-
-    public boolean isStack() {
-        return stack;
     }
 }
-

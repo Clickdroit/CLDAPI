@@ -98,7 +98,7 @@ public class ConfigOptionsGUI implements CustomInventory {
                 .addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage())
                 .addLore("")
                 .getItem();
-        slots[28] = OpenVar.CYCLE_DURATION.getItemCycle();
+        slots[28] = OpenVar.CYCLE_DURATION.getItem();
         slots[29] = (new ItemCreator(Material.POTION)).setName("§8| §fLimite de §9potions")
                 .addLore("")
                 .addLore("  §8| §fVous permet de limiter la")

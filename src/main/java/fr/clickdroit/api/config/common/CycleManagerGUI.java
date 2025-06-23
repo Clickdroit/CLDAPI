@@ -34,7 +34,7 @@ public class CycleManagerGUI implements CustomInventory {
         slots[0] = (new ItemCreator(Material.BANNER)).setName("§c-5").setDurability(Integer.valueOf(1)).getItem();
         slots[1] = (new ItemCreator(Material.BANNER)).setName("§c-2").setDurability(Integer.valueOf(14)).getItem();
         slots[2] = (new ItemCreator(Material.BANNER)).setName("§c-1").setDurability(Integer.valueOf(11)).getItem();
-        slots[4] = OpenVar.CYCLE_DURATION.getItemCycle();
+        slots[4] = OpenVar.CYCLE_DURATION.getItem();
         slots[6] = (new ItemCreator(Material.BANNER)).setName("§a+1").setDurability(Integer.valueOf(12)).getItem();
         slots[7] = (new ItemCreator(Material.BANNER)).setName("§a+2").setDurability(Integer.valueOf(10)).getItem();
         slots[8] = (new ItemCreator(Material.BANNER)).setName("§a+5").setDurability(Integer.valueOf(2)).getItem();
