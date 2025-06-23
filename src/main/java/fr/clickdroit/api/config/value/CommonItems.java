@@ -5,8 +5,8 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 public enum CommonItems {
-    GUI_BACK_ITEM("en ", Material.ARROW, 0),
-            GUI_CLOSE_ITEM("l'inventaire", Material.ARROW, 0);
+    GUI_BACK_ITEM("§8| §fRevenir en §carrière", Material.ARROW, 0),
+    GUI_CLOSE_ITEM("§8| §fFermer l'inventaire", Material.ARROW, 0);
 
     private final String name;
 

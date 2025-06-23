@@ -11,14 +11,7 @@ import fr.clickdroit.api.config.scenario.Scenario;
 import fr.clickdroit.api.game.team.Teams;
 import fr.clickdroit.api.utils.ItemCreator;
 import fr.clickdroit.api.utils.Title;
-import java.util.Map;
-import java.util.Random;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -28,20 +21,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityRegainHealthEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
-import org.bukkit.event.player.PlayerBucketEmptyEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkit.event.player.PlayerPortalEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.weather.ThunderChangeEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.inventory.ItemStack;
@@ -49,6 +32,9 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.Map;
+import java.util.Random;
 
 public class GameListener implements Listener {
     private final GameManager gameManager;
@@ -229,7 +215,7 @@ public class GameListener implements Listener {
     private void onPlayerPortalEvent(PlayerPortalEvent event) {
         if (!this.gameManager.getGameConfig().isNether()) {
             event.setCancelled(true);
-            event.getPlayer().sendMessage("Nether est d");
+            event.getPlayer().sendMessage("§cLe Nether est désactivé.");
         }
     }
 
@@ -359,7 +345,7 @@ public class GameListener implements Listener {
                         foundDiamond(player, block);
                         if (this.gameConfig.getDiamondMax() > 0 && gamePlayer.getDiamonds() >= this.gameConfig.getDiamondMax()) {
                             event.setCancelled(true);
-                            Title.sendActionBar(player, "de diamants: + gamePlayer.getDiamonds() + "+ API.getAPI().getGameManager().getGameConfig().getDiamondMax() + " par de l'");
+                            Title.sendActionBar(player, "§f[§b*§f] §bLimitede diamants: §c"+ gamePlayer.getDiamonds() +"§f/§f "+ API.getAPI().getGameManager().getGameConfig().getDiamondMax() + " §c(Remplacé par de l'§eor§c)");
                                     event.getBlock().setType(Material.AIR);
                             dropItemAndExp(player, location, cutclean ? 5 : event.getExpToDrop(), new ItemStack[] { (new ItemCreator(cutclean ? Material.GOLD_INGOT : Material.GOLD_ORE)).setAmount(Integer.valueOf(oremultiplicator ? oreMultiplicatorValue : 1)).getItem() });
                             return;
@@ -382,7 +368,7 @@ public class GameListener implements Listener {
                     case GOLD_ORE:
                         if (this.gameConfig.getGoldMax() > 0 && gamePlayer.getGolds() >= this.gameConfig.getGoldMax()) {
                             event.setCancelled(true);
-                            player.sendMessage("avez atteint la limite d'ors minable.");
+                            player.sendMessage("§cVous avez atteint la limite d'ors minable.");
                             return;
                         }
                         gamePlayer.addGolds();
@@ -455,7 +441,7 @@ public class GameListener implements Listener {
             }
             for (Player players : Bukkit.getOnlinePlayers()) {
                 if (GamePlayer.getPlayer(players.getUniqueId()).isAlerts())
-                    players.sendMessage(""+ player.getName() + " trouv" + diamonds + " diamant" + ((diamonds > 1) ? "s" : "") + ".");
+                    players.sendMessage("§f[FD] §b"+ player.getName() + "§ba trouvé" + diamonds + " diamant" + ((diamonds > 1) ? "s" : "") + ".");
             }
         }
     }
@@ -534,7 +520,7 @@ public class GameListener implements Listener {
     @EventHandler
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
         if (event.getBucket().equals(Material.LAVA_BUCKET) && !Rules.pvp.isActive()) {
-            event.getPlayer().sendMessage("PvP est dl'utilisation de sources de lave est interdite.");
+            event.getPlayer().sendMessage("§cLe PvP est désactivé, l'utilisation de sources de lave est interdite.");
             event.getPlayer().getWorld().getBlockAt(event.getBlockClicked().getLocation().add(event.getBlockFace().getModX(), event.getBlockFace().getModY(), event.getBlockFace().getModZ())).setType(Material.AIR);
             event.getPlayer().getInventory().getItemInHand().setType(Material.LAVA_BUCKET);
             event.setCancelled(true);
@@ -544,7 +530,7 @@ public class GameListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onSignChange(SignChangeEvent event) {
         for (int i = 0; i < 4; i++) {
-            if (event.getLine(i).matches("^[a-zA-Z0-9&]*$") && event.getLine(i).length() > 20)
+            if (event.getLine(i).matches("^[a-zA-Z0-9ÀÁÂÄÇÈÉÊËÎÍÎÏÒÓÕÖÛÛÛÛàáàäçèéëäîïôöûü &]*$") && event.getLine(i).length() > 20)
                 event.setCancelled(true);
         }
     }
@@ -571,7 +557,7 @@ public class GameListener implements Listener {
                 case "/w":
                 case "/whisper":
                     event.setCancelled(true);
-                    event.getPlayer().sendMessage("messages privsont d");
+                    event.getPlayer().sendMessage("§cLes messages privés sont désactivés.");
                     break;
             }
     }

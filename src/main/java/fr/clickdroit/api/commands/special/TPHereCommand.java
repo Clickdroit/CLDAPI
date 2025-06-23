@@ -14,7 +14,7 @@ public class TPHereCommand implements CommandExecutor {
             Player player = (Player)commandSender;
             if (player.isOp()) {
                 if (arguments.length == 0) {
-                    player.sendMessage("de syntaxe: /tphere <joueur:@a>");
+                    player.sendMessage("§cErreur de syntaxe: /tphere <joueur:@a>");
                     return false;
                 }
                 String arg = arguments[0];
@@ -22,15 +22,15 @@ public class TPHereCommand implements CommandExecutor {
                 if (arg.equalsIgnoreCase("@a")) {
                     for (Player players : Bukkit.getOnlinePlayers())
                         players.teleport(location);
-                    player.sendMessage("les joueurs ont tvers vous.");
+                    player.sendMessage("§aTous les joueurs ont été téléportés vers vous.");
                 } else {
                     Player target = Bukkit.getPlayer(arg);
                     if (target == null) {
-                        player.sendMessage("joueur avec le pseudo '" + arg + "' n'a trouv");
+                        player.sendMessage("§cAucun joueur avec le pseudo '" + arg + "' n'a été trouvé...");
                         return false;
                     }
                     target.teleport(location);
-                    player.sendMessage(""+ target.getName() + " tvers vous.");
+                    player.sendMessage("§f"+ target.getName() + " §aa été téléporté tvers vous.");
                 }
             } else {
                 player.sendMessage(CommonString.NO_PERMISSION.getMessage());

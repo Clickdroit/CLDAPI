@@ -23,7 +23,7 @@ public class SimpleBorder extends AbstractBorder {
             this.finalSize = finalSize;
             this.blocksSecond = blocksSecond;
             play();
-            Bukkit.broadcastMessage("La bordure est en mouvement");
+            Bukkit.broadcastMessage("§f[§c§1!§f] §fLa bordure est §aen mouvement§f.");
                     World endWorld = Bukkit.getWorld("world_the_end");
             WorldBorder endWorldBorder = endWorld.getWorldBorder();
             endWorldBorder.setSize(1000000.0D);

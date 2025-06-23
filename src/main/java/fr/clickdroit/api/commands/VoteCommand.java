@@ -43,35 +43,35 @@ public class VoteCommand implements CommandExecutor {
                                 if (arguments[1].equalsIgnoreCase("yes")) {
                                     this.yes++;
                                     getVoted().put(player.getUniqueId(), Boolean.valueOf(true));
-                                    player.sendMessage("avez bien vot");
+                                    player.sendMessage("§aVous avez bien voté. §f(§f§lPio§f)");
                                 } else if (arguments[1].equalsIgnoreCase("no")) {
                                     this.no++;
                                     getVoted().put(player.getUniqueId(), Boolean.valueOf(true));
-                                    player.sendMessage("avez bien vot");
+                                    player.sendMessage("§aVous avez bien voté. §f(§f§lNon§f)");
                                 }
                             } else {
-                                player.sendMessage("avez dvot");
+                                player.sendMessage("§cVous avez déjà voté.");
                             }
                         } else {
-                            player.sendMessage("n'y a aucun vote en cours..");
+                            player.sendMessage("§cIl n'y a aucun vote en cours..");
                         }
                 } else if (this.gameManager.hasHostAccess(player)) {
                     if (!isVote()) {
                         StringBuilder stringBuilder = new StringBuilder();
                         for (String msg : arguments)
                             stringBuilder.append(msg + " ");
+                        Bukkit.broadcastMessage("§f§m-----------------------------------------------");
+                        Bukkit.broadcastMessage("§aUn vote a été proposé :");
+                        Bukkit.broadcastMessage("§f§l> §b"+ stringBuilder);
                         Bukkit.broadcastMessage("");
-                                Bukkit.broadcastMessage("vote a propos:");
-                        Bukkit.broadcastMessage(""+ stringBuilder);
-                                Bukkit.broadcastMessage("");
-                        Bukkit.broadcastMessage("cliquer ci-dessous pour y soumettre votre r:");
+                        Bukkit.broadcastMessage("§fVeuillez cliquer ci-dessous pour y soumettre votre réponse :");
                         for (Player players : Bukkit.getOnlinePlayers()) {
                             (new InteractiveMessage())
-                                    .add((new TextComponentBuilder("")).setHoverMessage(new String[] { "ici pour voter Oui." }).setClickAction(ClickEvent.Action.RUN_COMMAND, "/vote answer yes").build())
-                                            .add((new TextComponentBuilder("      "  )).setHoverMessage(new String[] { "ici pour voter Non." }).setClickAction(ClickEvent.Action.RUN_COMMAND, "/vote answer no").build()).sendMessage(new Player[] { players });
+                                    .add((new TextComponentBuilder("§a§lOUI")).setHoverMessage(new String[] { "§f§l> §aCliquez ici pour voter Oui." }).setClickAction(ClickEvent.Action.RUN_COMMAND, "/vote answer yes").build())
+                                    .add((new TextComponentBuilder("        §c§lNON")).setHoverMessage(new String[] { "§f§l> §cCliquez ici pour voter Non." }).setClickAction(ClickEvent.Action.RUN_COMMAND, "/vote answer no").build()).sendMessage(new Player[] { players });
                         }
-                        Bukkit.broadcastMessage("");
-                                setVote(true);
+                        Bukkit.broadcastMessage("§f§m-----------------------------------------------");
+                        setVote(true);
                         setYes(0);
                         setNo(0);
                         getVoted().clear();
@@ -81,14 +81,14 @@ public class VoteCommand implements CommandExecutor {
                         }
                         Bukkit.getScheduler().runTaskLater((Plugin)API.getAPI(), () -> {
                             setVote(false);
-                            Bukkit.broadcastMessage("");
-                                    Bukkit.broadcastMessage("du" );
-                                            Bukkit.broadcastMessage(" " + getYes());
-                            Bukkit.broadcastMessage(" " + getNo());
-                            Bukkit.broadcastMessage("");
+                            Bukkit.broadcastMessage("§6§l------------");
+                            Bukkit.broadcastMessage("§fRéponse du §lvote§f:" );
+                            Bukkit.broadcastMessage(" §f> §aOui§f: " + getYes());
+                            Bukkit.broadcastMessage(" §f> §cNon§f: " + getNo());
+                            Bukkit.broadcastMessage("§6§l------------");
                         },300L);
                     } else {
-                        player.sendMessage("y' a dun vote en cours.");
+                        player.sendMessage("§cIl y' a dun vote en cours.");
                     }
                 }
         }

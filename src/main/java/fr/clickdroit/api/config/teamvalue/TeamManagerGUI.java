@@ -29,35 +29,35 @@ public class TeamManagerGUI implements CustomInventory {
     }
 
     public String getName() {
-        return "Gestion des ";
+        return "Gestion des équipes";
     }
 
     public Supplier<ItemStack[]> getContents(Player player) {
         ItemStack[] slots = new ItemStack[getSlots()];
-        slots[3] = (new ItemCreator(Material.DIAMOND)).setName("des" )
-                .addLore("de modifier l'affichage des")
-                .addLore("dans dans le menu correspondant")
-                .addLore("fonction du nombre de slots")
-                .addLore("en affichant toute les disponibles.")
+        slots[3] = (new ItemCreator(Material.DIAMOND)).setName("§eAffichage des équipes" )
+                .addLore("§fPermet de modifier l'affichage des")
+                .addLore("§féquipes dans dans le menu correspondant")
+                .addLore("§fen fonction du nombre de slots")
+                .addLore("§fou en affichant toute les disponibles.")
                 .addLore("")
-                .addLore(""+ (this.gameManager.getGameConfig().isShowAllTeams() ? "Toutes les" : "Nombre de slots"))
+                .addLore("§f> §eÉtat: §f"+ (this.gameManager.getGameConfig().isShowAllTeams() ? "Toutes les équipes" : "Nombre de slots"))
       .addLore("")
                 .addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage())
                 .addLore("")
                 .getItem();
-        slots[4] = (new ItemCreator(Material.BLAZE_POWDER)).setName("Fire")
-                .addLore("ici pour autoriser")
-                .addLore("non le friendly fire.")
+        slots[4] = (new ItemCreator(Material.BLAZE_POWDER)).setName("§6Friendly Fire")
+                .addLore("§fCliquez ici pour autoriser")
+                .addLore("§fou non le friendly fire.")
                 .addLore("")
-                .addLore(""+ (this.gameManager.getGameConfig().isFriendlyfire() ? "": ""))
+                .addLore("§f> §eConfiguration: §f"+ (this.gameManager.getGameConfig().isFriendlyfire() ? "§aOui": "§cNon"))
                 .addLore("")
                 .addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage())
                 .addLore("")
                 .getItem();
         slots[5] = (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(15)).setName("").setAmount(Integer.valueOf(this.gameManager.getGameConfig().getPlayerPerTeam()))
-                .addLore("ici pour modifier")
-                .addLore("nombre de joueurs")
-                .addLore("dans chaque ")
+                .addLore("§fCliquezici pour modifier")
+                .addLore("§fle nombre de joueurs")
+                .addLore("§fprésent dans chaque ")
                         .addLore("")
                         .addLore(""+ this.gameManager.getGameConfig().getPlayerPerTeam() + "vs" + this.gameManager.getGameConfig().getPlayerPerTeam())
                                 .addLore("")

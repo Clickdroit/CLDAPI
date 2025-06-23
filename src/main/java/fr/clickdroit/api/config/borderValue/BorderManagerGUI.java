@@ -26,7 +26,7 @@ public class BorderManagerGUI implements CustomInventory {
     }
 
     public String getName() {
-        return "";
+        return "§f(§c!§f) §cBordure";
     }
 
     public Supplier<ItemStack[]> getContents(Player player) {
@@ -40,26 +40,26 @@ public class BorderManagerGUI implements CustomInventory {
             slots[j] = (new ItemCreator(Material.STAINED_GLASS_PANE)).setDurability(Integer.valueOf(8)).getItem();
             b = (byte)(b + 1);
         }
-        slots[12] = (new ItemCreator(Material.STAINED_GLASS)).setDurability(Integer.valueOf(3)).setName("initiale + this.gameConfig.getBorderStartSize() + ")
+        slots[12] = (new ItemCreator(Material.STAINED_GLASS)).setDurability(Integer.valueOf(3)).setName("§8| §fBordure initiale §8(§c" + this.gameConfig.getBorderStartSize() + "§8)")
                 .addLore("")
-                .addLore("  ici pour dla taille")
-                .addLore("  la bordure initiale de la partie.")
-                .addLore("")
-                .addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage())
-                .addLore("")
-                .getItem();
-        slots[14] = (new ItemCreator(Material.STAINED_GLASS)).setDurability(Integer.valueOf(14)).setName("finale + this.gameConfig.getBorderEndSize() + ")
-                .addLore("")
-                .addLore("  ici pour dla taille")
-                .addLore("  la bordure finale de la partie.")
+                .addLore("  §8| §fCliquez ici pour définir la taille")
+                .addLore("  §8| §fde la bordure initiale de la partie.")
                 .addLore("")
                 .addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage())
                 .addLore("")
                 .getItem();
-        slots[13] = (new ItemCreator(Material.WATCH)).setName("de la bordure "+ this.gameConfig.getBorderBlocksPerSecond() + " bloc(s)/s")
+        slots[14] = (new ItemCreator(Material.STAINED_GLASS)).setDurability(Integer.valueOf(14)).setName("§8| §fBordure finale §8(§c" + this.gameConfig.getBorderEndSize() + "§8)")
                 .addLore("")
-                .addLore("  ici pour dla vitesse")
-                .addLore("  rde la bordure.")
+                .addLore("  §8| §fCliquez ici pour définir la taille")
+                .addLore("  §8| §fde la bordure finale de la partie.")
+                .addLore("")
+                .addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage())
+                .addLore("")
+                .getItem();
+        slots[13] = (new ItemCreator(Material.WATCH)).setName("§8| §fVitesse de la bordure §8(§c"+ this.gameConfig.getBorderBlocksPerSecond() + " bloc(s)/s§8)")
+                .addLore("")
+                .addLore("  §8| §fCliquez ici pour définir la vitesse")
+                .addLore("  §8| §fde réduction de la bordure.")
                 .addLore("")
                 .addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage())
                 .addLore("")

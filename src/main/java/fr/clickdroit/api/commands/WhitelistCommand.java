@@ -18,7 +18,7 @@ public class WhitelistCommand implements CommandExecutor {
             return true;
         Player player = (Player)sender;
         if (!this.gameManager.hasHostAccess(player)) {
-            sender.sendMessage("insuffisante.");
+            sender.sendMessage("§cPermission insuffisante.");
             return true;
         }
         if (arguments.length == 0) {
@@ -30,10 +30,10 @@ public class WhitelistCommand implements CommandExecutor {
                         String target = arguments[1];
                         if (!this.gameManager.getWhitelistedPlayers().contains(target)) {
                             this.gameManager.getWhitelistedPlayers().add(target);
-                            player.sendMessage("avez ajout"+ target + " la liste blanche.");
+                            player.sendMessage("§aVous avez ajouté §f"+ target + " §aà la liste blanche.");
                             break;
                         }
-                        player.sendMessage(""+ target + " est dprdans la liste blanche.");
+                        player.sendMessage("§a"+ target + " est déjà présent dans la liste blanche.");
                         break;
                     }
                     sendHelp(player);
@@ -43,23 +43,23 @@ public class WhitelistCommand implements CommandExecutor {
                         String target = arguments[1];
                         if (this.gameManager.getWhitelistedPlayers().contains(target)) {
                             this.gameManager.getWhitelistedPlayers().remove(target);
-                            player.sendMessage("avez retir" + target + " la liste blanche.");
+                            player.sendMessage("§cVous avez retiré §f" + target + " §cde la liste blanche.");
                             break;
                         }
-                        player.sendMessage(""+ target + " ne fait pas parti de la liste blanche.");
+                        player.sendMessage("§c"+ target + " ne fait pas parti de la liste blanche.");
                         break;
                     }
                     sendHelp(player);
                     break;
                 case "list":
                 case "liste":
-                    player.sendMessage("la liste des joueurs prdans la liste blanche :");
+                    player.sendMessage("§aVoici la liste des joueurs présents dans la liste blanche :");
                     for (String string : this.gameManager.getWhitelistedPlayers())
-                        player.sendMessage(""+ string);
+                        player.sendMessage("§f- §l"+ string);
                     break;
                 case "clear":
                     this.gameManager.getWhitelistedPlayers().clear();
-                    player.sendMessage("avez retirtous les joueurs de la liste blanche.");
+                    player.sendMessage("§cVous avez retiré tous les joueurs de la liste blanche.");
                     break;
             }
         }
@@ -67,9 +67,9 @@ public class WhitelistCommand implements CommandExecutor {
     }
 
     private final void sendHelp(Player sender) {
-        sender.sendMessage("");
-        sender.sendMessage("de syntaxe, voici de l'aide :");
-        sender.sendMessage("<add/remove/list/clear> [joueur]");
-        sender.sendMessage("");
+        sender.sendMessage("§c§m--------------------------------");
+        sender.sendMessage("§cErreur de syntaxe, voici de l'aide :");
+        sender.sendMessage("§c/whitelist <add/remove/list/clear> [joueur]");
+        sender.sendMessage("§c§m--------------------------------");
     }
 }

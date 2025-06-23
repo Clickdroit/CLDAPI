@@ -33,7 +33,7 @@ public class TCCommand implements CommandExecutor {
                     int y = player.getLocation().getBlockY();
                     int z = player.getLocation().getBlockZ();
                     for (Player players : this.teamManager.getPlayersInTeam(teams))
-                        players.sendMessage("" + teams.getColor() + teams.getName() + " " + player.getName() + " " + (player.isOp() ? "": "") + "X: " + x + ", Y: " + y + ", Z: " + z);
+                        players.sendMessage("§f(§fÉquipe§f)" + teams.getColor() + teams.getName() + " " + player.getName() + " §8> " + (player.isOp() ? "§f": "§f") + "X: " + x + ", Y: " + y + ", Z: " + z);
                 }
             }
         }

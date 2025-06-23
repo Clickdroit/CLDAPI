@@ -16,13 +16,13 @@ import java.util.function.Supplier;
 
 public class DamageGUI implements CustomInventory {
     public String getName() {
-        return "Configuration des d";
+        return "Configuration des dégâts";
     }
 
     public Supplier<ItemStack[]> getContents(Player player) {
         ItemStack[] slots = new ItemStack[getSlots()];
         GameConfig gameConfig = API.getAPI().getGameManager().getGameConfig();
-        slots[0] = (new ItemCreator(Material.ENDER_PEARL)).setName("Pearl" + gameConfig.getEnderpearlDamage() + "").setAmount(Integer.valueOf(gameConfig.getEnderpearlDamage())).getItem();
+        slots[0] = (new ItemCreator(Material.ENDER_PEARL)).setName("§cEnder Pearl §8(§e+" + gameConfig.getEnderpearlDamage() + "§8)").setAmount(Integer.valueOf(gameConfig.getEnderpearlDamage())).getItem();
         slots[13] = CommonItems.GUI_BACK_ITEM.getItem();
         return () -> slots;
     }

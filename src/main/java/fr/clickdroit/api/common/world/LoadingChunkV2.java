@@ -73,8 +73,8 @@ public class LoadingChunkV2 {
 
     private void sendMessage(int percentage) {
         for (Player player : Bukkit.getOnlinePlayers())
-            Title.sendActionBar(player, ChatColor.GRAY + "Pr" + ChatColor.GREEN + percentage + "% "+
-                    ProgressBar.getProgressBar(percentage, 100, 40, "|", ChatColor.GREEN, ChatColor.GRAY) + "");
+            Title.sendActionBar(player, ChatColor.GRAY + "Prégénération §f: " + ChatColor.GREEN + percentage + "% §8[§r"+
+                    ProgressBar.getProgressBar(percentage, 100, 40, "|", ChatColor.GREEN, ChatColor.GRAY) + "§8]");
     }
 }
 

@@ -26,7 +26,7 @@ public class FinishCommand implements CommandExecutor {
             if (gamePlayer.isEditing()) {
                 InventoryAPI.saveInventory(player);
                 gamePlayer.setEditing(false);
-                player.sendMessage("par a modifiavec succ");
+                player.sendMessage("§fL'inventaire par §fdéfaut a été modifié avec succès.");
                         player.setGameMode(GameMode.ADVENTURE);
                 player.getInventory().clear();
                 player.getInventory().setArmorContents(null);
@@ -36,7 +36,7 @@ public class FinishCommand implements CommandExecutor {
             } else if (gamePlayer.isEditingDeathInv()) {
                 InventoryAPI.saveDeathInventory(player);
                 gamePlayer.setEditingDeathInv(false);
-                player.sendMessage("de a modifiavec succ");
+                player.sendMessage("§fL'inventaire de §cmort§f a été avec succès.");
                         player.setGameMode(GameMode.ADVENTURE);
                 player.getInventory().clear();
                 player.getInventory().setArmorContents(null);
@@ -44,7 +44,7 @@ public class FinishCommand implements CommandExecutor {
                 player.getInventory().setHeldItemSlot(4);
                 this.gameManager.getApi().openInventory(player, DefaultDeathInvGUI.class);
             } else {
-                player.sendMessage("n'pas en train de dl'inventaire par d");
+                player.sendMessage("§cVous n'êtes pas en train de définir l'inventaire par défaut...");
             }
         }
         return false;

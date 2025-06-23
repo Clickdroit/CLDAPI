@@ -87,7 +87,7 @@ public class PotionManagerGUI implements CustomInventory {
         OTHER("Autres", Material.POTION, 8236, Material.FERMENTED_SPIDER_EYE),
         SPLASH("Splash", Material.SULPHUR, 0, Material.SULPHUR),
         LEVEL_II("Niveau II", Material.GLOWSTONE_DUST, 0, Material.GLOWSTONE_DUST),
-        LONG_DURATION("Longue dur", Material.REDSTONE, 0, Material.REDSTONE);
+        LONG_DURATION("Longue durée", Material.REDSTONE, 0, Material.REDSTONE);
 
         private boolean enabled = true;
 
@@ -107,7 +107,7 @@ public class PotionManagerGUI implements CustomInventory {
         }
 
         public ItemStack getItem() {
-            return (new ItemCreator(getItemMaterial())).setName(""+ getName() + "" + (isEnabled() ? "": "")).setDurability(Integer.valueOf(getIdItem())).addItemFlags(ItemFlag.HIDE_POTION_EFFECTS).getItem();
+            return (new ItemCreator(getItemMaterial())).setName("§c"+ getName() + " §8(" + (isEnabled() ? "§aActivé§8)": "§cDésactivé§8)")).setDurability(Integer.valueOf(getIdItem())).addItemFlags(ItemFlag.HIDE_POTION_EFFECTS).getItem();
         }
 
         public String getName() {

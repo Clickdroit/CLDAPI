@@ -31,7 +31,7 @@ public class VanishCommand implements CommandExecutor {
                     player.hidePlayer(p);
             }
             this.gameManager.getVanishList().remove(player.getUniqueId());
-            player.sendMessage("n'plus vanish !");
+            player.sendMessage("§eVous n'êtes plus vanish !");
         } else {
             for (Player p : Bukkit.getOnlinePlayers()) {
                 if (!this.gameManager.getVanishList().contains(p.getUniqueId()))
@@ -42,7 +42,7 @@ public class VanishCommand implements CommandExecutor {
                     player.showPlayer(p);
             }
             this.gameManager.getVanishList().add(player.getUniqueId());
-            player.sendMessage("vanish !");
+            player.sendMessage("§eVous êtes vanish !");
         }
         return false;
     }

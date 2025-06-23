@@ -24,13 +24,11 @@ public class CombatLogEntity {
     }
 
     public void spawnVillager() {
-        // Spawn du villager pour Minecraft 1.8
         this.entity = (Villager) this.location.getWorld().spawnEntity(this.location, EntityType.VILLAGER);
 
-        // Configuration spécifique 1.8
         setEntityNoAI(this.entity);
         this.entity.setCustomNameVisible(true);
-        this.entity.setCustomName("§c" + this.name);
+        this.entity.setCustomName("§8§l•§c§l" + this.name);
 
         // En 1.8, pas de setProfession(Profession.NITWIT), on utilise l'ID
         this.entity.setProfession(Villager.Profession.FARMER); // ou autre profession disponible en 1.8
@@ -40,12 +38,12 @@ public class CombatLogEntity {
         try {
             net.minecraft.server.v1_8_R3.Entity nms = ((CraftEntity) entity).getHandle();
             NBTTagCompound tag = new NBTTagCompound();
-            nms.c(tag); // Méthode pour écrire dans NBT en 1.8
+            nms.c(tag);
             tag.setBoolean("NoAI", true);
             tag.setBoolean("Silent", true);
             tag.setBoolean("Invulnerable", false);
-            tag.setBoolean("PersistenceRequired", true); // Empêche le despawn
-            ((EntityLiving) nms).a(tag); // Méthode pour lire depuis NBT en 1.8
+            tag.setBoolean("PersistenceRequired", true);
+            ((EntityLiving) nms).a(tag);
         } catch (Exception e) {
             e.printStackTrace();
         }

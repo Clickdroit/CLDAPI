@@ -28,46 +28,46 @@ public class RulesInventory implements CustomInventory {
     }
 
     public String getName() {
-        return "R";
+        return "Règles";
     }
 
     public Supplier<ItemStack[]> getContents(Player player) {
         ItemStack[] slots = new ItemStack[getSlots()];
         int result = Chrono.getCycleDurationTime(this.gameConfig.getDayNightDuration());
-        ItemCreator infoItem = (new ItemCreator(Material.ITEM_FRAME)).setName(").addLore("+ this.gameConfig.getGameSlot()).addLore("par "+ this.gameConfig.getPlayerPerTeam()).addLore("de diamants: "+ this.gameConfig.getDiamondMax()).addLore("d'ors: "+ this.gameConfig.getGoldMax()).addLore("jour/nuit: "+ result + "min").addLore("" + (this.gameConfig.isNether() ? "§aActive": "§cDesactive")).addLore("" + (this.gameConfig.isSpectators() ? "§aActive": "§cDesactive"));
+        ItemCreator infoItem = (new ItemCreator(Material.ITEM_FRAME)).setName("§6Informations").addLore("§fSlots: §6"+ this.gameConfig.getGameSlot()).addLore("§fJoueur(s) par équipe: §6"+ this.gameConfig.getPlayerPerTeam()).addLore("§fLimite de diamants: §6"+ this.gameConfig.getDiamondMax()).addLore("§fLimite d'ors: §6"+ this.gameConfig.getGoldMax()).addLore("§fCylce jour/nuit: §6"+ result + "min").addLore("§fNether: " + (this.gameConfig.isNether() ? "§aActivé": "§cDesactivé")).addLore("§fSpectateurs: " + (this.gameConfig.isSpectators() ? "§aActivé": "§cDésactivé"));
         if (this.gameConfig.getPlayerPerTeam() > 1)
-            infoItem.addLore("Fire: " + (this.gameConfig.isFriendlyfire() ? "§aActive": "§cDesactive"));
+            infoItem.addLore("§6Friendly Fire: " + (this.gameConfig.isFriendlyfire() ? "§aActivé": "§cDesactivé"));
         slots[4] = infoItem.getItem();
-        slots[10] = (new ItemCreator(Material.WATCH)).setName("")
-                .addLore(""+ Chrono.timeToDigitalString(this.gameConfig.getPvpTime()))
-                .addLore(""+ Chrono.timeToDigitalString(this.gameConfig.getBorderTime()))
+        slots[10] = (new ItemCreator(Material.WATCH)).setName("§6Temps")
+                .addLore("§fPvP: §a"+ Chrono.timeToDigitalString(this.gameConfig.getPvpTime()))
+                .addLore("§fBordure: §a"+ Chrono.timeToDigitalString(this.gameConfig.getBorderTime()))
                 .getItem();
-        ItemCreator potion = (new ItemCreator(Material.POTION)).setName("activ");
+        ItemCreator potion = (new ItemCreator(Material.POTION)).setName("§6Potions activées");
         for (PotionManagerGUI.Potions potions : PotionManagerGUI.Potions.values())
-            potion.addLore(""+ potions.getName() + ": " + (potions.isEnabled() ? "§aActive": "§cDesactive"));
+            potion.addLore("§f"+ potions.getName() + ": " + (potions.isEnabled() ? "§aActivée": "§cDésactivée"));
         slots[16] = potion.getItem();
         ItemCreator useItemItem = (new ItemCreator(Material.IRON_SWORD)).setName("");
         for (UseItems useItems : UseItems.values())
-            useItemItem.addLore(""+ useItems.getName() + ": " + (useItems.isEnabled() ? "§aActive": "§cDesactive"));
+            useItemItem.addLore("§f"+ useItems.getName() + ": " + (useItems.isEnabled() ? "§aActivée": "§cDésactivée"));
         slots[20] = useItemItem.getItem();
-        slots[22] = (new ItemCreator(Material.PRISMARINE_SHARD)).setName("de jeu: "+ this.gameManager.getModuleManager().getCurrentModule().getName()).getItem();
-        ItemCreator dropItemRateItem = (new ItemCreator(Material.FLINT)).setName("de drop");
+        slots[22] = (new ItemCreator(Material.PRISMARINE_SHARD)).setName("§6Modde de jeu: §f"+ this.gameManager.getModuleManager().getCurrentModule().getName()).getItem();
+        ItemCreator dropItemRateItem = (new ItemCreator(Material.FLINT)).setName("§6Taux de drop");
         for (DropItemRate dropItemRate : DropItemRate.values())
-            dropItemRateItem.addLore(""+ dropItemRate.getName() + ":" + dropItemRate.getAmount() + "%");
+            dropItemRateItem.addLore("§f"+ dropItemRate.getName() + ": §a+" + dropItemRate.getAmount() + "%");
         slots[24] = dropItemRateItem.getItem();
-        slots[28] = (new ItemCreator(Material.STAINED_GLASS)).setName("").setDurability(Integer.valueOf(9))
-                .addLore("initiale: "+ this.gameConfig.getBorderStartSize() + " / -" + this.gameConfig.getBorderStartSize())
-                .addLore("finale: "+ this.gameConfig.getBorderEndSize() + " / -" + this.gameConfig.getBorderEndSize())
-                .addLore("par seconde: "+ this.gameConfig.getBorderBlocksPerSecond() + " bloc" + ((this.gameConfig.getBorderBlocksPerSecond() > 1) ? "s" : ""))
+        slots[28] = (new ItemCreator(Material.STAINED_GLASS)).setName("§6Bordure").setDurability(Integer.valueOf(9))
+                .addLore("§fTaille initiale: §b"+ this.gameConfig.getBorderStartSize() + " / -" + this.gameConfig.getBorderStartSize())
+                .addLore("§fTaille finale: §b"+ this.gameConfig.getBorderEndSize() + " / -" + this.gameConfig.getBorderEndSize())
+                .addLore("§fBloc(s) par seconde: §b"+ this.gameConfig.getBorderBlocksPerSecond() + " bloc" + ((this.gameConfig.getBorderBlocksPerSecond() > 1) ? "s" : ""))
                 .getItem();
-        ItemCreator ruleItem = (new ItemCreator(Material.PAPER)).setName("");
+        ItemCreator ruleItem = (new ItemCreator(Material.PAPER)).setName("§6Règles");
         for (GeneralRules rules : GeneralRules.values())
-            ruleItem.addLore(""+ rules.getName() + ": " + (rules.isEnabled() ? "§aActive": "§cDesactive"));
+            ruleItem.addLore("§f"+ rules.getName() + ": " + (rules.isEnabled() ? "§aActivée": "§cDésactivée"));
         slots[34] = ruleItem.getItem();
-        ItemCreator scenarioItem = (new ItemCreator(Material.BOOK)).setName("");
+        ItemCreator scenarioItem = (new ItemCreator(Material.BOOK)).setName("§6Scénarios");
         for (Scenario scenarios : Scenario.values()) {
             if (scenarios.isEnabled())
-                scenarioItem.addLore(""+ scenarios.getName());
+                scenarioItem.addLore("§f"+ scenarios.getName());
         }
         slots[40] = scenarioItem.getItem();
         return () -> slots;

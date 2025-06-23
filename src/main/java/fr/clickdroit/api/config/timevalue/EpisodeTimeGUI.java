@@ -31,31 +31,31 @@ public class EpisodeTimeGUI implements CustomInventory {
 
     public Supplier<ItemStack[]> getContents(Player player) {
         ItemStack[] slots = new ItemStack[getSlots()];
-        slots[0] = (new ItemCreator(Material.BANNER)).setName("").setDurability(Integer.valueOf(1)).getItem();
-        slots[1] = (new ItemCreator(Material.BANNER)).setName("").setDurability(Integer.valueOf(14)).getItem();
-        slots[2] = (new ItemCreator(Material.BANNER)).setName("").setDurability(Integer.valueOf(11)).getItem();
+        slots[0] = (new ItemCreator(Material.BANNER)).setName("§c-60").setDurability(Integer.valueOf(1)).getItem();
+        slots[1] = (new ItemCreator(Material.BANNER)).setName("§c-30").setDurability(Integer.valueOf(14)).getItem();
+        slots[2] = (new ItemCreator(Material.BANNER)).setName("§c-10").setDurability(Integer.valueOf(11)).getItem();
         slots[4] = OpenVar.EPISODE_TIME.getItem();
-        slots[6] = (new ItemCreator(Material.BANNER)).setName("").setDurability(Integer.valueOf(12)).getItem();
-        slots[7] = (new ItemCreator(Material.BANNER)).setName("").setDurability(Integer.valueOf(10)).getItem();
-        slots[8] = (new ItemCreator(Material.BANNER)).setName("").setDurability(Integer.valueOf(2)).getItem();
-        slots[13] = (new ItemCreator(Material.ARROW)).setName("en arri").getItem();
+        slots[6] = (new ItemCreator(Material.BANNER)).setName("§a+10").setDurability(Integer.valueOf(12)).getItem();
+        slots[7] = (new ItemCreator(Material.BANNER)).setName("§a+30").setDurability(Integer.valueOf(10)).getItem();
+        slots[8] = (new ItemCreator(Material.BANNER)).setName("§a+60").setDurability(Integer.valueOf(2)).getItem();
+        slots[13] = (new ItemCreator(Material.ARROW)).setName("§fRevenir en arriere").getItem();
         return () -> slots;
     }
 
     public void onClick(Player player, Inventory inventory, ItemStack clickedItem, int slot, ClickType clickType) {
         switch (clickedItem.getType()) {
             case BANNER:
-                if (clickedItem.getItemMeta().getDisplayName().equalsIgnoreCase("")) {
+                if (clickedItem.getItemMeta().getDisplayName().equalsIgnoreCase("§c-10")) {
                     this.gameConfig.setEpisodeTime(this.gameConfig.getEpisodeTime() - 10);
-                } else if (clickedItem.getItemMeta().getDisplayName().equalsIgnoreCase("")) {
+                } else if (clickedItem.getItemMeta().getDisplayName().equalsIgnoreCase("§c-30")) {
                     this.gameConfig.setEpisodeTime(this.gameConfig.getEpisodeTime() - 30);
-                } else if (clickedItem.getItemMeta().getDisplayName().equalsIgnoreCase("")) {
+                } else if (clickedItem.getItemMeta().getDisplayName().equalsIgnoreCase("§c-60")) {
                     this.gameConfig.setEpisodeTime(this.gameConfig.getEpisodeTime() - 60);
-                } else if (clickedItem.getItemMeta().getDisplayName().equalsIgnoreCase("")) {
+                } else if (clickedItem.getItemMeta().getDisplayName().equalsIgnoreCase("§a+10")) {
                     this.gameConfig.setEpisodeTime(this.gameConfig.getEpisodeTime() + 10);
-                } else if (clickedItem.getItemMeta().getDisplayName().equalsIgnoreCase("")) {
+                } else if (clickedItem.getItemMeta().getDisplayName().equalsIgnoreCase("§a+30")) {
                     this.gameConfig.setEpisodeTime(this.gameConfig.getEpisodeTime() + 30);
-                } else if (clickedItem.getItemMeta().getDisplayName().equalsIgnoreCase("")) {
+                } else if (clickedItem.getItemMeta().getDisplayName().equalsIgnoreCase("§a+60")) {
                     this.gameConfig.setEpisodeTime(this.gameConfig.getEpisodeTime() + 60);
                 }
                 if (this.gameConfig.getEpisodeTime() < 60) {

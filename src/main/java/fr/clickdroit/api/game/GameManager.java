@@ -77,11 +77,11 @@ public class GameManager {
 
     private GameState gameState;
 
-    private boolean announcedOnHub;
+    private final boolean announcedOnHub;
 
     private boolean preload;
 
-    private boolean preloadFinished;
+    private final boolean preloadFinished;
 
     private int groupe;
 
@@ -148,22 +148,22 @@ public class GameManager {
         this.globalTask = new GlobalTask(this);
         this.globalTask.runTaskTimer((Plugin)this.api, 0L, 20L);
         this.cycleManager.startDayCycle(this.gameConfig.getDayNightDuration());
-        Bukkit.broadcastMessage("       le bonjour ");
+        Bukkit.broadcastMessage("       §f(§a!§f) §fBien le bonjour §f(§a!§f) ");
         Bukkit.broadcastMessage("");
-        Bukkit.broadcastMessage(" certaines respecter.");
-        Bukkit.broadcastMessage("   respect des ");
-        Bukkit.broadcastMessage("   pas ");
-        Bukkit.broadcastMessage("   pas sans raison. ");
-        Bukkit.broadcastMessage("   pas son r");
-        Bukkit.broadcastMessage("");
-        Bukkit.broadcastMessage(" les connaitre.");
-        Bukkit.broadcastMessage("   de voir le explicatifdu mode.");
-        Bukkit.broadcastMessage("   de voir le mumble de ");
-        Bukkit.broadcastMessage("   de voir les ");
-        Bukkit.broadcastMessage("   de de l'aide.");
-        Bukkit.broadcastMessage("");
-        Bukkit.broadcastMessage(" tous !");
-        Bukkit.broadcastMessage("");
+        Bukkit.broadcastMessage(" §8> §fVoici certaines §crègles§f à respecter.");
+        Bukkit.broadcastMessage(" §8| §fLe respect des §cgroupes§f.");
+        Bukkit.broadcastMessage(" §8| §fNe pas §cSoundBoard.§f ");
+        Bukkit.broadcastMessage(" §8| §fNe pas §ctuer§f sans raison.");
+        Bukkit.broadcastMessage(" §8| §fNe pas §cdévoiler§f son rôle");
+        Bukkit.broadcastMessage("§4");
+        Bukkit.broadcastMessage(" §8 > §fVoici les §ccommandes§f à connaitre.");
+        Bukkit.broadcastMessage(" §8| §f/§cdoc §8• §fPermet de voir le §cdocument explicatif§f du mode.");
+        Bukkit.broadcastMessage(" §8| §f/mumble §8• §fPermet de voir le mumble de la §c§1game ");
+        Bukkit.broadcastMessage(" §8| §f/§crules §8• §fPermet de voir les §crègles§f.");
+        Bukkit.broadcastMessage(" §8| §f/helpop §8• §fPermet de §cdemander§f de l'aide.");
+        Bukkit.broadcastMessage("§4");
+        Bukkit.broadcastMessage(" §8 > §f Bonne §achance§f à tous !");
+        Bukkit.broadcastMessage("§4");
         for (UUID uuid : getInGamePlayers()) {
             Player player = Bukkit.getPlayer(uuid);
             if (player == null)
@@ -255,7 +255,7 @@ public class GameManager {
                 .stream().map(team -> {
                     List<UUID> players = new ArrayList<>();
                     teamManager.getPlayersInTeam((Teams)team);
-                    return new TeamPlayerPlate(players, ((Teams)team).getColor() + "" + ((Teams)team).getColor() + ((Teams)team).getName());
+                    return new TeamPlayerPlate(players, ((Teams)team).getColor() + "équipe" + ((Teams)team).getColor() + ((Teams)team).getName());
                 }).collect(Collectors.toList())).toArray((Object[])new TeamPlayerPlate[0]);
     }
 

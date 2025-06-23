@@ -15,20 +15,20 @@ public class AlertsCommand implements CommandExecutor {
                 GamePlayer gamePlayer = GamePlayer.getPlayer(player.getUniqueId());
                 gamePlayer.setAlerts(!gamePlayer.isAlerts());
                 if (gamePlayer.isAlerts()) {
-                    player.sendMessage("avez activvos alertes.");
+                    player.sendMessage("§aVous avez activé vos alertes.");
                     for (Player players : Bukkit.getOnlinePlayers()) {
                         if (players.isOp())
-                            players.sendMessage(""+ player.getName() + ": a activses alertes.]");
+                            players.sendMessage("§f§o["+ player.getName() + ": a activé ses alertes.]");
                     }
                 } else {
-                    player.sendMessage("avez dvos alertes.");
+                    player.sendMessage("§cVous avez désactivé vos alertes.");
                     for (Player players : Bukkit.getOnlinePlayers()) {
                         if (players.isOp())
-                            players.sendMessage(""+ player.getName() + ": a dses alertes.]");
+                            players.sendMessage("§f§o["+ player.getName() + ": a désactivé ses alertes.]");
                     }
                 }
             } else {
-                player.sendMessage("insuffisante.");
+                player.sendMessage("§cPermission insuffisante.");
             }
         }
         return false;

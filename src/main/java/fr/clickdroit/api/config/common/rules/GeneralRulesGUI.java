@@ -52,7 +52,7 @@ public class GeneralRulesGUI implements CustomInventory {
     }
 
     public String getName() {
-        return "Rde la partie";
+        return "Règles de la partie";
     }
 
     public Supplier<ItemStack[]> getContents(Player player) {

@@ -118,25 +118,25 @@ public enum Scenario {
             item.addLore("");
             switch (this.scenarioValueType) {
                 case TIME:
-                    item.addLore(" "+ getValue() + " seconde" + ((getValue() > 1) ? "s" : ""));
+                    item.addLore(" §8> §fConfiguration §f: §6§1"+ getValue() + " seconde" + ((getValue() > 1) ? "s" : ""));
                     break;
                 case TIMEMIN:
-                    item.addLore(" "+ getValue() + " minute" + ((getValue() > 1) ? "s" : ""));
+                    item.addLore(" §8> §fConfiguration §f: §6§1"+ getValue() + " minute" + ((getValue() > 1) ? "s" : ""));
                     break;
                 case MULTIPLICATOR:
-                    item.addLore(" "+ getValue());
+                    item.addLore(" §8> §fConfiguration §f: §c§1x"+ getValue());
                     break;
                 case DAMAGE:
-                    item.addLore(" "+ getValue() + "");
+                    item.addLore(" §8> §fConfiguration §f: §c§1"+ getValue() + "❤");
                     break;
                 case PERCENT:
-                    item.addLore(" "+ getValue() + "%");
+                    item.addLore(" §8> §fConfiguration §f: §b§1"+ getValue() + "%");
                     break;
                 case YCOORD:
-                    item.addLore(" " + getValue());
+                    item.addLore(" §8> §fConfiguration §f: §b§1Y" + getValue());
                     break;
                 case INT:
-                    item.addLore(" "+ getValue());
+                    item.addLore(" §8> §fConfiguration §f: §e§1"+ getValue());
                     break;
             }
         }
@@ -149,11 +149,11 @@ public enum Scenario {
         }
         if (isNeedTeams()) {
             item.addLore("");
-            item.addLore(" sont obligatoires");
-            item.addLore(" utiliser ce ");
+            item.addLore(" §8| §fLes §céquipes§f sont obligatoires");
+            item.addLore(" §8| §fpour utiliser ce §cscénario§f.");
         }
         item.addLore("");
-        item.addLore(" pour " + (!isEnabled() ? "": "") + "");
+        item.addLore(" §8> §fCLiquez pour " + (!isEnabled() ? "§aactiver": "§cdesactiver") + "§f.");
         item.addLore("");
         return item.getItem();
     }

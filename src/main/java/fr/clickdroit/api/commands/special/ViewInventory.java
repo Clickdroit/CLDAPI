@@ -46,19 +46,19 @@ public class ViewInventory extends GUIView {
         setItem(37, target.getInventory().getChestplate());
         setItem(38, target.getInventory().getLeggings());
         setItem(39, target.getInventory().getBoots());
-        setItem(45, (new ItemCreator(Material.SKULL_ITEM)).setDurability(Integer.valueOf(3)).setOwner(target.getName()).setName(""+ target.getName()).addLore(gamePlayer.isAlive() ? ": Vivant" : ": mort").getItem());
-        setItem(46, (new ItemCreator(Material.APPLE)).setName(": + (int)target.getHealth() + " + (int)target.getMaxHealth()).setAmount(Integer.valueOf((int)target.getHealth())).getItem());
+        setItem(45, (new ItemCreator(Material.SKULL_ITEM)).setDurability(Integer.valueOf(3)).setOwner(target.getName()).setName("§6§1"+ target.getName()).addLore(gamePlayer.isAlive() ? "§aVivant" : "§cMort").getItem());
+        setItem(46, (new ItemCreator(Material.APPLE)).setName("§fVie§8 : §c" + (int)target.getHealth() + " §8/ §c"+ (int)target.getMaxHealth()).setAmount(Integer.valueOf((int)target.getHealth())).getItem());
         setItem(47, (new ItemCreator(Material.COOKED_BEEF)).setName(":" + target.getFoodLevel()).setAmount(Integer.valueOf(target.getFoodLevel())).getItem());
-                ItemCreator itemCreator = (new ItemCreator(Material.POTION)).setDurability(Integer.valueOf(8265)).setName("").setAmount(Integer.valueOf(target.getActivePotionEffects().size())).addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+                ItemCreator itemCreator = (new ItemCreator(Material.POTION)).setDurability(Integer.valueOf(8265)).setName("§eEffets").setAmount(Integer.valueOf(target.getActivePotionEffects().size())).addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
         if (target.getActivePotionEffects().isEmpty()) {
-            itemCreator.addLore("effet");
+            itemCreator.addLore("§cAucun effet");
         } else {
             for (PotionEffect potionEffect : target.getActivePotionEffects())
-                itemCreator.addLore(""+ TranslateEffect.translate(potionEffect.getType()) + " " + (potionEffect.getAmplifier() + 1) + " " + Chrono.timeToDigitalString((potionEffect.getDuration() / 20)));
+                itemCreator.addLore("§f- §b"+ TranslateEffect.translate(potionEffect.getType()) + " " + (potionEffect.getAmplifier() + 1) + " §f: " + Chrono.timeToDigitalString((potionEffect.getDuration() / 20)));
         }
         setItem(48, itemCreator.getItem());
-        setItem(49, (new ItemCreator(Material.DIAMOND)).setAmount(Integer.valueOf(gamePlayer.getDiamonds())).setName(""+ gamePlayer.getDiamonds() + "" ).getItem());
-        setItem(50, (new ItemCreator(Material.GOLD_INGOT)).setAmount(Integer.valueOf(gamePlayer.getGolds())).setName(""+ gamePlayer.getGolds() + "" ).getItem());
+        setItem(49, (new ItemCreator(Material.DIAMOND)).setAmount(Integer.valueOf(gamePlayer.getDiamonds())).setName("§b"+ gamePlayer.getDiamonds() + " §fminés" ).getItem());
+        setItem(50, (new ItemCreator(Material.GOLD_INGOT)).setAmount(Integer.valueOf(gamePlayer.getGolds())).setName("§e"+ gamePlayer.getGolds() + " §fminés" ).getItem());
         (new BukkitRunnable() {
             public void run() {
                 if (ViewInventory.this.isClosed()) {

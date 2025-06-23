@@ -28,31 +28,31 @@ public class EnchantCommand implements CommandExecutor, CustomInventory {
     }
 
     public enum Enchants {
-        PROTECTION_ENVIRONMENTAL(Enchantment.PROTECTION_ENVIRONMENTAL, "Protection", 0, 50, 4),
-        FIRE_PROTECTION(Enchantment.PROTECTION_FIRE, "Fire Protection", 0, 50, 4),
-        FEATHER_FALLING(Enchantment.PROTECTION_FALL, "Feather Falling", 0, 50, 4),
-        BLAST_PROTECTION(Enchantment.PROTECTION_EXPLOSIONS, "Blast Protection", 0, 50, 4),
-        PROJECTILE_PROTECTION(Enchantment.PROTECTION_PROJECTILE, "Projectile Protection", 0, 50, 4),
-        RESPIRATION(Enchantment.OXYGEN, "Respiration", 0, 50, 3),
-        AQUA_AFFINITY(Enchantment.WATER_WORKER, "Aqua Affinity", 0, 50, 1),
-        THORNS(Enchantment.THORNS, "Thorns", 0, 50, 3),
-        DEPTH_STRIDERS(Enchantment.DEPTH_STRIDER, "Depth Strider", 0, 50, 3),
-        SHARPNESS(Enchantment.DAMAGE_ALL, "Sharpness", 0, 50, 5),
-        SMITE(Enchantment.DAMAGE_UNDEAD, "Smite", 0, 50, 5),
-        BANE_OF_ARTHROPODS(Enchantment.DAMAGE_ARTHROPODS, "Bane of Arthropods", 0, 50, 5),
-        KNOCKBACK(Enchantment.KNOCKBACK, "Knockback", 0, 50, 2),
-        FIRE_ASPECT(Enchantment.FIRE_ASPECT, "Fire Aspect", 0, 50, 2),
-        LOOTING(Enchantment.LOOT_BONUS_MOBS, "Looting", 0, 50, 3),
-        POWER(Enchantment.ARROW_DAMAGE, "Power", 0, 50, 5),
-        PUNCH(Enchantment.ARROW_KNOCKBACK, "Punch", 0, 50, 2),
-        FLAME(Enchantment.ARROW_FIRE, "Flame", 0, 1, 1),
-        INFINITY(Enchantment.ARROW_INFINITE, "Infinity", 0, 1, 1),
-        EFFICIENCY(Enchantment.DIG_SPEED, "Efficiency", 0, 50, 5),
-        SILK_TOUCH(Enchantment.SILK_TOUCH, "Silk Touch", 0, 1, 1),
-        UNBREAKING(Enchantment.DURABILITY, "Unbreaking", 0, 50, 3),
-        FORTUNE(Enchantment.LOOT_BONUS_BLOCKS, "Fortune", 0, 50, 3),
-        LUCK_OF_THE_SEA(Enchantment.LUCK, "Luck of the Sea", 0, 100, 3),
-        LURE(Enchantment.LURE, "Lure", 0, 100, 3);
+        PROTECTION_ENVIRONMENTAL(Enchantment.PROTECTION_ENVIRONMENTAL, "§8| §cProtection", 0, 50, 4),
+        FIRE_PROTECTION(Enchantment.PROTECTION_FIRE, "§8| §cFire Protection", 0, 50, 4),
+        FEATHER_FALLING(Enchantment.PROTECTION_FALL, "§8| §cFeather Falling", 0, 50, 4),
+        BLAST_PROTECTION(Enchantment.PROTECTION_EXPLOSIONS, "§8| §cBlast Protection", 0, 50, 4),
+        PROJECTILE_PROTECTION(Enchantment.PROTECTION_PROJECTILE, "§8| §cProjectile Protection", 0, 50, 4),
+        RESPIRATION(Enchantment.OXYGEN, "§8| §cRespiration", 0, 50, 3),
+        AQUA_AFFINITY(Enchantment.WATER_WORKER, "§8| §cAqua Affinity", 0, 50, 1),
+        THORNS(Enchantment.THORNS, "§8| §cThorns", 0, 50, 3),
+        DEPTH_STRIDERS(Enchantment.DEPTH_STRIDER, "§8| §cDepth Strider", 0, 50, 3),
+        SHARPNESS(Enchantment.DAMAGE_ALL, "§8| §cSharpness", 0, 50, 5),
+        SMITE(Enchantment.DAMAGE_UNDEAD, "§8| §cSmite", 0, 50, 5),
+        BANE_OF_ARTHROPODS(Enchantment.DAMAGE_ARTHROPODS, "§8| §cBane of Arthropods", 0, 50, 5),
+        KNOCKBACK(Enchantment.KNOCKBACK, "§8| §cKnockback", 0, 50, 2),
+        FIRE_ASPECT(Enchantment.FIRE_ASPECT, "§8| §cFire Aspect", 0, 50, 2),
+        LOOTING(Enchantment.LOOT_BONUS_MOBS, "§8| §cLooting", 0, 50, 3),
+        POWER(Enchantment.ARROW_DAMAGE, "§8| §cPower", 0, 50, 5),
+        PUNCH(Enchantment.ARROW_KNOCKBACK, "§8| §cPunch", 0, 50, 2),
+        FLAME(Enchantment.ARROW_FIRE, "§8| §cFlame", 0, 1, 1),
+        INFINITY(Enchantment.ARROW_INFINITE, "§8| §cInfinity", 0, 1, 1),
+        EFFICIENCY(Enchantment.DIG_SPEED, "§8| §cEfficiency", 0, 50, 5),
+        SILK_TOUCH(Enchantment.SILK_TOUCH, "§8| §cSilk Touch", 0, 1, 1),
+        UNBREAKING(Enchantment.DURABILITY, "§8| §cUnbreaking", 0, 50, 3),
+        FORTUNE(Enchantment.LOOT_BONUS_BLOCKS, "§8| §cFortune", 0, 50, 3),
+        LUCK_OF_THE_SEA(Enchantment.LUCK, "§8| §cLuck of the Sea", 0, 100, 3),
+        LURE(Enchantment.LURE, "§8| §cLure", 0, 100, 3);
 
         private final Enchantment enchantment;
         private final String name;
@@ -110,10 +110,10 @@ public class EnchantCommand implements CommandExecutor, CustomInventory {
                 if (player.getItemInHand().getType() != Material.AIR) {
                     this.gameManager.getApi().openInventory(player, getClass());
                 } else {
-                    player.sendMessage("prendre un objet en mains.");
+                    player.sendMessage("§cVeuillez prendre un objet en mains.");
                 }
             } else {
-                player.sendMessage("n'pas en train de dl'inventaire par d");
+                player.sendMessage("§cVous n'êtes pas en train de définir l'inventaire par défaut...");
             }
         }
         return false;
@@ -127,7 +127,7 @@ public class EnchantCommand implements CommandExecutor, CustomInventory {
         ItemStack[] slots = new ItemStack[getSlots()];
         ItemStack current = player.getItemInHand();
         slots[3] = current;
-        slots[5] = (new ItemCreator(Material.DIAMOND_AXE)).setName(": " + (current.getItemMeta().spigot().isUnbreakable() ? "": "")).getItem();
+        slots[5] = (new ItemCreator(Material.DIAMOND_AXE)).setName("§8| §cIncassable : " + (current.getItemMeta().spigot().isUnbreakable() ? "§aOui": "§cNon")).getItem();
         int slot = 9;
         for (Enchants enchant : Enchants.values()) {
             int level = 0;
@@ -135,12 +135,12 @@ public class EnchantCommand implements CommandExecutor, CustomInventory {
                 level = current.getEnchantmentLevel(enchant.getEnchantment());
             ItemCreator item = (new ItemCreator(ENCHANTED_BOOK)).setName(enchant.getName());
             item.addLore("");
-            item.addLore("  : + level");
+            item.addLore("  §8| §fNiveau : §c"+ level);
             item.addLore("");
             if (level < enchant.getMax())
-                item.addLore(" gauche : un niveau");
+                item.addLore(" §8| §fClic-gauche : §aAjouter un niveau");
             if (level > enchant.getMin())
-                item.addLore(" droit : un niveau");
+                item.addLore(" §8| §fClic-droit : §cSupprimer un niveau");
             item.addLore("");
             item.setAmount(Integer.valueOf(level));
             slots[slot] = item.getItem();
@@ -153,7 +153,7 @@ public class EnchantCommand implements CommandExecutor, CustomInventory {
         ItemStack item;
         switch (clickedItem.getType()) {
             case DIAMOND_AXE:
-                if (clickedItem.hasItemMeta() && clickedItem.getItemMeta().hasDisplayName() && clickedItem.getItemMeta().getDisplayName().contains("")) {
+                if (clickedItem.hasItemMeta() && clickedItem.getItemMeta().hasDisplayName() && clickedItem.getItemMeta().getDisplayName().contains("§8| §cIncassable")) {
                     ItemStack itemStack = player.getItemInHand();
                     boolean unbreakable = itemStack.getItemMeta().spigot().isUnbreakable();
                     if (unbreakable) {

@@ -34,7 +34,7 @@ public class JoinTeamsGUI implements Listener {
 
     public Inventory openInventory(Player player, int page) {
         player_page.put(player, Integer.valueOf(page));
-        Inventory inventory = Bukkit.createInventory(null, 54, "(" + page + "/2)");
+        Inventory inventory = Bukkit.createInventory(null, 54, "Équipes (" + page + "/2)");
         int[] glass = {
                 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
                 17, 18, 26, 27, 35, 36, 44, 45, 46, 47,
@@ -63,15 +63,15 @@ public class JoinTeamsGUI implements Listener {
                 }
             }
         } else {
-            inventory.setItem(22, (new ItemCreator(Material.BARRIER)).setName("scRandomTeam est activ").getItem());
+            inventory.setItem(22, (new ItemCreator(Material.BARRIER)).setName("§cLe scénario RandomTeam est activé").getItem());
         }
         if (page == 1 && inventory
                 .getItem(43) != null && inventory.getItem(43).hasItemMeta() && inventory
                 .getItem(43).getType() == Material.BANNER)
-            inventory.setItem(51, (new ItemCreator(Material.PAPER)).setName("suivante").getItem());
+            inventory.setItem(51, (new ItemCreator(Material.PAPER)).setName("§fPage suivante").getItem());
         if (page > 1)
-            inventory.setItem(47, (new ItemCreator(Material.PAPER)).setName("pr").getItem());
-        inventory.setItem(49, (new ItemCreator(Material.ARROW)).setName("en arri").getItem());
+            inventory.setItem(47, (new ItemCreator(Material.PAPER)).setName("§fPage précédente").getItem());
+        inventory.setItem(49, (new ItemCreator(Material.ARROW)).setName("§fRevenir en arriere").getItem());
         player.openInventory(inventory);
         return inventory;
     }
@@ -83,7 +83,7 @@ public class JoinTeamsGUI implements Listener {
         Inventory inventory = event.getInventory();
         if (player == null || inventory == null || itemStack == null || itemStack.getType().equals(Material.AIR))
             return;
-        if (inventory.getName().contains("")) {
+        if (inventory.getName().contains("Équipes")) {
             event.setCancelled(true);
             int page = ((Integer)player_page.get(player)).intValue();
             int slot = event.getSlot();
@@ -103,7 +103,7 @@ public class JoinTeamsGUI implements Listener {
                     break;
                 case PAPER:
                     if (itemStack.hasItemMeta()) {
-                        if (itemStack.getItemMeta().getDisplayName().contains("pr")) {
+                        if (itemStack.getItemMeta().getDisplayName().contains("précédente")) {
                             if (page > 1)
                                 page--;
                         } else {
@@ -119,13 +119,13 @@ public class JoinTeamsGUI implements Listener {
     public ItemStack getItem(Teams teams) {
         ItemCreator item = teams.getItem();
         item.addLore("");
-        item.addLore(""+ ((this.gameManager.getTeamManager().getPlayerAmountInTeam(teams) > 1) ? "s" : "") + ":");
+        item.addLore("§8Membre"+ ((this.gameManager.getTeamManager().getPlayerAmountInTeam(teams) > 1) ? "s" : "") + ":");
         for (Player pl : this.gameManager.getTeamManager().getPlayersInTeam(teams))
-            item.addLore("  " + teams.getColor() + pl.getName());
+            item.addLore("  §f- " + teams.getColor() + pl.getName());
         for (int j = this.gameManager.getTeamManager().getPlayersInTeam(teams).size(); j < this.gameManager.getGameConfig().getPlayerPerTeam(); j++)
-            item.addLore("  vide]");
+            item.addLore("  §f- §8[Emplacement vide]");
         item.addLore("");
-        item.addLore("pour rejoindre.");
+        item.addLore("§f> §eCliquez ici pour rejoindre.");
         return item.getItem();
     }
 }

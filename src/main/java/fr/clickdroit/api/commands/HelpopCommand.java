@@ -15,25 +15,24 @@ public class HelpopCommand implements CommandExecutor {
         if (commandSender instanceof Player) {
             Player player = (Player)commandSender;
             if (arguments.length == 0) {
-                player.sendMessage("Veuillez mettre un message.");
+                player.sendMessage("§cErreur: Veuillez mettre un message.");
                 return false;
             }
             StringBuilder stringBuilder = new StringBuilder();
             for (String string : arguments)
                 stringBuilder.append(string).append(" ");
-            player.sendMessage("demande a bien envoyaux organisateurs de la partie.");
+            player.sendMessage("§a§l[Help-Op] §fVotre demande a bien été envoyée aux organisateurs de la partie.");
             for (Player players : Bukkit.getOnlinePlayers()) {
                 if (canViewHelpop(players)) {
-                    players.sendMessage(""+ (canViewIdentity(player) ? player.getName() : "Anonyme") + " "+ stringBuilder);
+                    players.sendMessage("§a§l[Help-Op] §6§l"+ (canViewIdentity(player) ? player.getName() : "Anonyme") + " §e: §f"+ stringBuilder);
                     (new InteractiveMessage()).add((new TextComponentBuilder(""))
-                                    .setHoverMessage(new String[] { "ici pour vous t"}).setClickAction(ClickEvent.Action.RUN_COMMAND, "/tp " + player.getName()).build())
-                            .add((new TextComponentBuilder("        "))
-                                    .setHoverMessage(new String[] { "ici pour voir l'inventaire" }).setClickAction(ClickEvent.Action.RUN_COMMAND, "/view " + player.getName()).build())
-
-                            .add((new TextComponentBuilder("        "))
-                                    .setHoverMessage(new String[] { "ici pour envoyer un message" }).setClickAction(ClickEvent.Action.SUGGEST_COMMAND, "/msg " + player.getName() + " ").build())
-                            .add((new TextComponentBuilder("       " ))
-                                    .setHoverMessage(new String[] { "ici pour voir le r"}).setClickAction(ClickEvent.Action.RUN_COMMAND, "/ds who " + player.getName() + " ").build())
+                                    .setHoverMessage(new String[] { "§f§l> §aCliquez ici pour vous téléporter"}).setClickAction(ClickEvent.Action.RUN_COMMAND, "/tp " + player.getName()).build())
+                            .add((new TextComponentBuilder("        §c§l[Inventaire]"))
+                                    .setHoverMessage(new String[] { "§f§l> §cCliquez ici pour voir l'inventaire" }).setClickAction(ClickEvent.Action.RUN_COMMAND, "/view " + player.getName()).build())
+                            .add((new TextComponentBuilder("        §6§l[Message]"))
+                                    .setHoverMessage(new String[] { "§f§l> §6Cliquez ici pour envoyer un message" }).setClickAction(ClickEvent.Action.SUGGEST_COMMAND, "/msg " + player.getName() + " ").build())
+                            .add((new TextComponentBuilder("       §b§l[Rôle]" ))
+                                    .setHoverMessage(new String[] { "§f§l> §bCliquez ici pour voir le rôle"}).setClickAction(ClickEvent.Action.RUN_COMMAND, "/ds who " + player.getName() + " ").build())
                             .sendMessage(new Player[] { players });
                 }
             }

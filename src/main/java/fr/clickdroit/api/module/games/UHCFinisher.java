@@ -25,18 +25,18 @@ public class UHCFinisher {
         if (GameUtils.isSoloMode()) {
             if (this.api.getGameManager().getInGamePlayers().size() == 1) {
                 Player winner = Bukkit.getPlayer(this.api.getGameManager().getInGamePlayers().get(0));
-                endMessage = "de + winner.getName() + " ;
+                endMessage = "§fVictoire de §c§l" + winner.getName() + " §f!";
                 giveExperience(Collections.singletonList(winner.getUniqueId()), 100, 20);
             } else if (this.api.getGameManager().getInGamePlayers().size() == 0) {
-                endMessage = "les joueurs sont !";
+                endMessage = "§fTous les joueurs sont éliminés !";
             }
         } else if (this.api.getGameManager().getAliveTeams().size() == 1) {
             Teams teams = this.api.getGameManager().getAliveTeams().get(0);
-            endMessage = "de l'" + teams.getColor() + teams.getName() + " ";
+            endMessage = "§fVictoire de l'équipe " + teams.getColor() + teams.getName() + " ";
             List<UUID> members = (List<UUID>)this.api.getGameManager().getTeamManager().getPlayersInTeam(teams).stream().map(Entity::getUniqueId).collect(Collectors.toList());
             giveExperience(members, 40, 15);
         } else if (this.api.getGameManager().getAliveTeams().size() == 0) {
-            endMessage = "les sont !";
+            endMessage = "§fToutes les équipes sont éliminées !";
         }
         if (endMessage != null)
             this.api.getGameManager().getUhcFinisherGame().finishGame(endMessage);
@@ -49,7 +49,7 @@ public class UHCFinisher {
             int exp = winners.contains(playedPlayer) ? winnerExp : loserExp;
             Player player = Bukkit.getPlayer(playedPlayer);
             if (player != null)
-                player.sendMessage("" + exp + " XP");
+                player.sendMessage("§a" + exp + " XP");
         }
     }
 }

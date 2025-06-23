@@ -20,6 +20,6 @@ public final class ReconnectListener implements Listener {
             return;
         if (!this.gameManager.getGameConfig().isSpectators() &&
                 !this.gameManager.getPlayedPlayers().contains(event.getUniqueId()))
-            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_WHITELIST, "spectateurs ne sont pas autorisdans cette partie.");
+            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_WHITELIST, "§cLes spectateurs ne sont pas autorisdans cette partie.");
     }
 }

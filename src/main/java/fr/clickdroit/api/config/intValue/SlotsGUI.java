@@ -30,12 +30,12 @@ public class SlotsGUI implements CustomInventory {
 
     public Supplier<ItemStack[]> getContents(Player player) {
         ItemStack[] slots = new ItemStack[getSlots()];
-        slots[0] = (new ItemCreator(Material.BANNER)).setName("").setDurability(Integer.valueOf(14)).getItem();
-        slots[1] = (new ItemCreator(Material.BANNER)).setName("").setDurability(Integer.valueOf(11)).getItem();
+        slots[0] = (new ItemCreator(Material.BANNER)).setName("§c-5").setDurability(Integer.valueOf(14)).getItem();
+        slots[1] = (new ItemCreator(Material.BANNER)).setName("§c-1").setDurability(Integer.valueOf(11)).getItem();
         slots[4] = OpenVar.SLOTS.getItem();
-        slots[7] = (new ItemCreator(Material.BANNER)).setName("").setDurability(Integer.valueOf(12)).getItem();
-        slots[8] = (new ItemCreator(Material.BANNER)).setName("").setDurability(Integer.valueOf(10)).getItem();
-        slots[13] = (new ItemCreator(Material.ARROW)).setName("en arri").getItem();
+        slots[7] = (new ItemCreator(Material.BANNER)).setName("§a+1").setDurability(Integer.valueOf(12)).getItem();
+        slots[8] = (new ItemCreator(Material.BANNER)).setName("§a+5").setDurability(Integer.valueOf(10)).getItem();
+        slots[13] = (new ItemCreator(Material.ARROW)).setName("§fRevenir en arriere").getItem();
         return () -> slots;
     }
 

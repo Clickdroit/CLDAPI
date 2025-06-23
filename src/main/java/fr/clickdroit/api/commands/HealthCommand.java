@@ -27,13 +27,13 @@ public class HealthCommand implements CommandExecutor {
                 try {
                     Player targetPlayer = Bukkit.getPlayer(target);
                     if (targetPlayer == null) {
-                        player.sendMessage("joueur avec le pseudo '" + arguments[0] + "' n'a trouv");
+                        player.sendMessage("§cAucun joueur avec le pseudo '" + arguments[0] + "' n'a été trouvé.");
                     } else if (action.equals("add")) {
                         HealthUtils.addPermanentHeart(targetPlayer, amount);
-                        player.sendMessage("avez donn" + amount + "" + targetPlayer.getName() + ".");
+                        player.sendMessage("§aVous avez donné " + amount + "❤ à" + targetPlayer.getName() + ".");
                     } else if (action.equals("remove")) {
                         HealthUtils.removePermanentHeart(targetPlayer, amount);
-                        player.sendMessage("avez retir" + amount + "" + targetPlayer.getName() + ".");
+                        player.sendMessage("§cVous avez retiré " + amount + "❤ à" + targetPlayer.getName() + ".");
                     } else {
                         sendHelp(player);
                     }
@@ -44,12 +44,12 @@ public class HealthCommand implements CommandExecutor {
                 sendHelp(player);
             }
         } else {
-            player.sendMessage("insuffisante.");
+            player.sendMessage("§cPermission insuffisante.");
         }
         return false;
     }
 
     public void sendHelp(Player sender) {
-        sender.sendMessage("de syntaxe: /health <joueur> <add:remove> <quantit");
+        sender.sendMessage("§cErreur de syntaxe: /health <joueur> <add:remove> <quantit");
     }
 }

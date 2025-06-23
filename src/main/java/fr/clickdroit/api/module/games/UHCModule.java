@@ -1,18 +1,18 @@
 package fr.clickdroit.api.module.games;
 
 import fr.clickdroit.api.API;
-import fr.clickdroit.api.common.scoreboard.ScoreboardContents;
 import fr.clickdroit.api.game.GameUtils;
 import fr.clickdroit.api.game.team.TeamManager;
 import fr.clickdroit.api.game.team.Teams;
 import fr.clickdroit.api.module.Modules;
 import fr.clickdroit.api.utils.InventoryAPI;
-import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.UUID;
 
 public class UHCModule extends Modules {
     private final API api;
@@ -41,18 +41,18 @@ public class UHCModule extends Modules {
         super.onPlayerDeath(player, killer);
         if (GameUtils.isSoloMode()) {
             if (killer == null) {
-                deathMessage = ""+ player.getName() + " mort.";
+                deathMessage = "§8| §c"+ player.getName() + " §fest mort.";
             } else {
-                deathMessage = ""+ player.getName() + " tupar + killer.getName() + ";
+                deathMessage = "§8| §c"+ player.getName() + " §fa été tué par §c"+ killer.getName() + "§f.";
             }
         } else {
             TeamManager teamManager = this.api.getGameManager().getTeamManager();
             Teams playerTeam = (Teams)teamManager.getPlayerTeam().get(player.getUniqueId());
             if (killer == null) {
-                deathMessage = ""+ playerTeam.getColor() + playerTeam.getName() + " " + player.getName() + " mort.";
+                deathMessage = "§8| §c"+ playerTeam.getColor() + playerTeam.getName() + " " + player.getName() + " mort.";
             } else {
                 Teams killerTeam = (Teams)teamManager.getPlayerTeam().get(killer.getUniqueId());
-                deathMessage = ""+ playerTeam.getColor() + playerTeam.getName() + " " + player.getName() + " tupar " + killerTeam.getColor() + killerTeam.getName() + " " + killer.getName() + "";
+                deathMessage = "§8| §c"+ playerTeam.getColor() + playerTeam.getName() + " " + player.getName() + " tupar " + killerTeam.getColor() + killerTeam.getName() + " " + killer.getName() + "";
             }
         }
         for (ItemStack item : InventoryAPI.itemsDeath) {
@@ -75,20 +75,20 @@ public class UHCModule extends Modules {
                 Teams teams = (Teams)teamManager.getPlayerTeam().get(player.getUniqueId());
                 if (message.startsWith("!")) {
                     for (Player players : Bukkit.getOnlinePlayers()) {
-                        players.sendMessage(teams.getColor() + teams.getName() + " " + player.getName() + " " + (player.isOp() ? "§aActive": "§cDesactive") + message.replaceFirst("!", "").replaceAll(players.getName(), message.contains(players.getName()) ? (""+ players.getName() + (player.isOp() ? "§aActive": "§cDesactive")) : players.getName()));
+                        players.sendMessage(teams.getColor() + teams.getName() + " " + player.getName() + " §8> " + (player.isOp() ? "§f": "§f") + message.replaceFirst("!", "").replaceAll(players.getName(), message.contains(players.getName()) ? ("§b@"+ players.getName() + (player.isOp() ? "§f": "§f")) : players.getName()));
                         if (message.contains(players.getName()))
                             players.playSound(players.getLocation(), Sound.ORB_PICKUP, 5.0F, 0.0F);
                     }
                 } else {
                     for (Player players : teamManager.getPlayersInTeam(teams)) {
-                        players.sendMessage("" + teams.getColor() + teams.getName() + " " + player.getName() + " " + (player.isOp() ? "§aActive": "§cDesactive") + message.replaceFirst("!", "").replaceAll(players.getName(), message.contains(players.getName()) ? (""+ players.getName() + (player.isOp() ? "§aActive": "§cDesactive")) : players.getName()));
+                        players.sendMessage("§f(§féquipe§f" + teams.getColor() + teams.getName() + " " + player.getName() + " §8> " + (player.isOp() ? "§f": "§f") + message.replaceFirst("!", "").replaceAll(players.getName(), message.contains(players.getName()) ? ("§b@"+ players.getName() + (player.isOp() ? "§f": "§f")) : players.getName()));
                         if (message.contains(players.getName()))
                             players.playSound(players.getLocation(), Sound.ORB_PICKUP, 5.0F, 0.0F);
                     }
                 }
             } else {
                 for (Player players : Bukkit.getOnlinePlayers()) {
-                    players.sendMessage((player.isOp() ? ("" + player.getName()) : (""+ player.getName())) + " " + (player.isOp() ? "§aActive": "§cDesactive") + message.replaceAll(players.getName(), message.contains(players.getName()) ? (""+ players.getName() + (player.isOp() ? "§aActive": "§cDesactive")) : players.getName()));
+                    players.sendMessage((player.isOp() ? ("§c§lOP" + player.getName()) : ("§f"+ player.getName())) + " §8> " + (player.isOp() ? "§f": "§f") + message.replaceAll(players.getName(), message.contains(players.getName()) ? ("§b@"+ players.getName() + (player.isOp() ? "§f": "§f")) : players.getName()));
                     if (message.contains(players.getName()))
                         players.playSound(players.getLocation(), Sound.ORB_PICKUP, 5.0F, 0.0F);
                 }
@@ -96,7 +96,7 @@ public class UHCModule extends Modules {
         } else {
             for (Player players : Bukkit.getOnlinePlayers()) {
                 if (!this.api.getGameManager().getInGamePlayers().contains(players.getUniqueId())) {
-                    players.sendMessage("+ player.getName() + " + message.replaceAll(players.getName(), message.contains(players.getName()) ? ("+ players.getName() + ") : players.getName()));
+                    players.sendMessage("§f[§fSpectateurs§f] §f"+ player.getName() + " §8> §f" + message.replaceAll(players.getName(), message.contains(players.getName()) ? ("§b@"+ players.getName() + "§f") : players.getName()));
                     if (message.contains(players.getName()))
                         players.playSound(players.getLocation(), Sound.ORB_PICKUP, 5.0F, 0.0F);
                 }

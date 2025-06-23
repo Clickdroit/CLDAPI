@@ -44,7 +44,7 @@ public enum DropItemRate {
     }
 
     public ItemStack getItem() {
-        return (new ItemCreator(this.material)).setDurability(Integer.valueOf(this.data)).setName("+ this.name + " + this.amount + "%").getItem();
+        return (new ItemCreator(this.material)).setDurability(Integer.valueOf(this.data)).setName("§c"+ this.name + " §8(§a+" + this.amount + "%§8)").getItem();
     }
 
     public String getName() {

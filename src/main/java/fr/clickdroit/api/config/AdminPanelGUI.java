@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class AdminPanelGUI implements CustomInventory {
     public String getName() {
-        return "";
+        return "§f(§c!§f) §cPanel";
     }
 
     public Supplier<ItemStack[]> getContents(Player player) {
@@ -29,7 +29,7 @@ public class AdminPanelGUI implements CustomInventory {
             slots[j] = (new ItemCreator(Material.STAINED_GLASS_PANE)).setDurability(Integer.valueOf(14)).getItem();
             b = (byte)(b + 1);
         }
-        slots[13] = (new ItemCreator(Material.EMPTY_MAP)).setName("Dev " + (API.getAPI().getGameManager().getGameConfig().isGameDev() ? "": "")).getItem();
+        slots[13] = (new ItemCreator(Material.EMPTY_MAP)).setName("§6Game Dev §f- " + (API.getAPI().getGameManager().getGameConfig().isGameDev() ? "§eOui": "§cNon")).getItem();
         slots[40] = CommonItems.GUI_BACK_ITEM.getItem();
         return () -> slots;
     }

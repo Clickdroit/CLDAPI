@@ -6,7 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 public enum UseItems {
-    FISHINGROD("Cannes p", Material.FISHING_ROD, 0),
+    FISHINGROD("Cannes pêche", Material.FISHING_ROD, 0),
     LAVA("Seaux de lave", Material.LAVA_BUCKET, 0),
     BOW("Arcs", Material.BOW, 0),
     FLINT_AND_STEEL("Briquets", Material.FLINT_AND_STEEL, 0),
@@ -28,7 +28,7 @@ public enum UseItems {
     }
 
     public ItemStack getItem() {
-        return (new ItemCreator(this.material)).setDurability(Integer.valueOf(this.data)).setName(""+ this.name + " " + (isEnabled() ? "": "")).getItem();
+        return (new ItemCreator(this.material)).setDurability(Integer.valueOf(this.data)).setName("§8| §c"+ this.name + " " + (isEnabled() ? "§8(§aOui§8)": "§8(§cNon§8)")).getItem();
     }
 
     public boolean isEnabled() {

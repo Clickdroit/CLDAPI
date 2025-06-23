@@ -26,7 +26,7 @@ public class NearCommand implements CommandExecutor {
                     try {
                         radius = Integer.parseInt(arguments[0]);
                     } catch (NumberFormatException e) {
-                        player.sendMessage("erron");
+                        player.sendMessage("§cChiffre erroné.");
                     }
                 Location playerLocation = player.getLocation().clone();
                 int totalPlayers = 0;
@@ -40,16 +40,16 @@ public class NearCommand implements CommandExecutor {
                         int y = (int)players.getLocation().getY();
                         int z = (int)players.getLocation().getZ();
                         String arrow = DaMath.getArrow(playerLocation, players.getLocation());
-                        player.sendMessage(""+ players.getName() + " "+ distance + " blocs vous." + arrow + " " + x + ", Y: " + y + ", Z: " + z + ")");
+                        player.sendMessage("§6"+ players.getName() + " §fest à §6"+ distance + " blocs §de vous. §f" + arrow + " §o(X:" + x + ", Y: " + y + ", Z: " + z + ")");
                         totalPlayers++;
                     }
                 }
                 if (totalPlayers > 0) {
-                    player.sendMessage("y a au total " + totalPlayers + " joueur(s) autour de vous dans un rayon de " + radius + " bloc(s).");
+                    player.sendMessage("§aIl y a au total " + totalPlayers + " joueur(s) autour de vous dans un rayon de " + radius + " bloc(s).");
                 } else {
-                    player.sendMessage("n'y a aucun joueur autour de vous dans un rayon de " + radius + " bloc(s).");
+                    player.sendMessage("§cIl n'y a aucun joueur autour de vous dans un rayon de " + radius + " bloc(s).");
                 }
-                player.sendMessage("pouvez changer le rayon de recherche en ajoutant un nombre aprla commande. Exemple: /near 150");
+                player.sendMessage("§8[§c?§8] §cVous pouvez changer le rayon de recherche en ajoutant un nombre aprla commande. Exemple: /near 150");
             } else {
                 player.sendMessage(CommonString.NO_PERMISSION.getMessage());
             }

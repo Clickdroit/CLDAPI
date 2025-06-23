@@ -17,7 +17,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class ScenarioCommand implements CommandExecutor, CustomInventory {
     public String getName() {
-        return "Scactiv";
+        return "Scénarios activés";
     }
 
     public Supplier<ItemStack[]> getContents(Player player) {
@@ -33,7 +33,7 @@ public class ScenarioCommand implements CommandExecutor, CustomInventory {
                 size++;
         }
         if (size == 0) {
-            slots[22] = (new ItemCreator(Material.BARRIER)).setName("scactiv:(").getItem();
+            slots[22] = (new ItemCreator(Material.BARRIER)).setName("§cAucun scénario activé :(").getItem();
         } else {
             int i = 10;
             for (Scenario scenarios : Scenario.values()) {

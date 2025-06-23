@@ -25,15 +25,15 @@ public class GroupeCommand implements CommandExecutor {
                         if (value < 0 || value > 10)
                             return false;
                         this.gameManager.setGroupe(value);
-                        player.sendMessage("dsur" + value);
-                                String title = (value > 0) ? ("Groupes de + value + " ) : "Limite de groupe retir";
+                        player.sendMessage("§bGroupes défini sur §e" + value);
+                                String title = (value > 0) ? ("§c⚠ Groupes de §l"+ value + "§c⚠") : "§c⚠ Limite de groupe retirée §c⚠";
                         for (Player players : Bukkit.getOnlinePlayers())
                             Title.sendTitle(players, 10, 60, 10, "", title);
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
                     }
             } else {
-                player.sendMessage("insuffisante");
+                player.sendMessage("§cPermission insuffisante");
             }
         }
         return true;

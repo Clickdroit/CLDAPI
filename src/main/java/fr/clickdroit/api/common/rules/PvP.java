@@ -23,12 +23,12 @@ public class PvP implements Rule, Listener {
 
     public void setActive(boolean active) {
         this.pvp = active;
-        Bukkit.broadcastMessage("PvP est d" + (active ? "": "") + "");
+        Bukkit.broadcastMessage("§f[§c§1!§f] §fLe PvP est désormais" + (active ? "§aactivé": "§cdésactivé") + "§f.");
         if (this.pvp && Scenario.SKYHIGH.isEnabled()) {
             SkyHighRunnable skyHighRunnable = new SkyHighRunnable(API.getAPI().getGameManager());
             skyHighRunnable.runTaskTimer((Plugin)API.getAPI(), 0L, 20L);
-            Bukkit.broadcastMessage("scdactif !");
-            Bukkit.broadcastMessage("vous rendre au dessus de la couche" + Scenario.SKYHIGH.getValue());
+            Bukkit.broadcastMessage("§eLe scénrario §6SkyHigh §eest désormais actif !");
+            Bukkit.broadcastMessage("§eVeuillez vous rendre au-dessus de la couche §c" + Scenario.SKYHIGH.getValue());
             for (Player players : Bukkit.getOnlinePlayers())
                 players.playSound(players.getLocation(), Sound.WITHER_SPAWN, 3.0F, 0.0F);
         }

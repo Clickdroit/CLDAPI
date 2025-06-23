@@ -21,12 +21,12 @@ public class ViewOfflineCommand implements CommandExecutor {
             return true;
         Player player = (Player)commandSender;
         if (this.gameManager.hasHostAccess(player)) {
-            commandSender.sendMessage("des joueurs d:");
+            commandSender.sendMessage("§aListe des joueurs déconnectés :");
             for (UUID uuid : this.gameManager.getOfflinePlayers()) {
                 GamePlayer gamePlayer = GamePlayer.getPlayer(uuid);
                 if (gamePlayer == null)
                     continue;
-                commandSender.sendMessage(""+ gamePlayer.getName());
+                commandSender.sendMessage("§f- §c"+ gamePlayer.getName());
             }
         } else {
             commandSender.sendMessage(CommonString.NO_PERMISSION.getMessage());

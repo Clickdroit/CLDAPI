@@ -31,10 +31,10 @@ public class OresLimitGUI implements CustomInventory {
     public Supplier<ItemStack[]> getContents(Player player) {
         ItemStack[] slots = new ItemStack[getSlots()];
         slots[3] = OpenVar.DIAMOND_MAX.getItem();
-        slots[4] = (new ItemCreator(Material.PAPER)).setName("")
+        slots[4] = (new ItemCreator(Material.PAPER)).setName("§cInformation")
                 .addLore("")
-                .addLore("  la valeur est dsur 0")
-                .addLore("  il n'y a pas de limite.")
+                .addLore("  §8| §fSi la valeur est définie sur 0")
+                .addLore("  §8| §falors il n'y a pas de limite.")
                 .addLore("")
                 .getItem();
         slots[5] = OpenVar.GOLD_MAX.getItem();

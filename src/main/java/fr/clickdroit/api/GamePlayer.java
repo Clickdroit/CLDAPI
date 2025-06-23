@@ -3,14 +3,15 @@ package fr.clickdroit.api;
 import fr.clickdroit.api.game.combatlog.CombatLogEntity;
 import fr.clickdroit.api.game.team.Teams;
 import fr.clickdroit.api.utils.Title;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class GamePlayer {
     private final UUID uuid;
@@ -123,7 +124,7 @@ public class GamePlayer {
 
     public void addDiamonds() {
         this.diamonds++;
-        Title.sendActionBar(getPlayer(), "de diamants: + this.diamonds + "+ API.getAPI().getGameManager().getGameConfig().getDiamondMax());
+        Title.sendActionBar(getPlayer(), "§f[§b*§f] §bLimite de diamants: §f"+ this.diamonds + "§f/§f"+ API.getAPI().getGameManager().getGameConfig().getDiamondMax());
     }
 
     public int getGolds() {

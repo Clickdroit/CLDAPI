@@ -10,32 +10,32 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
 public enum OpenVar {
-    SLOTS("gameSlot", Material.SKULL_ITEM, 3, "Slots",
-            new String[] { "", "  permet de définir le", "  nombre de slots autorisés", "  durant la partie.", "" },
+    SLOTS("gameSlot", Material.SKULL_ITEM, 3, "§8| §fSlots",
+            new String[] { "", "  §8| §fVous permet de §cmodifier", "  §8| §fle nombre de §cjoueurs§f autorisés", "  §8| §fà se §aconnecter§f à la §cpartie§f.", "" },
             false, true),
 
-    PVP_TIME("pvpTime", Material.DIAMOND_SWORD, 0, "Temps PvP",
-            new String[] { "", "  permet de définir le", "  temps avant l'activation", "  du PvP durant la partie.", "" },
+    PVP_TIME("pvpTime", Material.DIAMOND_SWORD, 0, "§8| §cP§fv§cP",
+            new String[] { "", "  §8| §fVous permet de §cmodifier", "  §8| §fle temps avant l'activation", "  §8| §fdu §6PvP§f durant la §cpartie§f.", "" },
             true, false),
 
-    EPISODE_TIME("episodeTime", Material.WATCH, 0, "Temps Episode",
-            new String[] { "", "  permet de définir le", "  temps entre chaque épisode.", "" },
+    EPISODE_TIME("episodeTime", Material.WATCH, 0, "§8| §fDurée §f: §cEpisode",
+            new String[] { "", "  §8| §fVous permet de §cmodifier", "  §8| §fle temps entre chaque épisode.", "" },
             true, false),
 
-    BORDER_TIME("borderTime", Material.STAINED_GLASS, 4, "Temps Bordure",
-            new String[] { "", "  permet de définir le", "  temps avant l'activation", "  de la réduction de la bordure", "  durant la partie.", "" },
+    BORDER_TIME("borderTime", Material.STAINED_GLASS, 4, "§8| §fBordure",
+            new String[] { "", "  §8| §fVous permet de §cmodifier", "  §8| §fle temps avant l'activation", "  §8| §fde la réduction de la", "  §8| §fbordure durant la partie.", "" },
             true, false),
 
-    CYCLE_DURATION("dayNightDuration", Material.WATCH, 0, "Durée du cycle jour/nuit",
-            new String[] { "", "  permet de définir la", "  durée du cycle jour/nuit", "  de la partie.", "  Le temps du jour ou de la nuit", "  sera égal à la moitié de", "  la valeur choisie.", "" },
+    CYCLE_DURATION("dayNightDuration", Material.WATCH, 0, "§8| §fDurée du cycle jour/nuit",
+            new String[] { "", "  §8| §fVous permet de §cmodifier", "  §8| §fla durée du cycle", "  §8| §fjour/nuit de la §cpartie.", "  §8| §fLe temps du §bjour§f ou de la ", "  §8| §cnuit§f sera égal à la §cmoitié§f de", "  §8| §fla valeur choisie.", "" },
             false, true),
 
-    DIAMOND_MAX("diamondMax", Material.DIAMOND, 0, "Limite Diamants",
-            new String[] { "", "  permet de limiter le", "  minage des diamants.", "" },
+    DIAMOND_MAX("diamondMax", Material.DIAMOND, 0, "§8| §fDiamants",
+            new String[] { "", "  §8| §fVous permet de §climiter", "  §8| §fle minage des diamants.", "" },
             false, true),
 
-    GOLD_MAX("goldMax", Material.GOLD_INGOT, 0, "Limite Or",
-            new String[] { "", "  permet de limiter le", "  minage de l'or.", "" },
+    GOLD_MAX("goldMax", Material.GOLD_INGOT, 0, "§8| §fOrs",
+            new String[] { "", "  §8| §fVous permet de §climiter", "  §8| §fle minage de l'or.", "" },
             false, true);
 
     private final String var;
@@ -74,9 +74,8 @@ public enum OpenVar {
         try {
             int amount = GameConfig.class.getField(this.var).getInt(API.getAPI().getGameManager().getGameConfig());
 
-            itemCreator.addLore("");
-            itemCreator.addLore("§7Valeur: §a" + (this.toDigital ?
-                    Chrono.timeToDigitalString(amount) : String.valueOf(amount)));
+            itemCreator.addLore(" §8> §fAccès §f: §6§lHost");
+            itemCreator.addLore(" §8> §fConfiguration: §c" + (this.toDigital ? Chrono.timeToDigitalString(amount) : String.valueOf(amount)));
             itemCreator.addLore("");
             itemCreator.addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage());
             itemCreator.addLore("");
@@ -100,7 +99,7 @@ public enum OpenVar {
         long value = API.getAPI().getGameManager().getGameConfig().getDayNightDuration();
         int result = Chrono.getCycleDurationTime(value);
 
-        itemCreator.addLore("§7Durée: §a" + result + " minute" + (result > 1 ? "s" : ""));
+        itemCreator.addLore(" §8> §fConfiguration: §c" + result + " minute" + (result > 1 ? "s" : ""));
         itemCreator.addLore("");
         itemCreator.addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage());
         itemCreator.addLore("");

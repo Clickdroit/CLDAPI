@@ -3,11 +3,6 @@ package fr.minuskube.netherboard.bukkit;
 import fr.minuskube.netherboard.Netherboard;
 import fr.minuskube.netherboard.api.PlayerBoard;
 import fr.minuskube.netherboard.bukkit.util.NMS;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Objective;
@@ -15,21 +10,17 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.*;
+
 public class BPlayerBoard implements PlayerBoard<String, Integer, String> {
     private static final Logger LOGGER = LoggerFactory.getLogger(BPlayerBoard.class);
 
     private Player player;
-
     private Scoreboard scoreboard;
-
     private String name;
-
     private Objective objective;
-
     private Objective buffer;
-
     private Map<Integer, String> lines = new HashMap<>();
-
     private boolean deleted = false;
 
     public BPlayerBoard(Player player, String name) {
@@ -73,8 +64,10 @@ public class BPlayerBoard implements PlayerBoard<String, Integer, String> {
         String oldName = this.lines.get(score);
         if (name.equals(oldName))
             return;
-        this.lines.entrySet()
-                .removeIf(entry -> ((String)entry.getValue()).equals(name));
+
+        // Supprimer les anciennes entrées avec le même nom
+        this.lines.entrySet().removeIf(entry -> entry.getValue().equals(name));
+
         if (oldName != null) {
             if (NMS.getVersion().getMajor().equals("1.7")) {
                 sendScore(this.objective, oldName, score.intValue(), true);
@@ -102,14 +95,14 @@ public class BPlayerBoard implements PlayerBoard<String, Integer, String> {
         }
         Set<Integer> scores = new HashSet<>(this.lines.keySet());
         for (Iterator<Integer> iterator = scores.iterator(); iterator.hasNext(); ) {
-            int score = ((Integer)iterator.next()).intValue();
+            int score = iterator.next().intValue();
             if (score <= 0 || score > lines.length)
                 remove(Integer.valueOf(score));
         }
     }
 
     public void clear() {
-        (new HashSet(this.lines.keySet())).forEach(this::remove);
+        new HashSet<>(this.lines.keySet()).forEach(this::remove);
         this.lines.clear();
     }
 
@@ -123,11 +116,9 @@ public class BPlayerBoard implements PlayerBoard<String, Integer, String> {
     private void sendObjective(Objective obj, ObjectiveMode mode) {
         try {
             Object objHandle = NMS.getHandle(obj);
-            Object packetObj = NMS.PACKET_OBJ.newInstance(new Object[] { objHandle,
-
-                    Integer.valueOf(mode.ordinal()) });
-            NMS.sendPacket(packetObj, new Player[] { this.player });
-        } catch (InstantiationException|IllegalAccessException|java.lang.reflect.InvocationTargetException|NoSuchMethodException e) {
+            Object packetObj = NMS.PACKET_OBJ.newInstance(objHandle, mode.ordinal());
+            NMS.sendPacket(packetObj, this.player);
+        } catch (Exception e) {
             LOGGER.error("Error while creating and sending objective packet. (Unsupported Minecraft version?)", e);
         }
     }
@@ -135,34 +126,39 @@ public class BPlayerBoard implements PlayerBoard<String, Integer, String> {
     private void sendObjectiveDisplay(Objective obj) {
         try {
             Object objHandle = NMS.getHandle(obj);
-            Object packet = NMS.PACKET_DISPLAY.newInstance(new Object[] { Integer.valueOf(1), objHandle });
-            NMS.sendPacket(packet, new Player[] { this.player });
-        } catch (InstantiationException|IllegalAccessException|java.lang.reflect.InvocationTargetException|NoSuchMethodException e) {
+            Object packet = NMS.PACKET_DISPLAY.newInstance(1, objHandle);
+            NMS.sendPacket(packet, this.player);
+        } catch (Exception e) {
             LOGGER.error("Error while creating and sending display packet. (Unsupported Minecraft version?)", e);
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void sendScore(Objective obj, String name, int score, boolean remove) {
         try {
             Object sbHandle = NMS.getHandle(this.scoreboard);
             Object objHandle = NMS.getHandle(obj);
-            Object sbScore = NMS.SB_SCORE.newInstance(new Object[] { sbHandle, objHandle, name });
-            NMS.SB_SCORE_SET.invoke(sbScore, new Object[] { Integer.valueOf(score) });
-            Map scores = (Map)NMS.PLAYER_SCORES.get(sbHandle);
+            Object sbScore = NMS.SB_SCORE.newInstance(sbHandle, objHandle, name);
+            NMS.SB_SCORE_SET.invoke(sbScore, Integer.valueOf(score));
+
+            Map<String, Map<Object, Object>> scores = (Map<String, Map<Object, Object>>) NMS.PLAYER_SCORES.get(sbHandle);
             if (remove) {
-                if (scores.containsKey(name))
-                    ((Map)scores.get(name)).remove(objHandle);
+                if (scores.containsKey(name)) {
+                    scores.get(name).remove(objHandle);
+                }
             } else {
-                if (!scores.containsKey(name))
+                if (!scores.containsKey(name)) {
                     scores.put(name, new HashMap<>());
-                ((Map<Object, Object>)scores.get(name)).put(objHandle, sbScore);
+                }
+                scores.get(name).put(objHandle, sbScore);
             }
+
+            Object packet = null; // Déclaration de la variable packet
+
             switch (NMS.getVersion().getMajor()) {
                 case "1.7":
-                    packet = NMS.PACKET_SCORE.newInstance(new Object[] { sbScore,
-
-                            Integer.valueOf(remove ? 1 : 0) });
-                    NMS.sendPacket(packet, new Player[] { this.player });
+                    packet = NMS.PACKET_SCORE.newInstance(sbScore, remove ? 1 : 0);
+                    NMS.sendPacket(packet, this.player);
                     return;
                 case "1.8":
                 case "1.9":
@@ -170,21 +166,24 @@ public class BPlayerBoard implements PlayerBoard<String, Integer, String> {
                 case "1.11":
                 case "1.12":
                     if (remove) {
-                        packet = NMS.PACKET_SCORE_REMOVE.newInstance(new Object[] { name, objHandle });
+                        packet = NMS.PACKET_SCORE_REMOVE.newInstance(name, objHandle);
                     } else {
-                        packet = NMS.PACKET_SCORE.newInstance(new Object[] { sbScore });
+                        packet = NMS.PACKET_SCORE.newInstance(sbScore);
                     }
-                    NMS.sendPacket(packet, new Player[] { this.player });
+                    NMS.sendPacket(packet, this.player);
                     return;
+                default:
+                    packet = NMS.PACKET_SCORE.newInstance(
+                            remove ? NMS.ENUM_SCORE_ACTION_REMOVE : NMS.ENUM_SCORE_ACTION_CHANGE,
+                            obj.getName(),
+                            name,
+                            Integer.valueOf(score)
+                    );
+                    NMS.sendPacket(packet, this.player);
+                    break;
             }
-            Object packet = NMS.PACKET_SCORE.newInstance(new Object[] { remove ? NMS.ENUM_SCORE_ACTION_REMOVE : NMS.ENUM_SCORE_ACTION_CHANGE, obj
-
-                    .getName(), name,
-
-                    Integer.valueOf(score) });
-            NMS.sendPacket(packet, new Player[] { this.player });
-        } catch (InstantiationException|IllegalAccessException|java.lang.reflect.InvocationTargetException|NoSuchMethodException e) {
-            LOGGER.error("Error while creating and sending remove packet. (Unsupported Minecraft version?)", e);
+        } catch (Exception e) {
+            LOGGER.error("Error while creating and sending score packet. (Unsupported Minecraft version?)", e);
         }
     }
 

@@ -38,8 +38,8 @@ public class DisperseCommand implements CommandExecutor {
                                         continue;
                                     gamePlayers.addInvincibilityNoFallCount(10);
                                     players.teleport(RandomUtils.getRandomLocationInBorder());
-                                    players.sendMessage("avez talpar un mod");
-                                            player.sendMessage("avez tal+ players.getName() + ");
+                                    players.sendMessage("§cVous avez été téléporté aléatoirement par un modérateur");
+                                            player.sendMessage("§cVous avez téléporté aléatoirement §l" + players.getName() + "§c.");
                                 }
                             }
                         } else {
@@ -56,19 +56,19 @@ public class DisperseCommand implements CommandExecutor {
                                             continue;
                                         gamePlayers.addInvincibilityNoFallCount(10);
                                         players.teleport(RandomUtils.getRandomLocationInBorder());
-                                        players.sendMessage("avez talpar un mod");
-                                                player.sendMessage("avez tal+ players.getName() + ");
+                                        players.sendMessage("§cVous avez été téléporté aléatoirement par un modérateur");
+                                                player.sendMessage("§cVous avez téléporté aléatoirement §l"+ players.getName() + "§c.");
                                     }
                                 }
                             } else {
-                                player.sendMessage("joueur avec le pseudo '" + arguments[0] + "' n'a trouv");
+                                player.sendMessage("§cAucun joueur avec le pseudo '" + arguments[0] + "' n'a été trouvé");
                             }
                         }
                     } else {
-                        player.sendMessage("de syntaxe: /disperse <pos:joueur>");
+                        player.sendMessage("§cErreur de syntaxe: /disperse <pos:joueur>");
                     }
                 } else {
-                    player.sendMessage("partie n'a pas commenc");
+                    player.sendMessage("§cLa partie n'a pas commencée");
                 }
             } else {
                 player.sendMessage(CommonString.NO_PERMISSION.getMessage());

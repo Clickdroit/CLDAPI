@@ -36,7 +36,7 @@ public class NoDamage implements Rule, Listener {
     public void setActive(boolean active) {
         this.noDamage = active;
         if (!active) {
-            Bukkit.broadcastMessage("est d");
+            Bukkit.broadcastMessage("§f[§a§1!§f] §fL'invincibilité est maintenant §cdésactivée§f.");
             GameUtils.registerHealth();
         }
     }

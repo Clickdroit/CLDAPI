@@ -22,7 +22,7 @@ public class PlayerBrewItemListener implements Listener {
                 if (result.getType() == potion.getMaterial() && !potion.isEnabled()) {
                     event.getInventory().remove(result);
                     event.setCancelled(true);
-                    player.sendMessage("potion est d");
+                    player.sendMessage("§cCettepotion est désactivé.");
                             player.closeInventory();
                 }
             }

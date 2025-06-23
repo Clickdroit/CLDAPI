@@ -18,7 +18,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class DefaultDeathInvGUI implements CustomInventory {
     public String getName() {
-        return "Dl'inventaire de" ;
+        return "Définir l'inventaire de §cmort" ;
     }
 
     public Supplier<ItemStack[]> getContents(Player player) {
@@ -32,7 +32,7 @@ public class DefaultDeathInvGUI implements CustomInventory {
         slots[37] = InventoryAPI.itemsDeath[37];
         slots[38] = InventoryAPI.itemsDeath[38];
         slots[39] = InventoryAPI.itemsDeath[39];
-        slots[52] = (new ItemCreator(Material.BANNER)).setName("").setDurability(Integer.valueOf(10)).getItem();
+        slots[52] = (new ItemCreator(Material.BANNER)).setName("§8| §fDéfinir §cl'inventaire").setDurability(Integer.valueOf(10)).getItem();
         slots[53] = CommonItems.GUI_BACK_ITEM.getItem();
         return () -> slots;
     }
@@ -47,11 +47,11 @@ public class DefaultDeathInvGUI implements CustomInventory {
                 player.setAllowFlight(false);
                 player.sendMessage(CommonString.BAR.getMessage());
                 player.sendMessage("");
-                player.sendMessage("l'inventaire de mort");
+                player.sendMessage("§c§lDéfinir l'inventaire de mort");
                 player.sendMessage("");
-                player.sendMessage("les commandes ");
-                player.sendMessage(" l'inventaire.");
-                player.sendMessage(" l'objet dans votre main.");
+                player.sendMessage("§cVoici les commandes §4:");
+                player.sendMessage(" §8| §4/§cfinish §8: §fSauvegarder l'inventaire.");
+                player.sendMessage(" §8| §4/§cenchant §8: §fEnchanter l'objet dans votre main.");
                 player.sendMessage("");
                 player.sendMessage(CommonString.BAR.getMessage());
                 player.getInventory().clear();

@@ -24,7 +24,7 @@ public class PlayerEnchantListener implements Listener {
             return;
         if (containsBlockedEnchant(event.getEnchantsToAdd())) {
             event.setCancelled(true);
-            player.sendMessage("enchantement est d");
+            player.sendMessage("§cCet enchantement est désactivé.");
         }
     }
 
@@ -46,7 +46,7 @@ public class PlayerEnchantListener implements Listener {
             return;
         if (containsBlockedEnchant(result.getEnchantments())) {
             getBlockedEnchant(result.getEnchantments()).keySet().forEach(enchant -> result.removeEnchantment(enchant));
-            player.sendMessage("enchantement est d");
+            player.sendMessage("§cCet enchantement est désactivé.");
         }
     }
 

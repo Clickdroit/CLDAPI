@@ -67,17 +67,17 @@ public abstract class Modules {
             if (item != null && item.getType() != Material.AIR)
                 gamePlayer.getLastLocation().getWorld().dropItemNaturally(gamePlayer.getLastLocation(), item);
         }
-        Bukkit.broadcastMessage(""+ gamePlayer.getName() + " pendant plus de " + api.getGameManager().getGameConfig().getDisconnectMinute() + " minute(s) a ");
+        Bukkit.broadcastMessage("§f[§c§l!§f] §a"+ gamePlayer.getName() + "§fs'est §bdéconnecté pendant plus de " + api.getGameManager().getGameConfig().getDisconnectMinute() + " minute(s) §fet a été §céliminé§f.");
     }
 
     public void onDay(boolean sendMessage) {
         if (sendMessage)
-            Bukkit.broadcastMessage("LE SOLEIL SE LEVE ");
+            Bukkit.broadcastMessage("§6§l☀ LE SOLEIL SE LEVE ☀");
     }
 
     public void onNight(boolean sendMessage) {
         if (sendMessage)
-            Bukkit.broadcastMessage("LA LUNE COMMENCE A S'ECLAIRCIR" );
+            Bukkit.broadcastMessage("§9§l☾ LA LUNE COMMENCE A S'ECLAIRCIR ☾" );
     }
 
     public abstract void onLoad();

@@ -62,7 +62,7 @@ public class GameUtils {
             Scoreboard scoreboard = API.getAPI().getServer().getScoreboardManager().getMainScoreboard();
             Objective objective = (scoreboard.getObjective("health") == null) ? scoreboard.registerNewObjective("health", "health") : scoreboard.getObjective("health");
             objective.setDisplaySlot(DisplaySlot.BELOW_NAME);
-            objective.setDisplayName("");
+            objective.setDisplayName("§4❤");
                     Objective objectiveTab = (scoreboard.getObjective("vie") == null) ? scoreboard.registerNewObjective("vie", "health") : scoreboard.getObjective("vie");
             objectiveTab.setDisplaySlot(DisplaySlot.PLAYER_LIST);
             for (Player players : Bukkit.getOnlinePlayers()) {

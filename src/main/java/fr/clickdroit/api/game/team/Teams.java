@@ -84,7 +84,7 @@ public enum Teams {
     }
 
     public ItemCreator getItem() {
-        return (new ItemCreator(Material.BANNER)).setName("" + this.color + this.name).setDurability(Integer.valueOf(this.dataitem));
+        return (new ItemCreator(Material.BANNER)).setName("§fÉquipe" + this.color + this.name).setDurability(Integer.valueOf(this.dataitem));
     }
 
     public int getPage() {

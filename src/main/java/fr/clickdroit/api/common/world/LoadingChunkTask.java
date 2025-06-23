@@ -67,7 +67,7 @@ public class LoadingChunkTask extends BukkitRunnable {
             }
             this.percent = this.currentChunkLoad / this.totalChunkToLoad * 100.0D;
             for (Player player : Bukkit.getOnlinePlayers())
-                Title.sendActionBar(player, ChatColor.GRAY + "Pr" + ChatColor.GREEN + this.percent + "%" + ProgressBar.getProgressBar((int)this.percent, 100, 40, "|", ChatColor.GREEN, ChatColor.GRAY) + "");
+                Title.sendActionBar(player, ChatColor.GRAY + "Prégénération : " + ChatColor.GREEN + this.percent + "% §8[§r" + ProgressBar.getProgressBar((int)this.percent, 100, 40, "|", ChatColor.GREEN, ChatColor.GRAY) + "§8]");
             if (this.ancientPercent < this.percent)
                 this.ancientPercent = (int)this.percent;
             if (this.finished) {

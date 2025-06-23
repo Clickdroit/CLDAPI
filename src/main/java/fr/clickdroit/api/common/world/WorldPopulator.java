@@ -35,7 +35,7 @@ public class WorldPopulator {
                 public void run() {
                     int radius = 250;
                     if (this.progress == 0)
-                        System.out.println("[Domei] Nettoyage du centre de la carte..");
+                        System.out.println("[UHC] Nettoyage du centre de la carte..");
                     for (int x = 0 - radius; x <= 0 + radius; x++) {
                         for (int z = 0 - radius; z <= 0 + radius; z++) {
                             Block block = WorldPopulator.this.gameWorld.getBlockAt(x, this.YChange, z);
@@ -52,11 +52,11 @@ public class WorldPopulator {
                     this.YChange++;
                     this.progress++;
                     for (Player player : Bukkit.getOnlinePlayers())
-                        Title.sendActionBar(player, ChatColor.YELLOW + "Nettoyage du centre: " + ChatColor.GREEN + this.progress + "%" +
-                                ProgressBar.getProgressBar(this.progress, 80, 20, "|", ChatColor.YELLOW, ChatColor.GRAY) + "");
+                        Title.sendActionBar(player, ChatColor.YELLOW + "Nettoyage du centre: " + ChatColor.GREEN + this.progress + "% §8[§r" +
+                                ProgressBar.getProgressBar(this.progress, 80, 20, "|", ChatColor.YELLOW, ChatColor.GRAY) + "§8]");
                     if (this.progress >= 80) {
                         cancel();
-                        System.out.println("[Domei] Nettoyage du centre de la carte termin!");
+                        System.out.println("[UHC] Nettoyage du centre de la carte termin!");
                         WorldPopulator.this.addSapling();
                     }
                 }
@@ -67,7 +67,7 @@ public class WorldPopulator {
     }
 
     private void addSapling() {
-        System.out.println("[Domei] Plantage d'arbres au centre de la carte..");
+        System.out.println("[UHC] Plantage d'arbres au centre de la carte..");
         (new Thread(() -> (new BukkitRunnable() {
             int yInicial = 50;
 
@@ -94,8 +94,8 @@ public class WorldPopulator {
                 this.YChange++;
                 this.progress++;
                 for (Player player : Bukkit.getOnlinePlayers())
-                    Title.sendActionBar(player, ChatColor.YELLOW + "Crde la for" + ChatColor.GREEN + this.progress + "%" +
-                            ProgressBar.getProgressBar(this.progress, 60, 20, "|", ChatColor.YELLOW, ChatColor.GRAY) + "");
+                    Title.sendActionBar(player, ChatColor.YELLOW + "Création de la forêt:" + ChatColor.GREEN + this.progress + "% §8[§r" +
+                            ProgressBar.getProgressBar(this.progress, 60, 20, "|", ChatColor.YELLOW, ChatColor.GRAY) + "§8]");
                 if (this.progress >= 60) {
                     new LoadingChunkV2(WorldPopulator.this.gameWorld);
                     cancel();

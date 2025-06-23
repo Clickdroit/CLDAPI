@@ -43,11 +43,11 @@ public class PlayerChatListener implements Listener {
                 if (!player.isOp()) {
                     if (this.lastMessage.containsKey(player) && ((String)this.lastMessage
                             .get(player)).equalsIgnoreCase(message)) {
-                        player.sendMessage("avez denvoyce message, n'insistez pas.");
+                        player.sendMessage("§fMerci de ne pas envoyé plusieurs fois le même message.");
                         return;
                     }
                     if (this.cooldown.contains(player)) {
-                        player.sendMessage("patienter avant de pouvoir renvoyer un message.");
+                        player.sendMessage("§fVeuillez patienter avant de pouvoir renvoyer un message.");
                         return;
                     }
                 }
@@ -55,7 +55,7 @@ public class PlayerChatListener implements Listener {
                     if (!GameUtils.isSoloMode() && this.gameManager.getTeamManager().getPlayerTeam().containsKey(player.getUniqueId())) {
                         Teams teams = (Teams)this.gameManager.getTeamManager().getPlayerTeam().get(player.getUniqueId());
                         for (Player players : Bukkit.getOnlinePlayers()) {
-                            players.sendMessage(teams.getColor() + teams.getName() + " " + player.getName() + " "+ message
+                            players.sendMessage(teams.getColor() + teams.getName() + " " + player.getName() + "§8> §f "+ message
                                     .replaceAll(players.getName(), message.contains(players.getName()) ? ("§b@"+ players.getName() + "§f") : players.getName()).replace(":)", "§e§r").replace("):", "§e§r"));
                             if (message.contains(players.getName()))
                                 players.playSound(players.getLocation(), Sound.ORB_PICKUP, 5.0F, 0.0F);
@@ -73,7 +73,7 @@ public class PlayerChatListener implements Listener {
                     Bukkit.getScheduler().runTaskLater((Plugin)this.gameManager.getApi(), () -> this.cooldown.remove(player), 40L);
                     break;
                 }
-                player.sendMessage("chat est actuellement desactiver");
+                player.sendMessage("§cLe chat est actuellement desactivé.");
                 break;
             case TELEPORTATION:
                 event.setCancelled(true);
@@ -84,12 +84,12 @@ public class PlayerChatListener implements Listener {
                 break;
             case FINISH:
                 event.setCancelled(true);
-                gg = new String[] { "!", "!", "!", "!", "!", "!" };
+                gg = new String[] { "§eGG !", "§aGG !", "§bGG !", "§cGG !", "§dGG !", "§fGG !" };
                 random = new Random();
                 r = random.nextInt(gg.length);
                 congrats = gg[r];
                 for (Player players : Bukkit.getOnlinePlayers()) {
-                    players.sendMessage(congrats + " " + player.getName() + "" + message.replaceAll(players.getName(), message.contains(players.getName()) ? (""+ players.getName() + "") : players.getName()).replace(":)", "").replace("):", ""));
+                    players.sendMessage(congrats + " " + player.getName() + "§8> §f" + message.replaceAll(players.getName(), message.contains(players.getName()) ? ("§b@"+ players.getName() + "§f") : players.getName()).replace(":)", "§e☺").replace("):", "☹"));
                     if (message.contains(players.getName()))
                         players.playSound(players.getLocation(), Sound.ORB_PICKUP, 5.0F, 0.0F);
                 }

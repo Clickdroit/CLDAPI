@@ -37,15 +37,15 @@ public class ReviveCommand implements CommandExecutor {
                 if (this.api.getGameManager().hasHostAccess(player)) {
                     Player target = Bukkit.getPlayer(arguments[0]);
                     if (target == null || !target.isOnline()) {
-                        player.sendMessage("joueur avec le pseudo '" + arguments[0] + "' n'a trouv");
+                        player.sendMessage("§cAucun joueur avec le pseudo '" + arguments[0] + "' n'a été trouvé");
                         return false;
                     }
                     final GamePlayer gameTarget = GamePlayer.getPlayer(target.getUniqueId());
                     if (gameTarget.isAlive()) {
-                        player.sendMessage("joueur n'est pas mort.");
+                        player.sendMessage("§cCe joueur n'est pas mort.");
                         return false;
                     }
-                    player.sendMessage("avez ressucit" + target.getName() + ".");
+                    player.sendMessage("§aVous avez ressucité" + target.getName() + ".");
                     if (!this.api.getGameManager().getInGamePlayers().contains(target.getUniqueId()))
                         this.api.getGameManager().getInGamePlayers().add(target.getUniqueId());
                     gameTarget.setAlive(true);
@@ -76,7 +76,7 @@ public class ReviveCommand implements CommandExecutor {
                     target.getInventory().setBoots(gameTarget.getPlayerArmor()[0]);
                     target.setLevel(gameTarget.getPlayerExp());
                     target.playSound(target.getLocation(), Sound.ORB_PICKUP, 5.0F, 0.0F);
-                    target.sendMessage("avez ressuscitpar un organisateur de la partie !");
+                    target.sendMessage("§aVous avez été ressuscité par un organisateur de la partie !");
                     (new BukkitRunnable() {
                         int current = 0;
 
@@ -89,14 +89,14 @@ public class ReviveCommand implements CommandExecutor {
                         }
                     }).runTaskTimer((Plugin)API.getAPI(), 0L, 20L);
                 } else {
-                    player.sendMessage("insuffisante.");
+                    player.sendMessage("§cPermission insuffisante.");
                     player.playSound(player.getLocation(), Sound.ITEM_BREAK, 3.0F, 0.0F);
                 }
             } else {
-                player.sendMessage("partie n'a pas commenc");
+                player.sendMessage("§cLa partie n'a pas commencée.");
             }
         } else {
-            player.sendMessage("fournir le nom d'un joueur.");
+            player.sendMessage("§cVeuillez fournir le nom d'un joueur.");
         }
         return false;
     }

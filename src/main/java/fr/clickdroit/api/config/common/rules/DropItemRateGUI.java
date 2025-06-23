@@ -30,20 +30,20 @@ public class DropItemRateGUI implements CustomInventory {
             slots[slot] = dropItemRate.getItem();
             slot++;
         }
-        slots[13] = (new ItemCreator(Material.ARROW)).setName("en arri").getItem();
+        slots[13] = (new ItemCreator(Material.ARROW)).setName("§fRevenir en arriere").getItem();
         return () -> slots;
     }
 
     public void onClick(Player player, Inventory inventory, ItemStack clickedItem, int slot, ClickType clickType) {
         for (DropItemRate dropItemRate : DropItemRate.values()) {
-            if (dropItemRate.getMaterial() == clickedItem.getType() && !clickedItem.getItemMeta().getDisplayName().equals("en arri")) {
+            if (dropItemRate.getMaterial() == clickedItem.getType() && !clickedItem.getItemMeta().getDisplayName().equals("§fRevenir en arriere")) {
                 dropItemRate.toggleAmount(clickType);
                 this.gameManager.getApi().openInventory(player, getClass());
             }
         }
         switch (slot) {
             case 13:
-                if (clickedItem.hasItemMeta() && clickedItem.getItemMeta().hasDisplayName() && clickedItem.getItemMeta().getDisplayName().equalsIgnoreCase("en arri"))
+                if (clickedItem.hasItemMeta() && clickedItem.getItemMeta().hasDisplayName() && clickedItem.getItemMeta().getDisplayName().equalsIgnoreCase("§fRevenir en arriere"))
                 this.gameManager.getApi().openInventory(player, ConfigOptionsGUI.class);
                 break;
         }

@@ -50,13 +50,13 @@ public class PlayerJoinListener implements Listener {
         Player player = event.getPlayer();
         if (!GameUtils.isGameStarted() &&
                 GameUtils.getPlayerAmount() >= this.api.getGameManager().getGameConfig().getGameSlot() && !player.isOp())
-            event.disallow(PlayerLoginEvent.Result.KICK_FULL, "serveur est plein.");
+            event.disallow(PlayerLoginEvent.Result.KICK_FULL, "§cLe serveur est plein.");
         if (this.api.getGameManager().getGameState().equals(GameState.TELEPORTATION))
-            event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "ne pouvez pas rejoindre la partie maintenant.");
+            event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "§cVous ne pouvez pas rejoindre la partie maintenant.");
         if ((this.api.getGameManager().getGameState().equals(GameState.PLAYING) || this.api.getGameManager().getGameState().equals(GameState.FINISH)) &&
                 !this.api.getGameManager().getGameConfig().isSpectators() && !this.api.getGameManager().getInGamePlayers().contains(player.getUniqueId()) &&
                 !player.isOp())
-            event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "spectateurs sont ddurant la partie.");
+            event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "§cLesspectateurs sont désactivés ddurant la partie.");
     }
 
     @EventHandler
@@ -69,7 +69,7 @@ public class PlayerJoinListener implements Listener {
         if (!GamePlayer.havePlayer(uuid))
             new GamePlayer(player);
         if (this.api.getGameManager().getBanList().contains(player.getName().toLowerCase())) {
-            player.kickPlayer("ne pouvez pas rejoindre car vous banni !");
+            player.kickPlayer("§cVous ne pouvez pas rejoindre car vous banni !");
             event.setJoinMessage(null);
             return;
         }
@@ -81,46 +81,46 @@ public class PlayerJoinListener implements Listener {
                 event.setJoinMessage(null);
                 player.teleport(this.api.getLobbyPopulator().getLobbyLocation());
                 player.sendMessage("");
-                player.sendMessage("   avez rejoint serveur de "+ ((UHCInfos.hostName == null) ? "Aucun" : UHCInfos.hostName) + "");
+                player.sendMessage("   §f(§c!§f) §fVous avez rejoint §fle serveur de §c§l§n"+ ((UHCInfos.hostName == null) ? "Aucun" : UHCInfos.hostName) + "§f.");
                 player.sendMessage("");
-                player.sendMessage("  " + moduleType.getColor() + moduleType.getName());
+                player.sendMessage("  §8• §fJeu §f" + moduleType.getColor() + moduleType.getName());
                 if (this.api.getGameManager().getGameHost() != null && (this.api.getGameManager().getGameHost().equals(uuid) || player.isOp() || this.api.getGameManager().getHosts().contains(uuid))) {
-                    player.sendMessage("  d'un mumble ?");
+                    player.sendMessage("  §8• §fBesoin d'un mumble ?");
                     (new InteractiveMessage())
-                            .add((new TextComponentBuilder("  un "))
-                                    .setHoverMessage(new String[] { "pour gun "}).setClickAction(ClickEvent.Action.RUN_COMMAND, "/mumble create").build())
+                            .add((new TextComponentBuilder("  §8• §f[§aAvoir un §lmumble§f]"))
+                                    .setHoverMessage(new String[] { "§8§l> §fCliquez ici pour avoir un."}).setClickAction(ClickEvent.Action.RUN_COMMAND, "/mumble create").build())
                                             .sendMessage(new Player[] { player });
                     player.sendMessage("");
         } else {
-                        BaseComponent[] components = TextComponent.fromLegacyText("  le mumble avec ");
+                        BaseComponent[] components = TextComponent.fromLegacyText("  §8• §fRejoignez le mumble avec §c/mumble");
                         for (BaseComponent component : components)
                             component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/mumble"));
                         player.spigot().sendMessage(components);
                         player.sendMessage("");
                     }
-                    player.sendMessage("  toutes questions appelez un ");
+                    player.sendMessage("  §8• §fPour toutes questions appelez un §9§lModérateur§f.");
                             player.sendMessage("");
                     (new InteractiveMessage())
-                            .add(" des ")
-                            .add((new TextComponentBuilder(""))
-                                    .setHoverMessage(new String[] { ""}).setClickAction(ClickEvent.Action.SUGGEST_COMMAND, "/h add").build())
-                                            .add(" ")
+                            .add(" §f[§6NOUVEAU§f] §8 > §eGestion des ")
+                            .add((new TextComponentBuilder("§e§l§nbans/kick"))
+                                    .setHoverMessage(new String[] { "§8§l> §f/h §8[§7kick§8/§7ban§8/§7unban§8/§7banlist§8]"}).setClickAction(ClickEvent.Action.SUGGEST_COMMAND, "/h add").build())
+                                            .add(" §e!")
                                             .sendMessage(new Player[] { player });
                     if (!this.api.getGameManager().getVanishList().contains(uuid))
-                        Bukkit.getOnlinePlayers().forEach(players -> Title.sendActionBar(players, ""+ player.getName() + " a rejoint la partie "+ GameUtils.getPlayerAmount() + ""+ this.api.getGameManager().getGameConfig().getGameSlot() + ""));
+                        Bukkit.getOnlinePlayers().forEach(players -> Title.sendActionBar(players, "§a"+ player.getName() + " §fa rejoint la partie §8(§e"+ GameUtils.getPlayerAmount() + "§8/§e"+ this.api.getGameManager().getGameConfig().getGameSlot() + "§8)"));
                     GameUtils.startPlayer(player, GameMode.ADVENTURE);
                     PlayerUtils.giveDefaultItems(player);
                     break;
                     case PLAYING:
                         if (this.api.getGameManager().getInGamePlayers().contains(uuid)) {
                             this.api.getGameManager().getApi().getModules().onPlayerReconnect(player);
-                            event.setJoinMessage(""+ player.getName() + " reconnect");
+                            event.setJoinMessage("§f[§a§l?§f] §a"+ player.getName() + " §fs'est reconnecté");
                             this.api.getGameManager().getOfflinePlayers().remove(uuid);
                             TabHandler.removePrefixFor(player);
                             break;
                         }
                         event.setJoinMessage(null);
-                        player.sendMessage("partie a dcommencvous spectateur.");
+                        player.sendMessage("§f[§fSpectateurs§f] §fLa partie a déjà commencée, vous êtes spectateur.");
                         GameUtils.startPlayer(player, GameMode.SPECTATOR);
                         random = new Random();
                         list = new ArrayList<>(Bukkit.getOnlinePlayers());
@@ -162,8 +162,8 @@ public class PlayerJoinListener implements Listener {
                         if (this.api.getGameManager().getInGamePlayers().contains(uuid)) {
                             GamePlayer.getPlayer(uuid).setLastLocation(player.getLocation());
                             this.api.getGameManager().getApi().getModules().onPlayerDisconnect(player);
-                            event.setQuitMessage(""+ player.getName() + " dil dispose de "+ this.api
-                                    .getGameManager().getGameConfig().getDisconnectMinute() + " minute(s) se reconnecter ou alors il sera" );
+                            event.setQuitMessage("§f[§a§l?§f] §a"+ player.getName() + " §fs'est déconnecté, il dispose de §b"+ this.api
+                                    .getGameManager().getGameConfig().getDisconnectMinute() + " minute(s) se reconnecter ou alors il sera éliminé." );
                             this.api.getGameManager().getOfflinePlayers().add(uuid);
                             TabHandler.removePrefixFor(player);
                             (new BukkitRunnable() {

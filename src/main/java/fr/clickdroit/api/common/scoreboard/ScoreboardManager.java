@@ -36,7 +36,7 @@ public class ScoreboardManager {
     }
 
     public void onLogin(Player player) {
-        this.netherboard.createBoard(player, "");
+        this.netherboard.createBoard(player, "§c§lUHC");
     }
 
     public void onLogout(Player player) {

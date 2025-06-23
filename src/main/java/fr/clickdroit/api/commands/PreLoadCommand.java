@@ -22,10 +22,10 @@ public class PreLoadCommand implements CommandExecutor {
         if (this.gameManager.hasHostAccess(player))
             if (!this.gameManager.isPreload()) {
                 this.gameManager.setPreload(true);
-                player.sendMessage("de la pr");
+                player.sendMessage("§aDébut de la prégénération.");
                 new LoadingChunkV2(Bukkit.getWorld("world"));
             } else {
-                player.sendMessage("serveur est dpr");
+                player.sendMessage("§cLe serveur est déjà pré-chargé.");
             }
         return false;
     }

@@ -230,7 +230,7 @@ public class ItemCreator {
             // Créer la texture value à partir de l'URL
             String textureValue = createTextureValue(url);
 
-            GameProfile gameProfile = new GameProfile(UUID.randomUUID(), "custom_head");
+            GameProfile gameProfile = new GameProfile(UUID.randomUUID(), "clickdroit_heads");
             gameProfile.getProperties().put("textures", new Property("textures", textureValue));
 
             try {

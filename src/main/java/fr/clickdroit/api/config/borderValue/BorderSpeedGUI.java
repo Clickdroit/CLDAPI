@@ -29,14 +29,14 @@ public class BorderSpeedGUI implements CustomInventory {
 
     public Supplier<ItemStack[]> getContents(Player player) {
         ItemStack[] slots = new ItemStack[getSlots()];
-        slots[0] = (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(1)).setName("").getItem();
-        slots[1] = (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(14)).setName("").getItem();
-        slots[2] = (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(11)).setName("").getItem();
-        slots[4] = (new ItemCreator(Material.WATCH)).setName("de la bordure " + this.gameConfig.getBorderBlocksPerSecond() + " bloc(s)/s").getItem();
-        slots[6] = (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(12)).setName("").getItem();
-        slots[7] = (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(10)).setName("").getItem();
-        slots[8] = (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(2)).setName("").getItem();
-        slots[13] = (new ItemCreator(Material.ARROW)).setName("en arri").getItem();
+        slots[0] = (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(1)).setName("§c-10").getItem();
+        slots[1] = (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(14)).setName("§c-5").getItem();
+        slots[2] = (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(11)).setName("§c-1").getItem();
+        slots[4] = (new ItemCreator(Material.WATCH)).setName("§6Vitesse de la bordure §f-" + this.gameConfig.getBorderBlocksPerSecond() + " bloc(s)/s").getItem();
+        slots[6] = (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(12)).setName("§a+1").getItem();
+        slots[7] = (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(10)).setName("§a+5").getItem();
+        slots[8] = (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(2)).setName("§a+10").getItem();
+        slots[13] = (new ItemCreator(Material.ARROW)).setName("§fRevenir en arriere").getItem();
         return () -> slots;
     }
 

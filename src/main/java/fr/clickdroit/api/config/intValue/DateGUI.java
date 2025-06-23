@@ -35,19 +35,19 @@ public class DateGUI implements CustomInventory {
     public Supplier<ItemStack[]> getContents(Player player) {
         ItemStack[] slots = new ItemStack[getSlots()];
         Date date = this.gameConfig.getOpenDate();
-        slots[0] = (new ItemCreator(Material.BANNER)).setName("").setDurability(Integer.valueOf(14)).getItem();
-                slots[1] = (new ItemCreator(Material.BANNER)).setName("").setDurability(Integer.valueOf(11)).getItem();
-                        slots[4] = (new ItemCreator(Material.WATCH)).setName("de lancement")
-                                .addLore("permet de dl'heure")
-                                .addLore("de la partie.")
+        slots[0] = (new ItemCreator(Material.BANNER)).setName("§c-30").setDurability(Integer.valueOf(14)).getItem();
+                slots[1] = (new ItemCreator(Material.BANNER)).setName("§c-10").setDurability(Integer.valueOf(11)).getItem();
+                        slots[4] = (new ItemCreator(Material.WATCH)).setName("§6Heure de lancement")
+                                .addLore("§fVous permet de définir l'heure")
+                                .addLore("§fd'ouverture de la partie.")
                                 .addLore("")
-                                .addLore("d'ouverture:" + date.getHours() + ":" + date.getMinutes())
+                                .addLore("§6§l> §eHeure d'ouverture: §f" + date.getHours() + ":" + date.getMinutes())
                 .addLore("")
                 .addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage())
                 .getItem();
-        slots[7] = (new ItemCreator(Material.BANNER)).setName("").setDurability(Integer.valueOf(12)).getItem();
-                slots[8] = (new ItemCreator(Material.BANNER)).setName("").setDurability(Integer.valueOf(10)).getItem();
-                        slots[9] = (new ItemCreator(Material.SLIME_BALL)).setName("l'heure").getItem();
+        slots[7] = (new ItemCreator(Material.BANNER)).setName("§a+10").setDurability(Integer.valueOf(12)).getItem();
+                slots[8] = (new ItemCreator(Material.BANNER)).setName("§a+30").setDurability(Integer.valueOf(10)).getItem();
+                        slots[9] = (new ItemCreator(Material.SLIME_BALL)).setName("§aValider l'heure").getItem();
         slots[13] = CommonItems.GUI_BACK_ITEM.getItem();
         return () -> slots;
     }

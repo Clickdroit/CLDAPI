@@ -39,12 +39,12 @@ public class GlobalTask extends BukkitRunnable {
             if (this.globalTime >= 30) {
                 Rules.noDamage.setActive(false);
                 Bukkit.getOnlinePlayers().forEach(players -> {
-                    Title.sendActionBar(players, "est d");
+                    Title.sendActionBar(players, "§8• §fL'invincibilité est désormais §cdésactivé§f §8•");
                             players.playSound(players.getLocation(), Sound.VILLAGER_HIT, 3.0F, 1.0F);
                 });
             } else {
                 int timeLeft = 30 - this.globalTime;
-                Bukkit.getOnlinePlayers().forEach(players -> Title.sendActionBar(players, "de l'dans "+ timeLeft + "seconde" + ((timeLeft > 1) ? "":" ") + "" ));
+                Bukkit.getOnlinePlayers().forEach(players -> Title.sendActionBar(players, "§8 §fFin de l'§cinvincibilité dans §c"+ timeLeft + "§fseconde" + ((timeLeft > 1) ? "§fs":"§f") + "§8•" ));
             }
         if (!Rules.pvp.isActive() &&
                 getGlobalTime() >= this.gameConfig.getPvpTime())

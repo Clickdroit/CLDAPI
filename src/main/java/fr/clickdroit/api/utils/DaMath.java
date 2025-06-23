@@ -1,9 +1,10 @@
 package fr.clickdroit.api.utils;
 
-import java.util.Random;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
+
+import java.util.Random;
 
 public class DaMath {
     public static Random random = new Random();
@@ -22,7 +23,7 @@ public class DaMath {
             return "?";
         from.setY(0.0D);
         to.setY(0.0D);
-        String[] arrows = { "", "", "", "", "", "", "", "", ""};
+        String[] arrows = { "⬆", "⬈", "⮕", "⬊", "⬇", "⬋", "⬅", "⬉", "⬆"};
                 Vector d = from.getDirection();
         Vector v = to.subtract(from).toVector().normalize();
         double a = Math.toDegrees(Math.atan2(d.getX(), d.getZ()));
@@ -40,11 +41,11 @@ public class DaMath {
                 return "?";
             int yFrom = (int)from.getY(), yTo = (int)to.getY();
             if (yFrom < yTo)
-                return "";
+                return "§c§l⬆";
             if (yFrom > yTo)
-                return "";
+                return "§c§l⬇";
             if (yFrom == yTo)
-                return "";
+                return "§c§l=";
             return "?";
         }
 

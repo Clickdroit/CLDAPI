@@ -38,7 +38,7 @@ public class ConfigMainGUI implements CustomInventory {
     }
 
     public String getName() {
-        return "";
+        return "§f(§c!§f) §cConfiguration";
     }
 
     public Supplier<ItemStack[]> getContents(Player player) {
@@ -50,39 +50,42 @@ public class ConfigMainGUI implements CustomInventory {
         byte b;
         for (b = 0; b < i; b = (byte)(b + 1)) {
             int j = arrayOfInteger1[b].intValue();
-            slots[j] = (new ItemCreator(Material.STAINED_GLASS_PANE)).setDurability(Integer.valueOf(14)).setName("").getItem();
+            slots[j] = (new ItemCreator(Material.STAINED_GLASS_PANE)).setDurability(Integer.valueOf(14)).setName("§f").getItem();
         }
-        slots[2] = (new ItemCreator(Material.RED_ROSE)).setName("d'").addLore("").addLore(" ").addLore("").addLore("  d'acceder au").addLore("  d'").addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
-                slots[4] = (new ItemCreator(Material.SAPLING)).setName("").addLore("").addLore(" ").addLore("").addLore("  de pr").addLore("  la ").addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
+        slots[2] = (new ItemCreator(Material.RED_ROSE)).setName("§8| §fPanel d'§cAdministration").addLore("").addLore(" §8> §fAccès §f: §c§lAdministration").addLore("").addLore("  §8| §fPermetd'acceder au").addLore("  §8| §fpanel d'§cadministration§f").addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
+        slots[4] = (new ItemCreator(Material.SAPLING)).setName("§8| §fPré-charger").addLore("").addLore(" §8> §fAccès §f: §6§lHost").addLore("").addLore("  §8| §fPermet de pré-charger").addLore("  §8| §ftoute la §2map§f.").addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
         GameConfig.WaitingTeleportationState waitingState = this.gameConfig.getTeleportationState();
-        slots[6] = (new ItemCreator(waitingState.equals(GameConfig.WaitingTeleportationState.IN_ROOM) ? Material.EYE_OF_ENDER : Material.ENDER_PEARL)).setName(waitingState.equals(GameConfig.WaitingTeleportationState.IN_ROOM) ? "au ": "la des r").addLore("").addLore(" ").addLore("").addLore("  de teleporter les" ).addLore(" " + (waitingState.equals(GameConfig.WaitingTeleportationState.IN_ROOM) ? "au point d'apparition" : "dans la salle des r") + "").addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
+        slots[6] = (new ItemCreator(waitingState.equals(GameConfig.WaitingTeleportationState.IN_ROOM) ? Material.EYE_OF_ENDER : Material.ENDER_PEARL)).setName(waitingState.equals(GameConfig.WaitingTeleportationState.IN_ROOM) ? "§8| §fTéléportation au §alobby": "§8| §fTéléportation à la §asalle des règles").addLore("").addLore(" §8> §fAccès §f: §6§lHost").addLore("").addLore("  §8| §fPermet de teleporter les §ajoueurs" ).addLore("  §8| §f" + (waitingState.equals(GameConfig.WaitingTeleportationState.IN_ROOM) ? "au point d'apparition" : "dans la salle des r") + "§f").addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
         slots[10] = OpenVar.SLOTS.getItem();
+
         if (this.gameManager.getModuleManager().getCurrentModule().hasTeam())
-            slots[25] = (new ItemCreator(Material.BANNER)).setName("des ").setDurability(Integer.valueOf(15)).addLore("").addLore(" ").addLore("").addLore("  de gles").addLore("  ").addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
-                    slots[11] = (new ItemCreator(Material.BARRIER)).setName("le serveur").setDurability(Integer.valueOf(15)).addLore("").addLore("" ).addLore("").addLore("  de stopper").addLore(" " ).addLore("").addLore(CommonString.CLICK_HERE_TO_ACTIVATE.getMessage()).addLore("").getItem();
-        slots[15] = (new ItemCreator(Material.EYE_OF_ENDER)).setName("").addLore("").addLore(" ").addLore(" " + (this.gameConfig.isSpectators() ? "": "")).addLore("").addLore("  d'ou la pr").addLore("  spectateurs dans la ").addLore("").addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage()).addLore("").getItem();
-        slots[16] = (new ItemCreator(Material.NETHERRACK)).setName("").addLore("").addLore(" ").addLore(" " + (this.gameConfig.isNether() ? "": "")).addLore("").addLore("  d'ou ").addLore("  joueurs aller dans le ").addLore("").addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage()).addLore("").getItem();
-        slots[22] = (new ItemCreator(Material.ITEM_FRAME)).setName("de la ").addLore("").addLore(" ").addLore("").addLore("  d'accaux").addLore("  de la partie").addLore("").addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage()).addLore("").getItem();
+            slots[25] = (new ItemCreator(Material.BANNER)).setName("§8| §fGestion des §céquipes").setDurability(Integer.valueOf(15)).addLore("").addLore(" §8> §fAccès §f: §6§lHost").addLore("").addLore("  §8| §fPermet de gérer les").addLore("  §8| §coptions §fdes équipes").addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
+        slots[11] = (new ItemCreator(Material.BARRIER)).setName("§8| §fStopper le serveur").setDurability(Integer.valueOf(15)).addLore("").addLore(" §8> §fAccès §f: §6§lHost").addLore("").addLore("  §8| §fPermet de stopper").addLore("  §8| §fle §cserveur").addLore("").addLore("").addLore(" " ).addLore("").addLore(CommonString.CLICK_HERE_TO_ACTIVATE.getMessage()).addLore("").getItem();
+        slots[15] = (new ItemCreator(Material.EYE_OF_ENDER)).setName("§8| §fSpectateurs").addLore("").addLore(" §8> §fAccès §f: §6§lHost").addLore(" §8> §fStatut §f: " + (this.gameConfig.isSpectators() ? "§aActivé": "§cDésactivé")).addLore("").addLore("  §8| §fPermet d'§aaccepter§f ou §cnon§f la présence").addLore("  §8| §fdes spectateurs dans la §cpartie§f ").addLore("").addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage()).addLore("").getItem();
+        slots[16] = (new ItemCreator(Material.NETHERRACK)).setName("§8| §fNether").addLore("").addLore(" §8> §fAccès §f: §6§lHost").addLore(" §8> §fStatut §f: " + (this.gameConfig.isNether() ? "§aActivé": "§cDésactivé")).addLore("").addLore("  §ç| §fPermet d'§aaccepter§f ou §cnon§f").addLore("  §8| §fdes joueurs à aller dans le §cnether§f").addLore("").addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage()).addLore("").getItem();
+        slots[22] = (new ItemCreator(Material.ITEM_FRAME)).setName("§8| §fOptions de la §cpartie").addLore("").addLore(" §8> §fAccès §f: §6§lHost").addLore("").addLore("  §8| §fPermet d'accéder aux").addLore("  §8| §coptions§f/§crègles§f de la partie").addLore("").addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage()).addLore("").getItem();
+
         if (!this.gameManager.getModuleManager().getCurrentModule().equals(ModuleType.UHC))
-            slots[31] = (new ItemCreator(Material.PRISMARINE_SHARD)).setName("de ").addLore("").addLore(" ).addLore(" + this.gameManager.getModuleManager().getCurrentModule().getName()).addLore("").addLore("  de modifer les options").addLore("  au mode de jeu" ).addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
-        slots[37] = (new ItemCreator(Material.STAINED_GLASS)).setDurability(Integer.valueOf(9)).setName("de la ").addLore("").addLore("" ).addLore("").addLore("  de modifer la ").addLore("  la de la ").addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
-        slots[43] = (new ItemCreator(Material.BOOK)).setName("des ").addLore("").addLore("" ).addLore("").addLore("  d'des sc").addLore("  dynamiseront la" ).addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
-        slots[47] = (new ItemCreator(Material.WATCH)).setName("de la ").addLore("").addLore(" ").addLore(" " + this.gameConfig.getGameAccess().getMessage()).addLore("").addLore("  de l'accessibilit").addLore("  la partie pour les ").addLore("").addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage()).addLore("").getItem();
+            slots[31] = (new ItemCreator(Material.PRISMARINE_SHARD)).setName("§8| §fMode de §cjeu").addLore("").addLore(" §8> §fAccès §f: §6§lHost").addLore(" §8> §fMode §f: §6§l"+ this.gameManager.getModuleManager().getCurrentModule().getName()).addLore("").addLore("  §8| §fPermet de modifier les options").addLore("  §8| §cliées§f au mode de jeu §aactif§f" ).addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
+        slots[37] = (new ItemCreator(Material.STAINED_GLASS)).setDurability(Integer.valueOf(9)).setName("§8| §fGestion de la §cbordure").addLore("").addLore(" §8> §fAccès §f: §6§lHost").addLore("").addLore("  §8| §fPermet de modifier la §ataille").addLore("  §8| §fet la §bvitesse de la §cbordure§f.").addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
+        slots[43] = (new ItemCreator(Material.BOOK)).setName("§8| §fGestion des §cscénarios").addLore("").addLore(" §8> §fAccès §f: §6§lHost").addLore("").addLore("  §8| §fPermet d'§aajouter§f des scénarios").addLore("  §8| §fquidynamiseront la §cpartie§f." ).addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
+        slots[47] = (new ItemCreator(Material.WATCH)).setName("§8| §fAccessibilité de la §cpartie").addLore("").addLore(" §8> §fAccès §f: §6§lHost").addLore(" §8> §fStatut §f: " + this.gameConfig.getGameAccess().getMessage()).addLore("").addLore("  §8| §fPermet de §cmodifier§f l'accessibilité").addLore("  §8| §fà la partie pour les §cjoueurs§f.").addLore("").addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage()).addLore("").getItem();
+
         if (this.gameManager.getModuleManager().getCurrentModule().equals(ModuleType.DEMONSLAYER)) {
-            slots[51] = (new ItemCreator(Material.PAPER)).setName("").addLore("").addLore(" ").addLore("").addLore("  d'acc").addLore(" " ).addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
+            slots[51] = (new ItemCreator(Material.PAPER)).setName("§8| §fPré-Config §f(§c§lDEMONSLAYER§f)").addLore("").addLore(" ").addLore("").addLore("  d'acc").addLore(" " ).addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
         } else if (this.gameManager.getModuleManager().getCurrentModule().equals(ModuleType.UHC)) {
-            slots[51] = (new ItemCreator(Material.PAPER)).setName("").addLore("").addLore(" ").addLore("").addLore("  d'acc").addLore(" " ).addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
+            slots[51] = (new ItemCreator(Material.PAPER)).setName("§8| §fPré-Config §f(§c§lUHC§f)").addLore("").addLore(" §8> §fAccès §f: §6§lHost").addLore("").addLore("  §8| §fPermet d'accéder à").addLore(" §8| §fvos §cconfigurations§f.").addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
         } else if (this.gameManager.getModuleManager().getCurrentModule().equals(ModuleType.LG)) {
-            slots[51] = (new ItemCreator(Material.PAPER)).setName("").addLore("").addLore(" ").addLore("").addLore("  d'acc").addLore(" " ).addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
+            slots[51] = (new ItemCreator(Material.PAPER)).setName("§8| §fPré-Config §f(§c§lLG§f)").addLore("").addLore(" ").addLore("").addLore("  d'acc").addLore(" " ).addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
         } else if (this.gameManager.getModuleManager().getCurrentModule().equals(ModuleType.NARUTO)) {
-            slots[51] = (new ItemCreator(Material.PAPER)).setName("").addLore("").addLore(" ").addLore("").addLore("  d'acc").addLore(" " ).addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
+            slots[51] = (new ItemCreator(Material.PAPER)).setName("§8| §fPré-Config §f(§c§lNARUTO§f)").addLore("").addLore(" ").addLore("").addLore("  d'acc").addLore(" " ).addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
         } else {
-            slots[51] = (new ItemCreator(Material.PAPER)).setName("").addLore("").addLore(" dans ce mode.").addLore("").getItem();
+            slots[51] = (new ItemCreator(Material.PAPER)).setName("§8| §fPré-Config §f(§c§lUHC§f)").addLore("").addLore(" dans ce mode.").addLore("").getItem();
         }
         if (this.api.getGameManager().getGameState().equals(GameState.WAITING)) {
-            slots[49] = (new ItemCreator(Material.INK_SACK)).setDurability(Integer.valueOf(10)).setName("la ").addLore("").addLore(" est ?").addLore(" ").addLore("").addLore("  de lancer la si").addLore("  avez fini la config de la ").addLore("").addLore(CommonString.CLICK_HERE_TO_ACTIVATE.getMessage()).addLore("").getItem();
+            slots[49] = (new ItemCreator(Material.INK_SACK)).setDurability(Integer.valueOf(10)).setName("§8| §fLancement de la §cpartie ").addLore("").addLore(" §8> §fTout est §aprêt§f ?").addLore(" §8> §fAccès §f: §6§lHost").addLore("").addLore("  §8| §fPermet de lancer la §cpartie§f si").addLore("  §8| §fvous avez fini la config de la §cpartie§f.").addLore("").addLore(CommonString.CLICK_HERE_TO_ACTIVATE.getMessage()).addLore("").getItem();
         } else if (this.api.getGameManager().getGameState().equals(GameState.STARTING)) {
-            slots[49] = (new ItemCreator(Material.INK_SACK)).setDurability(Integer.valueOf(8)).setName("le lancement").addLore("").addLore(" s? !").addLore(" ").addLore("").addLore("  d'arrla si").addLore("  avez mal fait la config de la ").addLore("").addLore(CommonString.CLICK_HERE_TO_ACTIVATE.getMessage()).addLore("").getItem();
+            slots[49] = (new ItemCreator(Material.INK_SACK)).setDurability(Integer.valueOf(8)).setName("§8| §cArrêter§f le lancement§f.").addLore("").addLore(" §8> §fPas sûr ? §cArrête !").addLore(" §8> §fAccès §f: §6§lHost").addLore("").addLore("  §8| §fPermet d'arrêter la §cpartie§f si").addLore("  §8| §fvous avez fini la config de la §cpartie§f.").addLore("").addLore(CommonString.CLICK_HERE_TO_ACTIVATE.getMessage()).addLore("").getItem();
         }
         return () -> slots;
     }
@@ -103,17 +106,17 @@ public class ConfigMainGUI implements CustomInventory {
                 if (!this.gameManager.isPreloadFinished() && !this.gameManager.isPreload()) {
                     this.gameManager.setPreload(true);
                     BiomeChanger.addSapling();
-                    player.sendMessage("venez de prde la map.");
+                    player.sendMessage("§fVous venez de §alancer §fla prégénération de la map.");
                     break;
                 }
-                player.sendMessage("serveur est dou est" );
+                player.sendMessage("§fLe serveur est §cchargé§f ou est §centrain§f..." );
                 break;
             case RED_ROSE:
                 if (GamePlayer.getPlayer(player.getUniqueId()).isHeadStaff()) {
                     this.api.openInventory(player, AdminPanelGUI.class);
                     break;
                 }
-                player.sendMessage("n'autorisfaire ceci.");
+                player.sendMessage("§fVous n'êtes §cpas autorisé§f à faire ceci.");
                 break;
             case SKULL_ITEM:
                 if (!this.gameManager.getModuleManager().getCurrentModule().isHasRole())
@@ -130,7 +133,7 @@ public class ConfigMainGUI implements CustomInventory {
                     this.api.getGameManager().setGameState(GameState.WAITING);
                     player.closeInventory();
                     Bukkit.getOnlinePlayers().forEach(players -> {
-                        Title.sendTitle(players, 10, 40, 10, "", "annul:c");
+                        Title.sendTitle(players, 10, 40, 10, "§cUHC", "§cLancement annulé... :c");
                         players.setLevel(0);
                         players.setExp(0.0F);
                     });
@@ -156,8 +159,8 @@ public class ConfigMainGUI implements CustomInventory {
             case BOOK:
                 this.api.getCommon().getScenariosGUI().openInventory(player, 1);
             case WATCH:
-                player.sendMessage("devez la map avant d'ouvrir la ");
-                        player.closeInventory();
+                player.sendMessage("§fVous devez §cpré-charger§f la map avant d'ouvrir la §cpartie§f.");
+                player.closeInventory();
                 break;
         }
     }

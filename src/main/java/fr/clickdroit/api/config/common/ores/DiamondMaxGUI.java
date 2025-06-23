@@ -30,11 +30,11 @@ public class DiamondMaxGUI implements CustomInventory {
 
     public Supplier<ItemStack[]> getContents(Player player) {
         ItemStack[] slots = new ItemStack[getSlots()];
-        slots[0] = (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(14)).setName("").getItem();
-                slots[1] = (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(11)).setName("").getItem();
+        slots[0] = (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(14)).setName("§c-5").getItem();
+                slots[1] = (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(11)).setName("§c-1").getItem();
                         slots[4] = OpenVar.DIAMOND_MAX.getItem();
-        slots[7] = (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(12)).setName("").getItem();
-                slots[8] = (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(10)).setName("").getItem();
+        slots[7] = (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(12)).setName("§a+1").getItem();
+                slots[8] = (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(10)).setName("§a+5").getItem();
                         slots[13] = CommonItems.GUI_BACK_ITEM.getItem();
         return () -> slots;
     }

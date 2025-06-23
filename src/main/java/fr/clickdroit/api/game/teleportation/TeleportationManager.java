@@ -7,20 +7,15 @@ import fr.clickdroit.api.game.teleportation.plate.Plate;
 import fr.clickdroit.api.game.teleportation.plate.SquarePlate;
 import fr.clickdroit.api.game.teleportation.player.PlayerPlate;
 import fr.clickdroit.api.utils.Title;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import net.minecraft.server.v1_8_R3.MinecraftServer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.*;
 
 public class TeleportationManager {
     private final List<PlayerPlate> players;
@@ -60,14 +55,14 @@ public class TeleportationManager {
                         public void run() {
                             if (this.time <= 0) {
                                 Bukkit.getOnlinePlayers().forEach(players -> {
-                                    Title.sendTitle(players, 0, 20, 10, "chance !", "le gagne");
+                                    Title.sendTitle(players, 0, 20, 10, "§fBonne chance !", "§f Que le §cmeilleur gagne§f");
                                             players.playSound(players.getLocation(), Sound.EXPLODE, 5.0F, 1.0F);
                                 });
                                 TeleportationManager.this.finishCountdown();
                                 cancel();
                             } else if (this.time <= 5 || this.time == 10) {
                                 Bukkit.getOnlinePlayers().forEach(players -> {
-                                    Title.sendTitle(players, 0, 30, 0, "dans", ""+ this.time);
+                                    Title.sendTitle(players, 0, 30, 0, "§fLancement dans", "§c"+ this.time);
                                             players.playSound(players.getLocation(), Sound.NOTE_PLING, 5.0F, 1.0F);
                                 });
                             }
@@ -75,7 +70,7 @@ public class TeleportationManager {
                         }
                     }).runTaskTimer((Plugin)main, 0L, 20L);
                 } else {
-                    Bukkit.getOnlinePlayers().forEach(player -> Title.sendActionBar(player, "quelques" ));
+                    Bukkit.getOnlinePlayers().forEach(player -> Title.sendActionBar(player, "§fPatientez quelques §csecondes§f..." ));
                 }
                 this.count++;
             }
@@ -102,7 +97,7 @@ public class TeleportationManager {
                     cancel();
                     runnable.run();
                 } else {
-                    Bukkit.getOnlinePlayers().forEach(player -> Title.sendActionBar(player, "quelques "));
+                    Bukkit.getOnlinePlayers().forEach(player -> Title.sendActionBar(player, "§fPatientez quelques §csecondes§f..." ));
                 }
                 this.count++;
             }
@@ -121,7 +116,7 @@ public class TeleportationManager {
                     Plate plate = TeleportationManager.this.initPlate(playerPlate, form.calc(this.i, length));
                     TeleportationManager.this.playerPlates.put(playerPlate.getName(), plate);
                     Bukkit.getWorld("world").loadChunk(Bukkit.getWorld("world").getChunkAt(plate.getTeleportLocation()));
-                    Bukkit.getOnlinePlayers().forEach(player -> Title.sendActionBar(player, ""+ playerPlate.getName() + "a t"+ (this.i + 1) + "/" + length + "]"));
+                    Bukkit.getOnlinePlayers().forEach(player -> Title.sendActionBar(player, "§c"+ playerPlate.getName() + "§f a été teleporté §f["+ (this.i + 1) + "/" + length + "]"));
                     Bukkit.getWorld("world").loadChunk(Bukkit.getWorld("world").getChunkAt(plate.getTeleportLocation()));
                     playerPlate.getName();
                     this.i++;

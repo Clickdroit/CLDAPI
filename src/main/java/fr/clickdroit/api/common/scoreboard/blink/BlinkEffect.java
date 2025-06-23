@@ -9,29 +9,29 @@ public class BlinkEffect {
 
     public void next() {
         if (this.count == 0) {
-            this.text = "Game";
+            this.text = "§eLocalHost";
         } else if (this.count == 1) {
-            this.text = "Game";
+            this.text = "§eLocalHost";
         } else if (this.count == 2) {
-            this.text = "Game";
+            this.text = "§eLocalHost";
         } else if (this.count == 3) {
-            this.text = "Game";
+            this.text = "§eLocalHost";
         } else if (this.count == 4) {
-            this.text = "Game";
+            this.text = "§eLocalHost";
         } else if (this.count == 5) {
-            this.text = "Game";
+            this.text = "§eLocalHost";
         } else if (this.count == 6) {
-            this.text = "Game";
+            this.text = "§eLocalHost";
         } else if (this.count == 7) {
-            this.text = "Game";
+            this.text = "§eLocalHost";
         } else if (this.count == 8) {
-            this.text = "Game";
+            this.text = "§eLocalHost";
         } else if (this.count == 9) {
-            this.text = "Game";
+            this.text = "§eLocalHost";
         } else if (this.count == 10) {
-            this.text = "Game";
+            this.text = "§eLocalHost";
         } else if (this.count == 11) {
-            this.text = "Game";
+            this.text = "§eLocalHost";
         }
         if (this.count == 12)
             this.back = true;

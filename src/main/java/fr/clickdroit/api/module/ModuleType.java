@@ -4,13 +4,13 @@ import fr.clickdroit.api.utils.ItemCreator;
 import org.bukkit.Material;
 
 public enum ModuleType {
-    UHC("UHC", "", Material.GOLDEN_APPLE, 0, false, true, true),
-    DEMONSLAYER("Demon Slayer", "", Material.BLAZE_POWDER, 0, true, false, false),
+    UHC("UHC", "§e", Material.GOLDEN_APPLE, 0, false, true, true),
+    DEMONSLAYER("Demon Slayer", "§6", Material.BLAZE_POWDER, 0, true, false, false),
     CODEGEASS("Code Geass", "", Material.COMPASS, 0, false, false, false),
     HUNTERXHUNTER("Hunter X Hunter", "", Material.VINE, 0, true, false, false),
-    LG("Loup-Garou", "", Material.VINE, 0, true, false, false),
-    JJK("Jujutsu", "", Material.BLAZE_POWDER, 0, true, false, false),
-    NARUTO("Naruto", "", Material.VINE, 0, true, false, false);
+    LG("Loup-Garou", "§c", Material.VINE, 0, true, false, false),
+    JJK("Jujutsu", "§5", Material.BLAZE_POWDER, 0, true, false, false),
+    NARUTO("Naruto", "§e", Material.VINE, 0, true, false, false);
 
     private String name;
 

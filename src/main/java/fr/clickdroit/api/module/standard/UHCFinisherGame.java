@@ -18,7 +18,7 @@ public class UHCFinisherGame {
     public void finishGame(String message) {
         this.api.getGameManager().setGameState(GameState.FINISH);
         Bukkit.getOnlinePlayers().forEach(players -> {
-            Title.sendTitle(players, 10, 200, 10, "de la partie !", message);
+            Title.sendTitle(players, 10, 200, 10, "§c§lFin de la partie !", message);
             players.setAllowFlight(true);
         });
         (new BukkitRunnable() {

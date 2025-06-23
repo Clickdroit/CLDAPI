@@ -38,15 +38,15 @@ public class DefaultScoreboardContents implements ScoreboardContents {
 
     public void setLines(BPlayerBoard board, UUID player, String ip) {
         int line = 14;
-        board.setName("");
-        board.set("", Integer.valueOf(line--));
-        board.set("" + ((this.online == 1) ? "" : "s") + "+ this.online + "+ this.maxplayer, Integer.valueOf(line--));
-        board.set(" "+ this.hostName, Integer.valueOf(line--));
-        board.set(" "+ this.moduleName, Integer.valueOf(line--));
+        board.setName("§6§lUHC");
+        board.set("§1", Integer.valueOf(line--));
+        board.set(" §8| §fJoueur" + ((this.online == 1) ? "" : "s") + "§f: §c"+ this.online + "§f/§c"+ this.maxplayer, Integer.valueOf(line--));
+        board.set(" §8| §fHost §f: §c"+ this.hostName, Integer.valueOf(line--));
+        board.set(" §8| §fJeu §f: §6"+ this.moduleName, Integer.valueOf(line--));
         if (this.teams) {
             int am = this.api.getGameManager().getGameConfig().getPlayerPerTeam();
-            board.set(" + am + "+ am, Integer.valueOf(line--));
+            board.set(" §8| §fÉquipes §f: §c" + am + "§fvs§c"+ am, Integer.valueOf(line--));
         }
-        board.set("", Integer.valueOf(line--));
+        board.set("§2", Integer.valueOf(line--));
     }
 }

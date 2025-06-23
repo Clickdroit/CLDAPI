@@ -29,7 +29,7 @@ public class InvCommand implements CommandExecutor, CustomInventory {
     }
 
     public String getName() {
-        return "Inventaire par d";
+        return "Inventaire par défaut";
     }
 
     public Supplier<ItemStack[]> getContents(Player player) {

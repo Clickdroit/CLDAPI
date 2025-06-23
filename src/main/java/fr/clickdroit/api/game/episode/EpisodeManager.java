@@ -20,7 +20,7 @@ public class EpisodeManager {
         if (this.gameManager.getModuleManager().getCurrentModule() != ModuleType.LG) {
             addEpisode();
             Bukkit.getOnlinePlayers().forEach(players -> {
-                Title.sendTitle(players, 10, 10, 10, "", "" + getEpisode());
+                Title.sendTitle(players, 10, 10, 10, "", "§bÉpisode" + getEpisode());
                 players.playSound(players.getLocation(), Sound.ORB_PICKUP, 3.0F, 0.0F);
             });
             this.gameManager.getApi().getModules().onEpisodeSwitch();

@@ -25,19 +25,19 @@ public class PlayerUtils {
             player.getInventory().setItem(1, (new ItemCreator(Material.SKULL_ITEM))
 
                     .setDurability(Short.valueOf((short)3))
-                    .setName("des r")
+                    .setName("§6§lListe des rôles §8§l• §f§lClic-droit")
                     .setSkullURL("http://textures.minecraft.net/texture/d92dde9fff32f7c6d13818754b361e95cb98a19c482d5c535ccfe0c185bc6")
                     .addItemFlags(ItemFlag.HIDE_ENCHANTS).getItem());
         if (API.getAPI().getGameManager().getModuleManager().getCurrentModule().equals(ModuleType.DEMONSLAYER))
-            player.getInventory().setItem(0, (new ItemCreator(Material.NETHER_STAR)).setName("au ddu jump ").getItem());
-        player.getInventory().setItem(8, (new ItemCreator(Material.BED)).setName("au lobby ").addItemFlags(ItemFlag.HIDE_ENCHANTS).getItem());
-        player.getInventory().setItem(2, (new ItemCreator(Material.BOOK)).setName("").addItemFlags(ItemFlag.HIDE_ENCHANTS).getItem());
+            player.getInventory().setItem(0, (new ItemCreator(Material.NETHER_STAR)).setName("§c§lRetourner au début du jump §8§l• §f§lClic-droit").getItem());
+        player.getInventory().setItem(8, (new ItemCreator(Material.BED)).setName("§c§lRetourner au lobby §8§l• §f§lClic-droit").addItemFlags(ItemFlag.HIDE_ENCHANTS).getItem());
+        player.getInventory().setItem(2, (new ItemCreator(Material.BOOK)).setName("§a§lScénarios §8§l• §f§lClic-droit").addItemFlags(ItemFlag.HIDE_ENCHANTS).getItem());
         if (!GameUtils.isSoloMode()) {
             player.getInventory().setItem(6, (new ItemCreator(Material.BANNER))
                     .setDurability(Integer.valueOf(teamManager.getPlayerTeam().containsKey(player.getUniqueId()) ? ((Teams)teamManager
                             .getPlayerTeam().get(player.getUniqueId())).getDataitem() : 15))
 
-                    .setName("une" ).getItem());
+                    .setName("§f§lChoisir une équipe §8§l• §f§lClic-droit" ).getItem());
         } else {
             player.getInventory().remove(Material.BANNER);
         }
@@ -49,7 +49,7 @@ public class PlayerUtils {
                 API.getAPI().getGameManager().getGameHost().equals(player.getUniqueId()) ||
                         API.getAPI().getGameManager().getHosts().contains(player.getUniqueId())))
             player.getInventory().setItem(4, (new ItemCreator(Material.REDSTONE_COMPARATOR))
-                    .setName("la partie ")
+                    .setName("§b§lConfigurer la partie §8§l• §f§lClic-droit")
                     .addEnchantment(Enchantment.DURABILITY, Integer.valueOf(1))
                     .addItemFlags(ItemFlag.HIDE_ENCHANTS).getItem());
     }
@@ -66,7 +66,7 @@ public class PlayerUtils {
         ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
         Scoreboard scoreboard = scoreboardManager.getNewScoreboard();
         Objective objective = (scoreboard.getObjective("HP") == null) ? scoreboard.registerNewObjective("HP", "health") : scoreboard.getObjective("HP");
-        objective.setDisplayName(ChatColor.RED +" ");
+        objective.setDisplayName(ChatColor.RED +"❤");
         objective.setDisplaySlot(DisplaySlot.BELOW_NAME);
         player.setScoreboard(scoreboard);
     }

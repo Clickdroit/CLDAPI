@@ -5,7 +5,6 @@ import fr.clickdroit.api.commands.ScenarioCommand;
 import fr.clickdroit.api.config.ConfigMainGUI;
 import fr.clickdroit.api.game.GameManager;
 import fr.clickdroit.api.game.GameUtils;
-import fr.clickdroit.api.utils.CustomInventory;
 import fr.clickdroit.api.utils.ItemCreator;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -97,20 +96,20 @@ public class PlayerInteractListener implements Listener {
                 !GameUtils.isGameStarted())
             switch (itemStack.getType()) {
                 case REDSTONE_COMPARATOR:
-                    if (itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName() && itemStack.getItemMeta().getDisplayName().contains("la partie ")) {
+                    if (itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName() && itemStack.getItemMeta().getDisplayName().contains("§b§lConfigurer la partie §8§l• §f§lClique-droit")) {
                         event.setCancelled(true);
                         this.gameManager.getApi().openInventory(player, ConfigMainGUI.class);
                     }
                     break;
                 case BED:
-                    if (itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName() && itemStack.getItemMeta().getDisplayName().contains("au lobby ")) {
-                        player.getInventory().setItem(8, (new ItemCreator(Material.BED)).setName("").addItemFlags(ItemFlag.HIDE_ENCHANTS).getItem());
-                        player.sendMessage("pour au lobby...");
-                        Bukkit.getScheduler().runTaskLaterAsynchronously((Plugin)API.getAPI(), () -> player.getInventory().setItem(8, (new ItemCreator(Material.BED)).setName("au lobby" ).addItemFlags(ItemFlag.HIDE_ENCHANTS).getItem()), 60L);
+                    if (itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName() && itemStack.getItemMeta().getDisplayName().contains("§c§lRetourner au lobby §8§l• §f§lClique-droit")) {
+                        player.getInventory().setItem(8, (new ItemCreator(Material.BED)).setName("§c§lConfirmation §8§l• §f§lClique-droit").addItemFlags(ItemFlag.HIDE_ENCHANTS).getItem());
+                        player.sendMessage("§6§lUHC §8§l• §fRe-cliquez pour être §ctéléporté§f au lobby...");
+                        Bukkit.getScheduler().runTaskLaterAsynchronously((Plugin)API.getAPI(), () -> player.getInventory().setItem(8, (new ItemCreator(Material.BED)).setName("§c§lRetourner au lobby §8§l• §f§lClique-droit" ).addItemFlags(ItemFlag.HIDE_ENCHANTS).getItem()), 60L);
                         break;
                     }
                     if (itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName() && itemStack.getItemMeta().getDisplayName().contains(""))
-                        player.kickPlayer("lobby n'est disponible");
+                        player.kickPlayer("§cAucun lobby n'est disponible");
                     break;
                 case BOOK:
                     if (itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName() && itemStack.getItemMeta().getDisplayName().contains("")) {

@@ -18,7 +18,7 @@ public enum GeneralRules {
     ROLLERCOASTER("Roller Coaster", Material.LADDER, 0, true),
     HEALTH("Vie des joueurs", Material.RED_ROSE, 0, false),
     MUMBLE("Mumble obligatoire", Material.IRON_HELMET, 0, true),
-    PRIVATEMSG("Messages priv", Material.SIGN, 0, true);
+    PRIVATEMSG("Messages privés", Material.SIGN, 0, true);
 
     private final String name;
 
@@ -44,7 +44,7 @@ public enum GeneralRules {
     }
 
     public ItemStack getItem() {
-        return (new ItemCreator(this.material)).setDurability(Integer.valueOf(this.data)).setName("+ this.name + " + (isEnabled() ? "": "")).getItem();
+        return (new ItemCreator(this.material)).setDurability(Integer.valueOf(this.data)).setName("§8| §c"+ this.name + " §8(" + (isEnabled() ? "§aActivé§8": "§cDésactivé§8)")).getItem();
     }
 
     public String getName() {

@@ -42,7 +42,7 @@ public class TeamManager {
         UUID uuid = player.getUniqueId();
         if (getPlayerAmountInTeam(teams) < this.gameConfig.getPlayerPerTeam()) {
             if (getPlayerTeam().containsKey(uuid) && ((Teams)getPlayerTeam().get(uuid)).equals(teams)) {
-                player.sendMessage("Vous ddans cette ");
+                player.sendMessage("§cVous êtes déjà dans cette équipe.");
             } else {
                 GamePlayer.getPlayer(player.getUniqueId()).setTeams(teams);
                 getPlayerTeam().put(uuid, teams);
@@ -51,13 +51,13 @@ public class TeamManager {
                 PlayerUtils.giveDefaultItems(player);
             }
         } else {
-            player.sendMessage("Cette est compl");
+            player.sendMessage("§cCette équipe est complète.");
         }
     }
 
     public void killTeam(Teams teams) {
         if (getPlayerAmountInTeam(teams) <= 0) {
-            Bukkit.broadcastMessage("" + teams.getColor() + teams.getName() + " elimin");
+            Bukkit.broadcastMessage("§8| §fL'équipe" + teams.getColor() + teams.getName() + " §fest eliminée");
             this.gameManager.getAliveTeams().remove(teams);
             Bukkit.getOnlinePlayers().forEach(players -> players.playSound(players.getLocation(), Sound.BLAZE_BREATH, 3.0F, 0.0F));
         }
@@ -108,10 +108,10 @@ public class TeamManager {
                         continue;
                     if (pl.getLocation().getWorld().getName() == players.getLocation().getWorld().getName()) {
                         int distance = (int)players.getLocation().distance(pl.getLocation());
-                        send = send + "+ pl.getName() + " + DaMath.getArrow(players.getLocation(), pl.getLocation()) + "§f (" + distance + "m) ";
+                        send = send + "§a"+ pl.getName() + "§f" + DaMath.getArrow(players.getLocation(), pl.getLocation()) + "§f (" + distance + "m) ";
                         continue;
                     }
-                    send = send + ""+ pl.getName() + " le mmonde ";
+                    send = send + "§c"+ pl.getName() + " §cPas le même monde ";
                 }
                 Title.sendActionBar(players, send);
             }

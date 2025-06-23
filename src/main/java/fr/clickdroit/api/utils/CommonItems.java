@@ -3,7 +3,7 @@ package fr.clickdroit.api.utils;
 import org.bukkit.Material;
 
 public enum CommonItems {
-    GUI_BACK_ARROW(Material.ARROW, 0, "en arri");
+    GUI_BACK_ARROW(Material.ARROW, 0, "§fRevenir en arrière");
 
     private Material material;
 

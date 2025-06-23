@@ -26,13 +26,13 @@ public class ViewCommand implements CommandExecutor {
                         ViewInventory viewInventory = new ViewInventory(player, target);
                         viewInventory.open();
                     } else {
-                        player.sendMessage("joueur avec le pseudo '" + arguments[0] + "' n'a trouv");
+                        player.sendMessage("§cAucun joueur avec le pseudo '" + arguments[0] + "' n'a été trouvé");
                     }
                 } else {
-                    player.sendMessage("de syntaxe: /view <joueur>");
+                    player.sendMessage("§cErreur de syntaxe: /view <joueur>");
                 }
             } else {
-                player.sendMessage("insuffisante.");
+                player.sendMessage("§cPermission insuffisante.");
                 player.playSound(player.getLocation(), Sound.ITEM_BREAK, 3.0F, 0.0F);
             }
         }
