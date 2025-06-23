@@ -108,7 +108,18 @@ public enum OpenVar {
         try {
             Field field = GameConfig.class.getDeclaredField(this.var);
             field.setAccessible(true);
-            int amount = field.getInt(API.getAPI().getGameManager().getGameConfig());
+
+            // CORRECTION ICI : Gérer les différents types de champs
+            Object fieldValue = field.get(API.getAPI().getGameManager().getGameConfig());
+            int amount;
+
+            if (fieldValue instanceof Integer) {
+                amount = (Integer) fieldValue;
+            } else if (fieldValue instanceof Long) {
+                amount = ((Long) fieldValue).intValue(); // Conversion sécurisée de long vers int
+            } else {
+                amount = 1; // Valeur par défaut
+            }
 
             itemCreator.addLore(" §8> §fAccès §f: §6§lHost");
             itemCreator.addLore(" §8> §fConfiguration: §c" + (this.toDigital ?
@@ -121,6 +132,11 @@ public enum OpenVar {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            // En cas d'erreur, utiliser des valeurs par défaut
+            itemCreator.addLore(" §8> §fAccès §f: §6§lHost");
+            itemCreator.addLore(" §8> §fConfiguration: §cErreur");
+            itemCreator.addLore("");
+            itemCreator.addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage());
         }
 
         return itemCreator.getItem();

@@ -1,4 +1,4 @@
-name: APIUHC
+name: UHCAPI
 main: fr.clickdroit.api.API
 version: 1.0
 author: clickdroit

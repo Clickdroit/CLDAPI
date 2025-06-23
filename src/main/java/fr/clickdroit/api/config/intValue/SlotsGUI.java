@@ -135,7 +135,7 @@ public class SlotsGUI implements CustomInventory {
             } else if (itemName.contains("§c§l-5")) {
                 this.gameConfig.setGameSlot(this.gameConfig.getGameSlot() - 5);
             } else if (itemName.contains("§c§l-10")) {
-                this.gameConfig.setGameSlot(this.gameConfig.getGameSlot() - 10);
+                this.gameConfig.setGameSlot(this.gameConfig.getGameSlot() - 010);
             }
             // Gestion des têtes d'augmentation (vertes)
             else if (itemName.contains("§a§l+1")) {
@@ -143,7 +143,7 @@ public class SlotsGUI implements CustomInventory {
             } else if (itemName.contains("§a§l+5")) {
                 this.gameConfig.setGameSlot(this.gameConfig.getGameSlot() + 5);
             } else if (itemName.contains("§a§l+10")) {
-                this.gameConfig.setGameSlot(this.gameConfig.getGameSlot() + 10);
+                this.gameConfig.setGameSlot(this.gameConfig.getGameSlot() + 010);
             }
             // Gestion du retour
             else if (itemName.contains("§fRevenir en arrière")) {
@@ -170,38 +170,18 @@ public class SlotsGUI implements CustomInventory {
             this.gameManager.getApi().openInventory(player, getClass());
         }
 
-        // Gestion de l'ancien système avec les bannières (au cas où)
-        else if (clickedItem.getType() == Material.BANNER) {
-            if (clickedItem.getDurability() == 10) {
-                this.gameConfig.setGameSlot(this.gameConfig.getGameSlot() - 1);
-            } else if (clickedItem.getDurability() == 11) {
-                this.gameConfig.setGameSlot(this.gameConfig.getGameSlot() - 5);
-            } else if (clickedItem.getDurability() == 12) {
-                this.gameConfig.setGameSlot(this.gameConfig.getGameSlot() - 10);
-            } else if (clickedItem.getDurability() == 14) {
-                this.gameConfig.setGameSlot(this.gameConfig.getGameSlot() + 1);
-            } else if (clickedItem.getDurability() == 15) {
-                this.gameConfig.setGameSlot(this.gameConfig.getGameSlot() + 5);
-            } else if (clickedItem.getDurability() == 16) {
-                this.gameConfig.setGameSlot(this.gameConfig.getGameSlot() + 10);
-
-            }
-            if (this.gameConfig.getGameSlot() > 1000) {
-                this.gameConfig.setGameSlot(1000);
-                player.playSound(player.getLocation(), Sound.VILLAGER_NO, 10.0F, 1.0F);
-            }
-            if (this.gameConfig.getGameSlot() < 1) {
-                this.gameConfig.setGameSlot(1);
-                player.playSound(player.getLocation(), Sound.VILLAGER_NO, 10.0F, 1.0F);
-            }
-            this.gameManager.getApi().openInventory(player, getClass());
+        if (this.gameConfig.getGameSlot() > 1000) {
+            this.gameConfig.setGameSlot(1000);
+            player.playSound(player.getLocation(), Sound.VILLAGER_NO, 10.0F, 1.0F);
         }
-        // Gestion de la flèche normale (ancien système)
-        else if (clickedItem.getType() == Material.ARROW) {
-            this.gameManager.getApi().openInventory(player, ConfigMainGUI.class);
+        if (this.gameConfig.getGameSlot() < 1) {
+            this.gameConfig.setGameSlot(1);
+            player.playSound(player.getLocation(), Sound.VILLAGER_NO, 10.0F, 1.0F);
         }
+        this.gameManager.getApi().openInventory(player, getClass());
     }
 
+    // Gestion de la flèche normale (ancien système)
     public int getRows() {
         return 3; // 27 slots (3 rangées de 9)
     }

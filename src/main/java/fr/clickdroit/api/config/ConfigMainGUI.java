@@ -17,6 +17,7 @@ import fr.clickdroit.api.utils.Title;
 import fr.clickdroit.api.worlds.BiomeChanger;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
@@ -95,6 +96,7 @@ public class ConfigMainGUI implements CustomInventory {
             if (this.gameManager.getGameState().equals(GameState.WAITING))
                 if (this.gameConfig.getTeleportationState().equals(GameConfig.WaitingTeleportationState.IN_ROOM)) {
                     this.gameConfig.setTeleportationState(GameConfig.WaitingTeleportationState.IN_LOBBY);
+                    player.playSound(player.getLocation(), Sound.CLICK, 1.0F, 1.0F);
                 } else {
                     this.gameConfig.setTeleportationState(GameConfig.WaitingTeleportationState.IN_ROOM);
                 }
@@ -112,7 +114,7 @@ public class ConfigMainGUI implements CustomInventory {
                 player.sendMessage("§fLe serveur est §cchargé§f ou est §centrain§f..." );
                 break;
             case RED_ROSE:
-                if (GamePlayer.getPlayer(player.getUniqueId()).isHeadStaff()) {
+                if (GamePlayer.getPlayer(player.getUniqueId()).isOp()) {
                     this.api.openInventory(player, AdminPanelGUI.class);
                     break;
                 }
@@ -162,6 +164,7 @@ public class ConfigMainGUI implements CustomInventory {
                 player.sendMessage("§fVous devez §cpré-charger§f la map avant d'ouvrir la §cpartie§f.");
                 player.closeInventory();
                 break;
+
         }
     }
 
