@@ -132,6 +132,7 @@ public final class Reflection {
         field.setAccessible(true);
         return field.get(instance);
     }
+
     public static Field getField(Class<?> clazz, boolean declared, String fieldName) throws NoSuchFieldException {
         Field field = declared ? clazz.getDeclaredField(fieldName) : clazz.getField(fieldName);
         field.setAccessible(true);
@@ -143,12 +144,44 @@ public final class Reflection {
         field.setAccessible(true);
         field.set(instance, value);
     }
-    public static void setFinalStatic(Field field, Object newValue) throws NoSuchFieldException, IllegalAccessException {
+
+    // NOUVELLE VERSION DE setFinalStatic avec support Unsafe
+    public static void setFinalStatic(Field field, Object newValue) throws Exception {
         field.setAccessible(true);
-        Field modifiersField = Field.class.getDeclaredField("modifiers");
-        modifiersField.setAccessible(true);
-        modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-        field.set(null, newValue);
+
+        try {
+            // Essayer la méthode normale d'abord (Java 8 Oracle JDK)
+            Field modifiersField = Field.class.getDeclaredField("modifiers");
+            modifiersField.setAccessible(true);
+            modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+            field.set(null, newValue);
+            return;
+        } catch (NoSuchFieldException | IllegalAccessException | SecurityException e) {
+            // La méthode normale a échoué, essayer avec Unsafe
+            System.out.println("Standard reflection failed for field " + field.getName() + ", trying Unsafe method...");
+        }
+
+        // Méthode alternative avec Unsafe pour Amazon Corretto et autres JDK restrictifs
+        try {
+            sun.misc.Unsafe unsafe = getUnsafe();
+            Object staticFieldBase = unsafe.staticFieldBase(field);
+            long staticFieldOffset = unsafe.staticFieldOffset(field);
+            unsafe.putObject(staticFieldBase, staticFieldOffset, newValue);
+            System.out.println("Successfully set field using Unsafe: " + field.getName());
+        } catch (Exception e) {
+            System.err.println("Failed to set field " + field.getName() + " using both reflection and Unsafe: " + e.getMessage());
+            throw e;
+        }
+    }
+
+    private static sun.misc.Unsafe getUnsafe() throws Exception {
+        try {
+            Field unsafeField = sun.misc.Unsafe.class.getDeclaredField("theUnsafe");
+            unsafeField.setAccessible(true);
+            return (sun.misc.Unsafe) unsafeField.get(null);
+        } catch (Exception e) {
+            throw new RuntimeException("Cannot access Unsafe", e);
+        }
     }
 
     // Classes
@@ -278,33 +311,13 @@ public final class Reflection {
     public enum PackageType {
         MINECRAFT_SERVER("net.minecraft.server." + getServerVersion()),
         CRAFTBUKKIT("org.bukkit.craftbukkit." + getServerVersion()),
-        CRAFTBUKKIT_BLOCK(CRAFTBUKKIT, "block"),
-        CRAFTBUKKIT_CHUNKIO(CRAFTBUKKIT, "chunkio"),
-        CRAFTBUKKIT_COMMAND(CRAFTBUKKIT, "command"),
-        CRAFTBUKKIT_CONVERSATIONS(CRAFTBUKKIT, "conversations"),
-        CRAFTBUKKIT_ENCHANTMENTS(CRAFTBUKKIT, "enchantments"),
-        CRAFTBUKKIT_ENTITY(CRAFTBUKKIT, "entity"),
-        CRAFTBUKKIT_EVENT(CRAFTBUKKIT, "event"),
-        CRAFTBUKKIT_GENERATOR(CRAFTBUKKIT, "generator"),
-        CRAFTBUKKIT_HELP(CRAFTBUKKIT, "help"),
-        CRAFTBUKKIT_INVENTORY(CRAFTBUKKIT, "inventory"),
-        CRAFTBUKKIT_MAP(CRAFTBUKKIT, "map"),
-        CRAFTBUKKIT_METADATA(CRAFTBUKKIT, "metadata"),
-        CRAFTBUKKIT_POTION(CRAFTBUKKIT, "potion"),
-        CRAFTBUKKIT_PROJECTILES(CRAFTBUKKIT, "projectiles"),
-        CRAFTBUKKIT_SCHEDULER(CRAFTBUKKIT, "scheduler"),
-        CRAFTBUKKIT_SCOREBOARD(CRAFTBUKKIT, "scoreboard"),
-        CRAFTBUKKIT_UPDATER(CRAFTBUKKIT, "updater"),
-        CRAFTBUKKIT_UTIL(CRAFTBUKKIT, "util");
+        BUKKIT("org.bukkit"),
+        NMS("net.minecraft.server." + getServerVersion());
 
         private final String path;
 
         PackageType(String path) {
             this.path = path;
-        }
-
-        PackageType(PackageType parent, String suffix) {
-            this.path = parent.path + "." + suffix;
         }
 
         public String getPath() {
@@ -320,31 +333,8 @@ public final class Reflection {
             return path;
         }
 
-        private static String getServerVersion() {
-            return org.bukkit.Bukkit.getServer().getClass().getPackage().getName().substring(23);
+        public static String getServerVersion() {
+            return Bukkit.getServer().getClass().getPackage().getName().substring(23);
         }
-    }
-    public static void sendPacket(Player player, Object packet) {
-        try {
-            Object handle = getHandle(player);
-            Object playerConnection = handle.getClass().getField("playerConnection").get(handle);
-            playerConnection.getClass().getMethod("sendPacket", getNMSClass("Packet")).invoke(playerConnection, packet);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static Object getHandle(Player player) {
-        try {
-            return player.getClass().getMethod("getHandle").invoke(player);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public static Class<?> getNMSClass(String className) throws ClassNotFoundException {
-        String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
-        return Class.forName("net.minecraft.server." + version + "." + className);
     }
 }

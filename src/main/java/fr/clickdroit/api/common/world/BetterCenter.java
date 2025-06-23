@@ -7,7 +7,7 @@ import java.lang.reflect.Field;
 import java.util.Random;
 
 public class BetterCenter {
-    public static void load() throws ReflectiveOperationException {
+    public static void load() throws Exception {
         Field worldGenTreesField = BiomeBase.class.getDeclaredField("aA");
         worldGenTreesField.setAccessible(true);
         Field worldGenBigTreeField = BiomeBase.class.getDeclaredField("aB");
@@ -53,7 +53,9 @@ public class BetterCenter {
     }
 
     private static class WorldGenSwampTreePatched extends WorldGenSwampTree {
-        private WorldGenSwampTreePatched() {}
+        WorldGenSwampTreePatched() {
+            super();
+        }
 
         public boolean generate(World world, Random random, BlockPosition blockPosition) {
             return ((blockPosition.getX() <= -64 || blockPosition.getX() >= 64 || blockPosition.getZ() <= -64 || blockPosition.getZ() >= 64) && super.generate(world, random, blockPosition));
@@ -61,8 +63,8 @@ public class BetterCenter {
     }
 
     private static class WorldGenForestPatched extends WorldGenForest {
-        WorldGenForestPatched(boolean b, boolean b1) {
-            super(b, b1);
+        WorldGenForestPatched(boolean b1, boolean b2) {
+            super(b1, b2);
         }
 
         public boolean generate(World world, Random random, BlockPosition blockPosition) {
@@ -70,9 +72,9 @@ public class BetterCenter {
         }
     }
 
-    private static class WorldGenForestTreePatched extends WorldGenForestTree {
-        WorldGenForestTreePatched(boolean flag) {
-            super(flag);
+    private static class WorldGenForestTreePatched extends WorldGenTrees {
+        WorldGenForestTreePatched(boolean b) {
+            super(b);
         }
 
         public boolean generate(World world, Random random, BlockPosition blockPosition) {
@@ -80,4 +82,3 @@ public class BetterCenter {
         }
     }
 }
-

@@ -48,7 +48,7 @@ public class NMSPatcher {
         Reflection.setFinalStatic(BiomeBase.class.getDeclaredField("biomes"), biomes);
     }
 
-    public void patchPotions() throws ReflectiveOperationException {
+    public void patchPotions() throws Exception {
         Reflection.setFinalStatic(PotionEffectType.class.getDeclaredField("acceptingNew"), Boolean.valueOf(true));
         Field byIdField = Reflection.getField(PotionEffectType.class, true, "byId");
         Field byNameField = Reflection.getField(PotionEffectType.class, true, "byName");
@@ -58,35 +58,12 @@ public class NMSPatcher {
         this.logger.info("Correction des effets de Force (130% => 26%, 260% => 52%)");
     }
 
-    private void fixAnimals() throws ReflectiveOperationException {
+    private void fixAnimals() throws Exception {
         addAnimalsSpawn("PLAINS", BiomeBase.PLAINS);
         addAnimalsSpawn("DESERT", BiomeBase.DESERT);
         addAnimalsSpawn("EXTREME_HILLS", BiomeBase.EXTREME_HILLS);
         addAnimalsSpawn("FOREST", BiomeBase.FOREST);
         addAnimalsSpawn("TAIGA", BiomeBase.TAIGA);
-        addAnimalsSpawn("SWAMPLAND", BiomeBase.SWAMPLAND);
-        addAnimalsSpawn("RIVER", BiomeBase.RIVER);
-        addAnimalsSpawn("FROZEN_OCEAN", BiomeBase.FROZEN_OCEAN);
-        addAnimalsSpawn("FROZEN_RIVER", BiomeBase.FROZEN_RIVER);
-        addAnimalsSpawn("MUSHROOM_ISLAND", BiomeBase.MUSHROOM_ISLAND);
-        addAnimalsSpawn("MUSHROOM_SHORE", BiomeBase.MUSHROOM_SHORE);
-        addAnimalsSpawn("BEACH", BiomeBase.BEACH);
-        addAnimalsSpawn("DESERT_HILLS", BiomeBase.DESERT_HILLS);
-        addAnimalsSpawn("FOREST_HILLS", BiomeBase.FOREST_HILLS);
-        addAnimalsSpawn("TAIGA_HILLS", BiomeBase.TAIGA_HILLS);
-        addAnimalsSpawn("SMALL_MOUNTAINS", BiomeBase.SMALL_MOUNTAINS);
-        addAnimalsSpawn("JUNGLE", BiomeBase.JUNGLE);
-        addAnimalsSpawn("JUNGLE_HILLS", BiomeBase.JUNGLE_HILLS);
-        addAnimalsSpawn("JUNGLE_EDGE", BiomeBase.JUNGLE_EDGE);
-        addAnimalsSpawn("STONE_BEACH", BiomeBase.STONE_BEACH);
-        addAnimalsSpawn("COLD_BEACH", BiomeBase.COLD_BEACH);
-        addAnimalsSpawn("BIRCH_FOREST", BiomeBase.BIRCH_FOREST);
-        addAnimalsSpawn("BIRCH_FOREST_HILLS", BiomeBase.BIRCH_FOREST_HILLS);
-        addAnimalsSpawn("ROOFED_FOREST", BiomeBase.ROOFED_FOREST);
-        addAnimalsSpawn("COLD_TAIGA", BiomeBase.COLD_TAIGA);
-        addAnimalsSpawn("COLD_TAIGA_HILLS", BiomeBase.COLD_TAIGA_HILLS);
-        addAnimalsSpawn("MEGA_TAIGA", BiomeBase.MEGA_TAIGA);
-        addAnimalsSpawn("MEGA_TAIGA_HILLS", BiomeBase.MEGA_TAIGA_HILLS);
         addAnimalsSpawn("EXTREME_HILLS_PLUS", BiomeBase.EXTREME_HILLS_PLUS);
         addAnimalsSpawn("SAVANNA", BiomeBase.SAVANNA);
         addAnimalsSpawn("SAVANNA_PLATEAU", BiomeBase.SAVANNA_PLATEAU);
@@ -96,7 +73,7 @@ public class NMSPatcher {
         addAnimalsSpawn("FOREST", BiomeBase.FOREST);
     }
 
-    private void addAnimalsSpawn(String name, BiomeBase biomeBase) throws ReflectiveOperationException {
+    private void addAnimalsSpawn(String name, BiomeBase biomeBase) throws Exception {
         Field biome = BiomeBase.class.getDeclaredField(name);
         Field defaultMobField = BiomeBase.class.getDeclaredField("au");
         defaultMobField.setAccessible(true);
