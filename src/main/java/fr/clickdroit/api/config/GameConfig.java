@@ -84,7 +84,7 @@ public class GameConfig {
         this.openDate = Date.from(Instant.now());
         this.serverHourSetup = true;
         this.episodeTime = 1200;
-        this.disconnectMinute = 15;
+        this.disconnectMinute = 900;
         this.teleportationState = WaitingTeleportationState.IN_LOBBY;
     }
 

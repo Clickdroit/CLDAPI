@@ -12,69 +12,144 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class TeleportationManager {
     private final List<PlayerPlate> players;
-
     private final long delay;
-
     private final Form form;
 
-    private final Map<String, Plate> playerPlates;
+    // Map thread-safe pour les plateformes
+    private final Map<String, Plate> playerPlates = new ConcurrentHashMap<>();
+
+    // Cache pour optimiser les accès répétés
+    private final World gameWorld;
+    private final Collection<? extends Player> onlinePlayersCache;
+
+    // Constantes pour éviter les nombres magiques
+    private static final double MIN_TPS_THRESHOLD = 19.85D;
+    private static final int MAX_TPS_WAIT_CYCLES = 20;
+    private static final int DEFAULT_COUNTDOWN_TIME = 10;
+    private static final int PLATE_SIZE = 3;
+    private static final Material PLATE_MATERIAL = Material.STAINED_GLASS;
+    private static final byte PLATE_DATA = 14;
+
+    // Messages pré-compilés pour éviter les concaténations répétées
+    private static final String WAITING_MESSAGE = "§fPatientez quelques §csecondes§f...";
+    private static final String GOOD_LUCK_TITLE = "§fBonne chance !";
+    private static final String BEST_WINS_SUBTITLE = "§f Que le §cmeilleur gagne§f";
+    private static final String LAUNCH_TITLE = "§fLancement dans";
+
+    // Tasks pour pouvoir les annuler si nécessaire
+    private BukkitTask tpsWaitTask;
+    private BukkitTask countdownTask;
+    private BukkitTask teleportationTask;
 
     public TeleportationManager(PlayerPlate[] players, long delay, Form form) {
         this(Arrays.asList(players), delay, form);
     }
 
     public TeleportationManager(List<PlayerPlate> players, long delay, Form form) {
-        this.players = players;
+        this.players = new CopyOnWriteArrayList<>(players); // Thread-safe copy
         this.delay = delay;
         this.form = form;
-        this.playerPlates = new HashMap<>();
+
+        // Cache du monde de jeu pour éviter les recherches répétées
+        this.gameWorld = Bukkit.getWorld("world");
+
+        // Cache des joueurs en ligne (snapshot au moment de la création)
+        this.onlinePlayersCache = new ArrayList<>(Bukkit.getOnlinePlayers());
     }
 
     public void teleportAllAndRun(Runnable runnable) {
-        createPlate(runnable, this.delay, this.form, this.players);
+        createPlateOptimized(runnable, this.delay, this.form, this.players);
     }
 
     public void startCoundown(final API main) {
-        (new BukkitRunnable() {
-            int count = 0;
+        final AtomicInteger count = new AtomicInteger(0);
 
+        tpsWaitTaskActive = true;
+        this.tpsWaitTask = new BukkitRunnable() {
+            @Override
             public void run() {
-                double[] tps = (MinecraftServer.getServer()).recentTps;
-                if (this.count >= 20 || tps[0] >= 19.85D) {
-                    cancel();
-                    (new BukkitRunnable() {
-                        int time = 10;
+                double[] tps = MinecraftServer.getServer().recentTps;
+                int currentCount = count.incrementAndGet();
 
-                        public void run() {
-                            if (this.time <= 0) {
-                                Bukkit.getOnlinePlayers().forEach(players -> {
-                                    Title.sendTitle(players, 0, 20, 10, "§fBonne chance !", "§f Que le §cmeilleur gagne§f");
-                                            players.playSound(players.getLocation(), Sound.EXPLODE, 5.0F, 1.0F);
-                                });
-                                TeleportationManager.this.finishCountdown();
-                                cancel();
-                            } else if (this.time <= 5 || this.time == 10) {
-                                Bukkit.getOnlinePlayers().forEach(players -> {
-                                    Title.sendTitle(players, 0, 30, 0, "§fLancement dans", "§c"+ this.time);
-                                            players.playSound(players.getLocation(), Sound.NOTE_PLING, 5.0F, 1.0F);
-                                });
-                            }
-                            this.time--;
-                        }
-                    }).runTaskTimer((Plugin)main, 0L, 20L);
+                if (currentCount >= MAX_TPS_WAIT_CYCLES || tps[0] >= MIN_TPS_THRESHOLD) {
+                    cancel();
+                    tpsWaitTaskActive = false;
+                    startActualCountdown(main);
                 } else {
-                    Bukkit.getOnlinePlayers().forEach(player -> Title.sendActionBar(player, "§fPatientez quelques §csecondes§f..." ));
+                    sendWaitingMessageToAll();
                 }
-                this.count++;
             }
-        }).runTaskTimer((Plugin)API.getAPI(), 0L, 20L);
+        }.runTaskTimer((Plugin) API.getAPI(), 0L, 20L);
+    }
+
+    /**
+     * Démarre le compte à rebours optimisé
+     */
+    private void startActualCountdown(final API main) {
+        final AtomicInteger timeLeft = new AtomicInteger(DEFAULT_COUNTDOWN_TIME);
+
+        countdownTaskActive = true;
+        this.countdownTask = new BukkitRunnable() {
+            @Override
+            public void run() {
+                int currentTime = timeLeft.getAndDecrement();
+
+                if (currentTime <= 0) {
+                    // Fin du compte à rebours
+                    sendFinalMessages();
+                    finishCountdown();
+                    cancel();
+                    countdownTaskActive = false;
+                } else if (currentTime <= 5 || currentTime == 10) {
+                    // Messages importants
+                    sendCountdownMessage(currentTime);
+                }
+            }
+        }.runTaskTimer((Plugin) main, 0L, 20L);
+    }
+
+    /**
+     * Envoie les messages finaux de manière optimisée
+     */
+    private void sendFinalMessages() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            Title.sendTitle(player, 0, 20, 10, GOOD_LUCK_TITLE, BEST_WINS_SUBTITLE);
+            player.playSound(player.getLocation(), Sound.EXPLODE, 5.0F, 1.0F);
+        }
+    }
+
+    /**
+     * Envoie les messages de compte à rebours
+     */
+    private void sendCountdownMessage(int time) {
+        String timeString = "§c" + time;
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            Title.sendTitle(player, 0, 30, 0, LAUNCH_TITLE, timeString);
+            player.playSound(player.getLocation(), Sound.NOTE_PLING, 5.0F, 1.0F);
+        }
+    }
+
+    /**
+     * Envoie le message d'attente à tous les joueurs
+     */
+    private void sendWaitingMessageToAll() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            Title.sendActionBar(player, WAITING_MESSAGE);
+        }
     }
 
     public void teleportAllAndStart(API main) {
@@ -88,66 +163,200 @@ public class TeleportationManager {
     }
 
     public void teleportPlayersAndStart(final Runnable runnable) {
-        (new BukkitRunnable() {
-            int count = 0;
+        final AtomicInteger count = new AtomicInteger(0);
 
+        new BukkitRunnable() {
+            @Override
             public void run() {
-                double[] tps = (MinecraftServer.getServer()).recentTps;
-                if (this.count >= 20 || tps[0] >= 19.85D) {
+                double[] tps = MinecraftServer.getServer().recentTps;
+                int currentCount = count.incrementAndGet();
+
+                if (currentCount >= MAX_TPS_WAIT_CYCLES || tps[0] >= MIN_TPS_THRESHOLD) {
                     cancel();
                     runnable.run();
                 } else {
-                    Bukkit.getOnlinePlayers().forEach(player -> Title.sendActionBar(player, "§fPatientez quelques §csecondes§f..." ));
+                    sendWaitingMessageToAll();
                 }
-                this.count++;
             }
-        }).runTaskTimer((Plugin)API.getAPI(), 0L, 20L);
+        }.runTaskTimer((Plugin) API.getAPI(), 0L, 20L);
     }
 
-    public void createPlate(final Runnable runnable, long delay, final Form form, Collection<PlayerPlate> players) {
-        final int length = players.size();
-        final Iterator<PlayerPlate> playerPlateIterator = players.iterator();
-        (new BukkitRunnable() {
-            int i = 0;
+    /**
+     * Version optimisée de createPlate
+     */
+    public void createPlateOptimized(final Runnable runnable, long delay, final Form form, Collection<PlayerPlate> players) {
+        final int totalPlayers = players.size();
+        final List<PlayerPlate> playersList = new ArrayList<>(players);
+        final AtomicInteger currentIndex = new AtomicInteger(0);
 
+        // Pré-charger les messages pour éviter les concaténations répétées
+        final List<String> progressMessages = new ArrayList<>(totalPlayers);
+        for (int i = 0; i < totalPlayers; i++) {
+            progressMessages.add("§f[" + (i + 1) + "/" + totalPlayers + "]");
+        }
+
+        teleportationTaskActive = true;
+        this.teleportationTask = new BukkitRunnable() {
+            @Override
             public void run() {
-                if (playerPlateIterator.hasNext()) {
-                    PlayerPlate playerPlate = playerPlateIterator.next();
-                    Plate plate = TeleportationManager.this.initPlate(playerPlate, form.calc(this.i, length));
-                    TeleportationManager.this.playerPlates.put(playerPlate.getName(), plate);
-                    Bukkit.getWorld("world").loadChunk(Bukkit.getWorld("world").getChunkAt(plate.getTeleportLocation()));
-                    Bukkit.getOnlinePlayers().forEach(player -> Title.sendActionBar(player, "§c"+ playerPlate.getName() + "§f a été teleporté §f["+ (this.i + 1) + "/" + length + "]"));
-                    Bukkit.getWorld("world").loadChunk(Bukkit.getWorld("world").getChunkAt(plate.getTeleportLocation()));
-                    playerPlate.getName();
-                    this.i++;
+                int index = currentIndex.get();
+
+                if (index < playersList.size()) {
+                    PlayerPlate playerPlate = playersList.get(index);
+
+                    try {
+                        // Calculer la position
+                        Location plateLocation = form.calc(index, totalPlayers);
+
+                        // Créer et assigner la plateforme
+                        Plate plate = initPlateOptimized(playerPlate, plateLocation);
+                        playerPlates.put(playerPlate.getName(), plate);
+
+                        // Charger le chunk une seule fois
+                        loadChunkOptimized(plateLocation);
+
+                        // Message de progression optimisé
+                        String progressMessage = "§c" + playerPlate.getName() + "§f a été téléporté " + progressMessages.get(index);
+                        sendProgressMessageToAll(progressMessage);
+
+                        currentIndex.incrementAndGet();
+
+                    } catch (Exception e) {
+                        // En cas d'erreur, continuer avec le joueur suivant
+                        e.printStackTrace();
+                        currentIndex.incrementAndGet();
+                    }
                 } else {
+                    // Téléportation terminée
                     cancel();
-                    Bukkit.getScheduler().runTaskLater((Plugin)API.getAPI(), () -> TeleportationManager.this.teleportPlayersAndStart(runnable), 40L);
+                    teleportationTaskActive = false;
+
+                    // Attendre 2 secondes avant de démarrer le compte à rebours
+                    Bukkit.getScheduler().runTaskLater(
+                            (Plugin) API.getAPI(),
+                            () -> teleportPlayersAndStart(runnable),
+                            40L
+                    );
                 }
             }
-        }).runTaskTimer((Plugin)API.getAPI(), 0L, delay);
+        }.runTaskTimer((Plugin) API.getAPI(), 0L, delay);
     }
 
-    private Plate initPlate(PlayerPlate playerPlate, Location location) {
-        SquarePlate squarePlate = new SquarePlate(location, 3, Material.STAINED_GLASS, 14);
-        playerPlate.assignPlate((Plate)squarePlate);
-        return (Plate)squarePlate;
+    /**
+     * Version optimisée de initPlate
+     */
+    private Plate initPlateOptimized(PlayerPlate playerPlate, Location location) {
+        SquarePlate squarePlate = new SquarePlate(location, PLATE_SIZE, PLATE_MATERIAL, PLATE_DATA);
+        playerPlate.assignPlate(squarePlate);
+        return squarePlate;
     }
 
+    /**
+     * Charge un chunk de manière optimisée
+     */
+    private void loadChunkOptimized(Location location) {
+        if (gameWorld != null) {
+            int chunkX = location.getBlockX() >> 4;
+            int chunkZ = location.getBlockZ() >> 4;
+
+            // Vérifier si le chunk est déjà chargé
+            if (!gameWorld.isChunkLoaded(chunkX, chunkZ)) {
+                gameWorld.loadChunk(chunkX, chunkZ, true);
+            }
+        }
+    }
+
+    /**
+     * Envoie un message de progression à tous les joueurs
+     */
+    private void sendProgressMessageToAll(String message) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            Title.sendActionBar(player, message);
+        }
+    }
+
+    /**
+     * Version non utilisée mais gardée pour compatibilité
+     */
+    @Deprecated
     private void teleport(PlayerPlate playerPlate, Location location) {
-        SquarePlate squarePlate = new SquarePlate(location, 3, Material.STAINED_GLASS, 14);
-        playerPlate.assignPlate((Plate)squarePlate);
+        SquarePlate squarePlate = new SquarePlate(location, PLATE_SIZE, PLATE_MATERIAL, PLATE_DATA);
+        playerPlate.assignPlate(squarePlate);
     }
 
     public void launchAll() {
-        launchAll(this.players);
+        launchAllOptimized(this.players);
     }
 
-    public static void launchAll(List<PlayerPlate> players) {
-        players.forEach(PlayerPlate::removePlate);
+    /**
+     * Version optimisée de launchAll
+     */
+    public static void launchAllOptimized(List<PlayerPlate> players) {
+        // Traitement en parallèle pour de meilleures performances
+        players.parallelStream().forEach(PlayerPlate::removePlate);
     }
 
     public Collection<PlayerPlate> getPlayers() {
-        return this.players;
+        return Collections.unmodifiableList(this.players);
+    }
+
+    // Variables pour tracker l'état des tâches
+    private volatile boolean tpsWaitTaskActive = false;
+    private volatile boolean countdownTaskActive = false;
+    private volatile boolean teleportationTaskActive = false;
+
+    /**
+     * Méthode pour annuler toutes les tâches en cours
+     */
+    public void cancelAllTasks() {
+        if (tpsWaitTask != null) {
+            tpsWaitTask.cancel();
+            tpsWaitTaskActive = false;
+        }
+        if (countdownTask != null) {
+            countdownTask.cancel();
+            countdownTaskActive = false;
+        }
+        if (teleportationTask != null) {
+            teleportationTask.cancel();
+            teleportationTaskActive = false;
+        }
+    }
+
+    /**
+     * Méthode pour obtenir le statut de la téléportation
+     */
+    public TeleportationStatus getStatus() {
+        if (teleportationTaskActive) {
+            return TeleportationStatus.TELEPORTING;
+        } else if (tpsWaitTaskActive) {
+            return TeleportationStatus.WAITING_TPS;
+        } else if (countdownTaskActive) {
+            return TeleportationStatus.COUNTDOWN;
+        } else {
+            return TeleportationStatus.COMPLETED;
+        }
+    }
+
+    /**
+     * Méthode pour obtenir les statistiques
+     */
+    public Map<String, Object> getStatistics() {
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("totalPlayers", players.size());
+        stats.put("platesCreated", playerPlates.size());
+        stats.put("status", getStatus());
+        stats.put("delay", delay);
+        return stats;
+    }
+
+    /**
+     * Enumération pour le statut de téléportation
+     */
+    public enum TeleportationStatus {
+        WAITING_TPS,
+        TELEPORTING,
+        COUNTDOWN,
+        COMPLETED
     }
 }

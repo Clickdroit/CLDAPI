@@ -224,12 +224,6 @@ public class GameListener implements Listener {
         ItemStack item = event.getInventory().getResult();
         if (item == null)
             return;
-        for (GeneralRules rules : GeneralRules.values()) {
-            if ((rules == GeneralRules.DIAMOND_SWORD || rules == GeneralRules.DIAMOND_HELMET || rules == GeneralRules.DIAMOND_CHESTPLATE || rules == GeneralRules.DIAMOND_LEGGINGS || rules == GeneralRules.DIAMOND_BOOTS) &&
-                    !rules.isEnabled() && item
-                    .getType() == rules.getMaterial())
-                event.getInventory().setResult(new ItemStack(Material.AIR));
-        }
         for (UseItems items : UseItems.values()) {
             if (items.equals(UseItems.FISHINGROD) &&
                     !items.isEnabled() && item

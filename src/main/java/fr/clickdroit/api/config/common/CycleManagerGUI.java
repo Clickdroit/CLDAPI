@@ -68,9 +68,6 @@ public class CycleManagerGUI implements CustomInventory {
         // Remplir avec du verre pour la bordure
         fillWithGlass(slots);
 
-        // Récupérer le mode actuel (on suppose qu'il y a un champ dans GameConfig)
-        // Pour l'instant on utilise dayNightDuration pour déterminer le mode :
-        // 0 = Jour éternel, -1 = Nuit éternelle, >0 = Cycle normal
         long duration = this.gameConfig.getDayNightDuration();
         CycleMode currentMode;
         if (duration == 0) {
@@ -159,6 +156,9 @@ public class CycleManagerGUI implements CustomInventory {
             selectedMode = CycleMode.NORMAL_CYCLE;
         } else if (slot == 15) { // Nuit éternelle
             selectedMode = CycleMode.ETERNAL_NIGHT;
+        } else if (slot == 22) { // Gestion de la flèche de retour par SLOT
+            this.gameManager.getApi().openInventory(player, ConfigOptionsGUI.class);
+            return;
         }
 
         if (selectedMode != null) {
@@ -166,15 +166,12 @@ public class CycleManagerGUI implements CustomInventory {
             switch (selectedMode) {
                 case ETERNAL_DAY:
                     this.gameConfig.setDayNightDuration(0L); // 0 = Jour éternel
-                    player.sendMessage("§e§l✓ §fMode §eJour éternel §factivé!");
                     break;
                 case ETERNAL_NIGHT:
                     this.gameConfig.setDayNightDuration(-1L); // -1 = Nuit éternelle
-                    player.sendMessage("§8§l✓ §fMode §8Nuit éternelle §factivé!");
                     break;
                 case NORMAL_CYCLE:
                     this.gameConfig.setDayNightDuration(1200L); // 20 minutes par défaut
-                    player.sendMessage("§6§l✓ §fMode §6Cycle normal §factivé!");
                     break;
             }
 
@@ -183,11 +180,6 @@ public class CycleManagerGUI implements CustomInventory {
 
             // Actualiser l'inventaire
             this.gameManager.getApi().openInventory(player, getClass());
-        }
-
-        // Gestion de la flèche de retour
-        if (clickedItem.getType() == Material.ARROW) {
-            this.gameManager.getApi().openInventory(player, ConfigOptionsGUI.class);
         }
     }
 

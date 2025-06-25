@@ -5,11 +5,6 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 public enum GeneralRules {
-    DIAMOND_HELMET("Casque en diamant", Material.DIAMOND_HELMET, 0, true),
-    DIAMOND_CHESTPLATE("Plastron en diamant", Material.DIAMOND_CHESTPLATE, 0, true),
-    DIAMOND_LEGGINGS("Jambien diamant", Material.DIAMOND_LEGGINGS, 0, false),
-    DIAMOND_BOOTS("Bottes en diamant", Material.DIAMOND_BOOTS, 0, true),
-    DIAMOND_SWORD("en diamant", Material.DIAMOND_SWORD, 0, true),
     STRIPMINING("Strip Mining", Material.IRON_PICKAXE, 0, true),
     IPVP("iPvP", Material.IRON_SWORD, 0, true),
     CROSSTEAM("Cross Team", Material.GOLD_SWORD, 0, true),

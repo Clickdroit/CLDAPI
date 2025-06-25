@@ -55,7 +55,22 @@ public class ConfigMainGUI implements CustomInventory {
             slots[j] = (new ItemCreator(Material.STAINED_GLASS_PANE)).setDurability(Integer.valueOf(14)).setName("§f").getItem();
         }
         slots[2] = (new ItemCreator(Material.RED_ROSE)).setName("§8| §fPanel d'§cAdministration").addLore("").addLore(" §8> §fAccès §f: §c§lAdministration").addLore("").addLore("  §8| §fPermetd'acceder au").addLore("  §8| §fpanel d'§cadministration§f").addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
-        slots[4] = (new ItemCreator(Material.SAPLING)).setName("§8| §fPré-charger").addLore("").addLore(" §8> §fAccès §f: §6§lHost").addLore("").addLore("  §8| §fPermet de pré-charger").addLore("  §8| §ftoute la §2map§f.").addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
+
+        // REMPLACEMENT DU SAPLING PAR UNE TÊTE PERSONNALISÉE
+        slots[4] = (new ItemCreator(Material.SKULL_ITEM))
+                .setDurability(3) // Tête de joueur
+                .setSkullURL("http://textures.minecraft.net/texture/cf40942f364f6cbceffcf1151796410286a48b1aeba77243e218026c09cd1")
+                .setName("§8| §fPré-charger")
+                .addLore("")
+                .addLore(" §8> §fAccès §f: §6§lHost")
+                .addLore("")
+                .addLore("  §8| §fPermet de pré-charger")
+                .addLore("  §8| §ftoute la §2map§f.")
+                .addLore("")
+                .addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage())
+                .addLore("")
+                .getItem();
+
         GameConfig.WaitingTeleportationState waitingState = this.gameConfig.getTeleportationState();
         slots[6] = (new ItemCreator(waitingState.equals(GameConfig.WaitingTeleportationState.IN_ROOM) ? Material.EYE_OF_ENDER : Material.ENDER_PEARL)).setName(waitingState.equals(GameConfig.WaitingTeleportationState.IN_ROOM) ? "§8| §fTéléportation au §alobby": "§8| §fTéléportation à la §asalle des règles").addLore("").addLore(" §8> §fAccès §f: §6§lHost").addLore("").addLore("  §8| §fPermet de teleporter les §ajoueurs" ).addLore("  §8| §f" + (waitingState.equals(GameConfig.WaitingTeleportationState.IN_ROOM) ? "au point d'apparition" : "dans la salle des r") + "§f").addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
         slots[10] = OpenVar.SLOTS.getItem();
@@ -137,26 +152,33 @@ public class ConfigMainGUI implements CustomInventory {
         }
 
         switch (clickedItem.getType()) {
-            case SAPLING:
-                player.closeInventory();
-                if (!this.gameManager.isPreloadFinished() && !this.gameManager.isPreload()) {
-                    this.gameManager.setPreload(true);
-                    BiomeChanger.addSapling();
-                    player.sendMessage("§fVous venez de §alancer §fla prégénération de la map.");
+            case SKULL_ITEM:
+                // Vérifier si c'est la tête de pré-chargement (slot 4)
+                if (slot == 4) {
+                    player.closeInventory();
+                    if (!this.gameManager.isPreloadFinished() && !this.gameManager.isPreload()) {
+                        this.gameManager.setPreload(true);
+                        BiomeChanger.addSapling();
+                        player.sendMessage("§fVous venez de §alancer §fla prégénération de la map.");
 
-                    Bukkit.getScheduler().runTaskLater(this.api, () -> {
-                        if (this.gameManager.isPreloadFinished()) {
-                            player.sendMessage("§aLa prégénération de la map est terminée !");
-                        }
-                    }, 20L * 5);
+                        Bukkit.getScheduler().runTaskLater(this.api, () -> {
+                            if (this.gameManager.isPreloadFinished()) {
+                                player.sendMessage("§aLa prégénération de la map est terminée !");
+                            }
+                        }, 20L * 5);
 
+                        break;
+                    }
+                    if (this.gameManager.isPreloadFinished()) {
+                        player.sendMessage("§aLa map est déjà pré-chargée !");
+                    } else {
+                        player.sendMessage("§fLe serveur est §cchargé§f ou est §centrain§f de pré-charger...");
+                    }
                     break;
                 }
-                if (this.gameManager.isPreloadFinished()) {
-                    player.sendMessage("§aLa map est déjà pré-chargée !");
-                } else {
-                    player.sendMessage("§fLe serveur est §cchargé§f ou est §centrain§f de pré-charger...");
-                }
+                // Garder le code existant pour les autres têtes
+                if (!this.gameManager.getModuleManager().getCurrentModule().isHasRole())
+                    this.api.openInventory(player, SlotsGUI.class);
                 break;
 
             case RED_ROSE:
@@ -165,10 +187,6 @@ public class ConfigMainGUI implements CustomInventory {
                     break;
                 }
                 player.sendMessage("§fVous n'êtes §cpas autorisé§f à faire ceci.");
-                break;
-            case SKULL_ITEM:
-                if (!this.gameManager.getModuleManager().getCurrentModule().isHasRole())
-                    this.api.openInventory(player, SlotsGUI.class);
                 break;
             case INK_SACK:
                 if (clickedItem.getDurability() == 10) {
@@ -242,4 +260,3 @@ public class ConfigMainGUI implements CustomInventory {
         return 6;
     }
 }
-

@@ -457,4 +457,9 @@ public class ItemCreator {
         // pour l'instant, on retourne this pour éviter les erreurs
         return this;
     }
+
+    public ItemCreator setSkullTexture(String texture) {
+        // Logique pour appliquer la texture à la tête
+        return this;
+    }
 }

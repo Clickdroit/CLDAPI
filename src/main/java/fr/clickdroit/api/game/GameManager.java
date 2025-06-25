@@ -32,88 +32,78 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class GameManager {
     private final API api;
-
     private final GameConfig gameConfig;
-
     private final ModuleManager moduleManager;
-
     private final EpisodeManager episodeManager;
-
     private final TeamManager teamManager;
-
     private final WorldPopulator worldPopulator;
-
     private final CycleManager cycleManager;
-
     private final CombatLogManager combatLogManager;
-
     private final UHCStandard uhcStandard;
-
     private final UHCFinisherGame uhcFinisherGame;
-
     private final SimpleBorder border;
 
-    private final List<UUID> inGamePlayers;
+    // Collections thread-safe pour éviter les problèmes de concurrence
+    private final List<UUID> inGamePlayers = new CopyOnWriteArrayList<>();
+    private final List<Teams> aliveTeams = new CopyOnWriteArrayList<>();
+    private final List<UUID> offlinePlayers = new CopyOnWriteArrayList<>();
+    private final List<Scenario> enabledScenarios = new CopyOnWriteArrayList<>();
+    private final List<UUID> playedPlayers = new CopyOnWriteArrayList<>();
+    private final List<String> playedDomeiPlayers = new CopyOnWriteArrayList<>();
+    private final List<String> whitelistedPlayers = new CopyOnWriteArrayList<>();
+    private final List<UUID> hosts = new CopyOnWriteArrayList<>();
+    private final List<String> banList = new CopyOnWriteArrayList<>();
+    private final List<UUID> vanishList = new CopyOnWriteArrayList<>();
 
-    private final List<Teams> aliveTeams;
+    // Cache pour les opérations fréquentes
+    private final Map<UUID, GamePlayer> gamePlayerCache = new ConcurrentHashMap<>();
+    private final Set<UUID> hostAccessCache = ConcurrentHashMap.newKeySet();
+    private long hostCacheLastUpdate = 0;
+    private static final long HOST_CACHE_DURATION = 5000; // 5 secondes
 
-    private final List<UUID> offlinePlayers;
+    // Messages pré-compilés pour éviter les concaténations répétées
+    private static final String[] START_MESSAGES = {
+            "       §f(§a!§f) §fBien le bonjour §f(§a!§f) ",
+            "",
+            " §8> §fVoici certaines §crègles§f à respecter.",
+            " §8| §fLe respect des §cgroupes§f.",
+            " §8| §fNe pas §cSoundBoard.§f ",
+            " §8| §fNe pas §ctuer§f sans raison.",
+            " §8| §fNe pas §cdévoiler§f son rôle",
+            "§4",
+            " §8 > §fVoici les §ccommandes§f à connaitre.",
+            " §8| §f/§cdoc §8• §fPermet de voir le §cdocument explicatif§f du mode.",
+            " §8| §f/mumble §8• §fPermet de voir le mumble de la §c§1game ",
+            " §8| §f/§crules §8• §fPermet de voir les §crègles§f.",
+            " §8| §f/helpop §8• §fPermet de §cdemander§f de l'aide.",
+            "§4",
+            " §8 > §f Bonne §achance§f à tous !",
+            "§4"
+    };
 
-    private final List<Scenario> enabledScenarios;
-
-    private final List<UUID> playedPlayers;
-
-    private final List<String> playedDomeiPlayers;
-
-    private final List<String> whitelistedPlayers;
-
-    private GameState gameState;
-
+    private volatile GameState gameState;
     private final boolean announcedOnHub;
-
-    private boolean preload;
-
-    private boolean preloadFinished;
-
-    private int groupe;
-
+    private volatile boolean preload;
+    private volatile boolean preloadFinished;
+    private volatile int groupe;
     private BeforeStartTask beforeStartTask;
-
     private GlobalTask globalTask;
-
     private StartGameCountDown startGameCountDown;
-
-    private UUID gameHost;
-
-    private final List<UUID> hosts;
-
-    private final List<String> banList;
-
-    private final List<UUID> vanishList;
+    private volatile UUID gameHost;
 
     public GameManager(API api) {
         this.api = api;
         this.moduleManager = new ModuleManager(this);
         this.gameState = GameState.WAITING;
-        this.inGamePlayers = new ArrayList<>();
-        this.playedPlayers = new ArrayList<>();
-        this.hosts = new ArrayList<>();
-        this.banList = new ArrayList<>();
-        this.vanishList = new ArrayList<>();
-        this.playedDomeiPlayers = new ArrayList<>();
-        this.aliveTeams = new ArrayList<>();
-        this.offlinePlayers = new ArrayList<>();
-        this.enabledScenarios = new ArrayList<>();
-        this.whitelistedPlayers = new ArrayList<>();
         this.gameConfig = new GameConfig(this);
         this.episodeManager = new EpisodeManager(this);
         this.teamManager = new TeamManager(this);
@@ -129,12 +119,23 @@ public class GameManager {
         this.announcedOnHub = false;
         this.preload = false;
         this.preloadFinished = false;
-        Scenario.TIMBER.getScenarioManager().activeScenario();
-        Scenario.CUTCLEAN.getScenarioManager().activeScenario();
-        Scenario.HASTEYBOYS.getScenarioManager().activeScenario();
-        Scenario.SAFEMINER.getScenarioManager().activeScenario();
-        Scenario.CAT_EYES.getScenarioManager().activeScenario();
-        Scenario.BETAZOMBIE.getScenarioManager().activeScenario();
+
+        // Activation optimisée des scénarios par défaut
+        activateDefaultScenarios();
+    }
+
+    /**
+     * Active les scénarios par défaut de manière optimisée
+     */
+    private void activateDefaultScenarios() {
+        Scenario[] defaultScenarios = {
+                Scenario.TIMBER, Scenario.CUTCLEAN, Scenario.HASTEYBOYS,
+                Scenario.SAFEMINER, Scenario.CAT_EYES, Scenario.BETAZOMBIE
+        };
+
+        for (Scenario scenario : defaultScenarios) {
+            scenario.getScenarioManager().activeScenario();
+        }
     }
 
     public void startWithTimer() {
@@ -149,115 +150,264 @@ public class GameManager {
         this.globalTask = new GlobalTask(this);
         this.globalTask.runTaskTimer((Plugin)this.api, 0L, 20L);
         this.cycleManager.startDayCycle(this.gameConfig.getDayNightDuration());
-        Bukkit.broadcastMessage("       §f(§a!§f) §fBien le bonjour §f(§a!§f) ");
-        Bukkit.broadcastMessage("");
-        Bukkit.broadcastMessage(" §8> §fVoici certaines §crègles§f à respecter.");
-        Bukkit.broadcastMessage(" §8| §fLe respect des §cgroupes§f.");
-        Bukkit.broadcastMessage(" §8| §fNe pas §cSoundBoard.§f ");
-        Bukkit.broadcastMessage(" §8| §fNe pas §ctuer§f sans raison.");
-        Bukkit.broadcastMessage(" §8| §fNe pas §cdévoiler§f son rôle");
-        Bukkit.broadcastMessage("§4");
-        Bukkit.broadcastMessage(" §8 > §fVoici les §ccommandes§f à connaitre.");
-        Bukkit.broadcastMessage(" §8| §f/§cdoc §8• §fPermet de voir le §cdocument explicatif§f du mode.");
-        Bukkit.broadcastMessage(" §8| §f/mumble §8• §fPermet de voir le mumble de la §c§1game ");
-        Bukkit.broadcastMessage(" §8| §f/§crules §8• §fPermet de voir les §crègles§f.");
-        Bukkit.broadcastMessage(" §8| §f/helpop §8• §fPermet de §cdemander§f de l'aide.");
-        Bukkit.broadcastMessage("§4");
-        Bukkit.broadcastMessage(" §8 > §f Bonne §achance§f à tous !");
-        Bukkit.broadcastMessage("§4");
-        for (UUID uuid : getInGamePlayers()) {
-            Player player = Bukkit.getPlayer(uuid);
-            if (player == null)
-                continue;
-            player.getInventory().clear();
-            player.getInventory().setArmorContents(null);
-            player.setFoodLevel(20);
-            player.setHealth(player.getMaxHealth());
-            player.setExp(0.0F);
-            player.setLevel(0);
-            TabHandler.removePrefixFor(player);
-            GameUtils.clearPlayerEffect(player);
-            InventoryAPI.giveInvent(player);
+
+        // Diffusion optimisée des messages
+        broadcastStartMessages();
+
+        // Traitement optimisé des joueurs
+        processGameStartForPlayers();
+
+        // Activation des scénarios de manière optimisée
+        activateEnabledScenarios();
+
+        this.worldPopulator.getGameWorld().setGameRuleValue("randomTickSpeed", "3");
+
+        // Gestion optimisée des spectateurs OP
+        processSpectatorOPs();
+    }
+
+    /**
+     * Diffuse les messages de début de manière optimisée
+     */
+    private void broadcastStartMessages() {
+        for (String message : START_MESSAGES) {
+            Bukkit.broadcastMessage(message);
         }
-        Arrays.<Scenario>stream(Scenario.values())
+    }
+
+    /**
+     * Traite le début de jeu pour tous les joueurs de manière optimisée
+     */
+    private void processGameStartForPlayers() {
+        List<UUID> inGamePlayersCopy = new ArrayList<>(getInGamePlayers());
+
+        for (UUID uuid : inGamePlayersCopy) {
+            Player player = Bukkit.getPlayer(uuid);
+            if (player == null) continue;
+
+            // Réinitialisation optimisée du joueur
+            resetPlayer(player);
+        }
+    }
+
+    /**
+     * Réinitialise un joueur de manière optimisée
+     */
+    private void resetPlayer(Player player) {
+        player.getInventory().clear();
+        player.getInventory().setArmorContents(null);
+        player.setFoodLevel(20);
+        player.setHealth(player.getMaxHealth());
+        player.setExp(0.0F);
+        player.setLevel(0);
+        TabHandler.removePrefixFor(player);
+        GameUtils.clearPlayerEffect(player);
+        InventoryAPI.giveInvent(player);
+    }
+
+    /**
+     * Active les scénarios activés de manière optimisée
+     */
+    private void activateEnabledScenarios() {
+        Arrays.stream(Scenario.values())
                 .filter(Scenario::isEnabled)
                 .map(Scenario::getScenarioManager)
                 .forEach(ScenarioManager::onStart);
-        this.worldPopulator.getGameWorld().setGameRuleValue("randomTickSpeed", "3");
+    }
+
+    /**
+     * Traite les OPs spectateurs de manière optimisée
+     */
+    private void processSpectatorOPs() {
         Bukkit.getOnlinePlayers().stream()
-                .filter(player -> (!this.inGamePlayers.contains(player.getUniqueId()) && player.isOp()))
+                .filter(player -> !this.inGamePlayers.contains(player.getUniqueId()) && player.isOp())
                 .map(OfflinePlayer::getUniqueId)
-                .map(GamePlayer::getPlayer)
+                .map(this::getCachedGamePlayer)
+                .filter(Objects::nonNull)
                 .forEach(gamePlayer -> gamePlayer.setAlerts(true));
     }
 
     public void tryStartGame() {
-        if (!this.gameState.equals(GameState.STARTING))
-            return;
+        if (!this.gameState.equals(GameState.STARTING)) return;
+
         System.out.println("[UHC] Starting game..");
         setGameState(GameState.TELEPORTATION);
+
+        // Nettoyage optimisé des listes
+        clearGameLists();
+
+        // Initialisation de la bordure
+        this.border.init((this.gameConfig.getBorderStartSize() * 2), 0, 0);
+
+        // Collecte optimisée des joueurs
+        List<SoloPlayerPlate> playerPlatesList = collectActivePlayers();
+
+        // Traitement optimisé des joueurs en jeu
+        processInGamePlayers();
+
+        // Gestion des équipes si nécessaire
+        if (this.gameConfig.getPlayerPerTeam() > 1) {
+            processTeams();
+        }
+
+        // Collecte des scénarios activés
+        collectEnabledScenarios();
+
+        // Téléportation optimisée
+        handleTeleportation(playerPlatesList);
+    }
+
+    /**
+     * Nettoie les listes de jeu de manière optimisée
+     */
+    private void clearGameLists() {
         this.inGamePlayers.clear();
         this.playedPlayers.clear();
         this.offlinePlayers.clear();
         this.aliveTeams.clear();
         this.enabledScenarios.clear();
-        this.border.init((this.gameConfig.getBorderStartSize() * 2), 0, 0);
+    }
+
+    /**
+     * Collecte les joueurs actifs de manière optimisée
+     */
+    private List<SoloPlayerPlate> collectActivePlayers() {
         List<SoloPlayerPlate> playerPlatesList = new ArrayList<>();
-        for (Player players : Bukkit.getOnlinePlayers()) {
-            if (!players.getGameMode().equals(GameMode.SPECTATOR)) {
-                UUID uuid = players.getUniqueId();
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (!player.getGameMode().equals(GameMode.SPECTATOR)) {
+                UUID uuid = player.getUniqueId();
                 this.inGamePlayers.add(uuid);
                 this.playedPlayers.add(uuid);
                 this.playedDomeiPlayers.add(uuid.toString());
-                playerPlatesList.add(new SoloPlayerPlate(players));
+                playerPlatesList.add(new SoloPlayerPlate(player));
             }
         }
-        for (UUID uuid : this.inGamePlayers) {
+
+        return playerPlatesList;
+    }
+
+    /**
+     * Traite les joueurs en jeu de manière optimisée
+     */
+    private void processInGamePlayers() {
+        Iterator<UUID> iterator = this.inGamePlayers.iterator();
+
+        while (iterator.hasNext()) {
+            UUID uuid = iterator.next();
             Player player = Bukkit.getPlayer(uuid);
-            GamePlayer gamePlayer = GamePlayer.getPlayer(uuid);
+            GamePlayer gamePlayer = getCachedGamePlayer(uuid);
+
             if (player == null || gamePlayer == null) {
-                this.inGamePlayers.remove(uuid);
+                iterator.remove();
                 continue;
             }
-            if (this.gameConfig.getPlayerPerTeam() > 1 && gamePlayer
-                    .getTeams() == null)
-                for (Teams teams : Teams.values()) {
-                    if (this.teamManager.getPlayerAmountInTeam(teams) < this.gameConfig.getPlayerPerTeam()) {
-                        this.teamManager.addPlayerToTeam(player, teams);
-                        break;
-                    }
-                }
-            GameUtils.startPlayer(player, GameMode.ADVENTURE);
-        }
-        if (this.gameConfig.getPlayerPerTeam() > 1)
-            for (Teams teams : Teams.values()) {
-                if (this.teamManager.getPlayerAmountInTeam(teams) >= 1)
-                    getAliveTeams().add(teams);
+
+            if (this.gameConfig.getPlayerPerTeam() > 1 && gamePlayer.getTeams() == null) {
+                assignPlayerToTeam(player);
             }
-        for (Scenario scenario : Scenario.values()) {
-            if (scenario.isEnabled())
-                this.enabledScenarios.add(scenario);
-        }
-        World gameWorld = this.worldPopulator.getGameWorld();
-        CircleForm circleForm = new CircleForm((this.gameConfig.getBorderStartSize() - 10), 150, gameWorld, gameWorld.getWorldBorder().getCenter());
-        if (GameUtils.isSoloMode()) {
-            PlayerPlate[] playerPlates = (PlayerPlate[])playerPlatesList.<Object>toArray((Object[])new SoloPlayerPlate[0]);
-            TeleportationManager teleportationManager = new TeleportationManager(playerPlates, 2L, (Form)circleForm);
-            teleportationManager.teleportAllAndStart(this.api);
-        } else {
-            TeamPlayerPlate[] arrayOfTeamPlayerPlate = getTeamPlayerPlate(this.teamManager);
-            TeleportationManager teleportationManager = new TeleportationManager((PlayerPlate[])arrayOfTeamPlayerPlate, 2L, (Form)circleForm);
-            teleportationManager.teleportAllAndStart(this.api);
+
+            GameUtils.startPlayer(player, GameMode.ADVENTURE);
         }
     }
 
-    private TeamPlayerPlate[] getTeamPlayerPlate(TeamManager teamManager) {
-        return (TeamPlayerPlate[])((List)((List)Arrays.<Teams>stream(Teams.values()).limit(100L).filter(teams -> (teamManager.getPlayerAmountInTeam(teams) > 0)).collect(Collectors.toList()))
-                .stream().map(team -> {
+    /**
+     * Assigne un joueur à une équipe disponible
+     */
+    private void assignPlayerToTeam(Player player) {
+        for (Teams team : Teams.values()) {
+            if (this.teamManager.getPlayerAmountInTeam(team) < this.gameConfig.getPlayerPerTeam()) {
+                this.teamManager.addPlayerToTeam(player, team);
+                break;
+            }
+        }
+    }
+
+    /**
+     * Traite les équipes de manière optimisée
+     */
+    private void processTeams() {
+        for (Teams team : Teams.values()) {
+            if (this.teamManager.getPlayerAmountInTeam(team) >= 1) {
+                getAliveTeams().add(team);
+            }
+        }
+    }
+
+    /**
+     * Collecte les scénarios activés
+     */
+    private void collectEnabledScenarios() {
+        for (Scenario scenario : Scenario.values()) {
+            if (scenario.isEnabled()) {
+                this.enabledScenarios.add(scenario);
+            }
+        }
+    }
+
+    /**
+     * Gère la téléportation de manière optimisée
+     */
+    private void handleTeleportation(List<SoloPlayerPlate> playerPlatesList) {
+        World gameWorld = this.worldPopulator.getGameWorld();
+        CircleForm circleForm = new CircleForm(
+                (this.gameConfig.getBorderStartSize() - 10),
+                150,
+                gameWorld,
+                gameWorld.getWorldBorder().getCenter()
+        );
+
+        TeleportationManager teleportationManager;
+
+        if (GameUtils.isSoloMode()) {
+            PlayerPlate[] playerPlates = playerPlatesList.toArray(new SoloPlayerPlate[0]);
+            teleportationManager = new TeleportationManager(playerPlates, 2L, circleForm);
+        } else {
+            TeamPlayerPlate[] teamPlates = getTeamPlayerPlateOptimized(this.teamManager);
+            teleportationManager = new TeleportationManager(teamPlates, 2L, circleForm);
+        }
+
+        teleportationManager.teleportAllAndStart(this.api);
+    }
+
+    /**
+     * Version optimisée de getTeamPlayerPlate
+     */
+    private TeamPlayerPlate[] getTeamPlayerPlateOptimized(TeamManager teamManager) {
+        return Arrays.stream(Teams.values())
+                .limit(100)
+                .filter(team -> teamManager.getPlayerAmountInTeam(team) > 0)
+                .map(team -> {
                     List<UUID> players = new ArrayList<>();
-                    teamManager.getPlayersInTeam((Teams)team);
-                    return new TeamPlayerPlate(players, ((Teams)team).getColor() + "équipe" + ((Teams)team).getColor() + ((Teams)team).getName());
-                }).collect(Collectors.toList())).toArray((Object[])new TeamPlayerPlate[0]);
+                    teamManager.getPlayersInTeam(team);
+                    return new TeamPlayerPlate(players, team.getColor() + "équipe" + team.getColor() + team.getName());
+                })
+                .toArray(TeamPlayerPlate[]::new);
+    }
+
+    /**
+     * Obtient un GamePlayer avec mise en cache
+     */
+    private GamePlayer getCachedGamePlayer(UUID uuid) {
+        return gamePlayerCache.computeIfAbsent(uuid, GamePlayer::getPlayer);
+    }
+
+    /**
+     * Invalide le cache d'un joueur
+     */
+    public void invalidateGamePlayerCache(UUID uuid) {
+        gamePlayerCache.remove(uuid);
+    }
+
+    /**
+     * Nettoie le cache des GamePlayer
+     */
+    public void cleanGamePlayerCache() {
+        Set<UUID> onlinePlayerIds = Bukkit.getOnlinePlayers().stream()
+                .map(Player::getUniqueId)
+                .collect(Collectors.toSet());
+
+        gamePlayerCache.entrySet().removeIf(entry -> !onlinePlayerIds.contains(entry.getKey()));
     }
 
     public boolean isPreloadFinished() {
@@ -267,26 +417,37 @@ public class GameManager {
     public void setPreloadFinished(boolean preloadFinished) {
         this.preloadFinished = preloadFinished;
 
-        // Si la prégénération vient de se terminer
         if (preloadFinished && !this.preload) {
-            // Log pour le serveur
             getLogger().info("Map pregeneration completed successfully!");
 
-            // Notification aux administrateurs/hosts
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                if (hasHostAccess(player)) {
-                    player.sendMessage("");
-                    player.sendMessage("§a§l✓ PRÉGÉNÉRATION TERMINÉE");
-                    player.sendMessage("§fLa map est maintenant prête pour la partie !");
-                    player.sendMessage("§fVous pouvez configurer les scénarios et lancer la partie.");
-                    player.sendMessage("");
-                }
-            }
+            // Notification optimisée aux hosts
+            notifyHostsPreloadComplete();
 
-            // Réinitialiser le flag de prégénération en cours
             this.preload = false;
         }
     }
+
+    /**
+     * Notifie les hosts de manière optimisée
+     */
+    private void notifyHostsPreloadComplete() {
+        String[] messages = {
+                "",
+                "§a§l✓ PRÉGÉNÉRATION TERMINÉE",
+                "§fLa map est maintenant prête pour la partie !",
+                "§fVous pouvez configurer les scénarios et lancer la partie.",
+                ""
+        };
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (hasHostAccess(player)) {
+                for (String message : messages) {
+                    player.sendMessage(message);
+                }
+            }
+        }
+    }
+
     private Logger getLogger() {
         return this.api.getLogger();
     }
@@ -348,6 +509,8 @@ public class GameManager {
     public void setGameHost(UUID gameHost) {
         this.gameHost = gameHost;
         this.whitelistedPlayers.add(Bukkit.getOfflinePlayer(gameHost).getName());
+        // Invalider le cache des hosts
+        hostCacheLastUpdate = 0;
     }
 
     public SimpleBorder getBorder() {
@@ -434,8 +597,34 @@ public class GameManager {
         return this.api;
     }
 
+    /**
+     * Version optimisée de hasHostAccess avec cache
+     */
     public boolean hasHostAccess(Player player) {
-        return ((this.gameHost != null && this.gameHost.equals(player.getUniqueId())) || player.isOp() || getHosts().contains(player.getUniqueId()));
+        UUID playerId = player.getUniqueId();
+        long currentTime = System.currentTimeMillis();
+
+        // Vérifier le cache
+        if ((currentTime - hostCacheLastUpdate) < HOST_CACHE_DURATION) {
+            if (hostAccessCache.contains(playerId)) {
+                return true;
+            }
+        } else {
+            // Rafraîchir le cache
+            hostAccessCache.clear();
+            hostCacheLastUpdate = currentTime;
+        }
+
+        // Vérifier les permissions
+        boolean hasAccess = (this.gameHost != null && this.gameHost.equals(playerId)) ||
+                player.isOp() ||
+                getHosts().contains(playerId);
+
+        if (hasAccess) {
+            hostAccessCache.add(playerId);
+        }
+
+        return hasAccess;
     }
 
     public void broadcast(String message) {
@@ -446,7 +635,7 @@ public class GameManager {
         for (UUID uuid : this.inGamePlayers) {
             Player player = Bukkit.getPlayer(uuid);
             if (player != null && player.isOnline()) {
-                GamePlayer gamePlayer = GamePlayer.getPlayer(uuid);
+                GamePlayer gamePlayer = getCachedGamePlayer(uuid);
                 if (gamePlayer != null && gamePlayer.isAlive()) {
                     player.sendMessage(message);
                 }
@@ -462,12 +651,13 @@ public class GameManager {
 
     public void broadcastToSpectators(String message) {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            GamePlayer gamePlayer = GamePlayer.getPlayer(player.getUniqueId());
+            GamePlayer gamePlayer = getCachedGamePlayer(player.getUniqueId());
             if (gamePlayer != null && !gamePlayer.isAlive()) {
                 player.sendMessage(message);
             }
         }
     }
+
     public void broadcastWithPrefix(String message) {
         broadcast("§8[§6UHC§8] §f" + message);
     }

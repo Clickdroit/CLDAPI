@@ -42,10 +42,45 @@ public class RulesInventory implements CustomInventory {
                 .addLore("§fPvP: §a"+ Chrono.timeToDigitalString(this.gameConfig.getPvpTime()))
                 .addLore("§fBordure: §a"+ Chrono.timeToDigitalString(this.gameConfig.getBorderTime()))
                 .getItem();
+
+        // Section potions corrigée avec le nouveau système de catégories
         ItemCreator potion = (new ItemCreator(Material.POTION)).setName("§6Potions activées");
-        for (PotionManagerGUI.Potions potions : PotionManagerGUI.Potions.values())
-            potion.addLore("§f"+ potions.getName() + ": " + (potions.isEnabled() ? "§aActivée": "§cDésactivée"));
+        for (PotionManagerGUI.Potions potions : PotionManagerGUI.Potions.values()) {
+            String status = potions.isEnabled() ? "§aActivée" : "§cDésactivée";
+
+            // Ajouter les détails des catégories si la potion est activée
+            if (potions.isEnabled()) {
+                StringBuilder categoryDetails = new StringBuilder();
+
+                // Vérifier quelles catégories sont disponibles et activées
+                for (PotionManagerGUI.PotionCategory category : potions.getAvailableCategories()) {
+                    if (category.isEnabled(potions)) {
+                        switch (category) {
+                            case SPLASH:
+                                if (categoryDetails.length() > 0) categoryDetails.append("§8, ");
+                                categoryDetails.append("§aSplash");
+                                break;
+                            case NIVEAU_II:
+                                if (categoryDetails.length() > 0) categoryDetails.append("§8, ");
+                                categoryDetails.append("§aNv2");
+                                break;
+                            case LONGUE_DUREE:
+                                if (categoryDetails.length() > 0) categoryDetails.append("§8, ");
+                                categoryDetails.append("§aLongue");
+                                break;
+                        }
+                    }
+                }
+
+                if (categoryDetails.length() > 0) {
+                    status = "§aActivée §8(" + categoryDetails.toString() + "§8)";
+                }
+            }
+
+            potion.addLore("§f" + potions.getName() + ": " + status);
+        }
         slots[16] = potion.getItem();
+
         ItemCreator useItemItem = (new ItemCreator(Material.IRON_SWORD)).setName("");
         for (UseItems useItems : UseItems.values())
             useItemItem.addLore("§f"+ useItems.getName() + ": " + (useItems.isEnabled() ? "§aActivée": "§cDésactivée"));

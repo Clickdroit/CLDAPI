@@ -2,7 +2,7 @@ package fr.clickdroit.api.config.common;
 
 public enum GameAccess {
     OPEN("§aOuvert"),
-    CLOSE("§cFermé"); // Correction: "Fermer" -> "Fermé"
+    CLOSE("§cFermé");
 
     private final String message;
 

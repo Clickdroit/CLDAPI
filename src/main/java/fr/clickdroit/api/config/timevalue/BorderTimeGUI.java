@@ -46,9 +46,9 @@ public class BorderTimeGUI implements CustomInventory {
         fillWithGlass(slots);
 
         // Ligne du haut - Têtes pour diminuer (-2m, -1m, -10s)
-        slots[10] = createRedMinusHead("-2m", "§7Diminuer de 2 minutes");
-        slots[11] = createRedMinusHead("-1m", "§7Diminuer de 1 minute");
-        slots[12] = createRedMinusHead("-10s", "§7Diminuer de 10 secondes");
+        slots[10] = createRedMinusHead("-10m", "§7Diminuer de 10 minutes");
+        slots[11] = createRedMinusHead("-5m", "§7Diminuer de 5 minutes");
+        slots[12] = createRedMinusHead("-1m", "§7Diminuer de 1 minute");
 
         // Item central - VERRE COLORÉ (Bordure)
         slots[13] = new ItemCreator(Material.STAINED_GLASS)
@@ -66,9 +66,9 @@ public class BorderTimeGUI implements CustomInventory {
                 .getItem();
 
         // Ligne du haut - Têtes pour augmenter (+10s, +1m, +2m)
-        slots[14] = createGreenPlusHead("+10s", "§7Augmenter de 10 secondes");
-        slots[15] = createGreenPlusHead("+1m", "§7Augmenter de 1 minute");
-        slots[16] = createGreenPlusHead("+2m", "§7Augmenter de 2 minutes");
+        slots[14] = createGreenPlusHead("+1m", "§7Augmenter de 1 minute");
+        slots[15] = createGreenPlusHead("+5m", "§7Augmenter de 5 minutes");
+        slots[16] = createGreenPlusHead("+10m", "§7Augmenter de 10 minutes");
 
         // Flèche de retour avec une tête personnalisée (ligne du bas, centre)
         slots[22] = createBackArrowHead("§fRevenir en arrière", "§7Retourner au menu des options");
@@ -170,20 +170,20 @@ public class BorderTimeGUI implements CustomInventory {
             String itemName = clickedItem.getItemMeta().getDisplayName();
 
             // Gestion des têtes de diminution (rouges)
-            if (itemName.contains("§c§l-10s")) {
-                this.gameConfig.setBorderTime(this.gameConfig.getBorderTime() - 10);
+            if (itemName.contains("§c§l-10m")) {
+                this.gameConfig.setBorderTime(this.gameConfig.getBorderTime() - 600);
+            } else if (itemName.contains("§c§l-5m")) {
+                this.gameConfig.setBorderTime(this.gameConfig.getBorderTime() - 300);
             } else if (itemName.contains("§c§l-1m")) {
                 this.gameConfig.setBorderTime(this.gameConfig.getBorderTime() - 60);
-            } else if (itemName.contains("§c§l-2m")) {
-                this.gameConfig.setBorderTime(this.gameConfig.getBorderTime() - 120);
             }
             // Gestion des têtes d'augmentation (vertes)
-            else if (itemName.contains("§a§l+10s")) {
-                this.gameConfig.setBorderTime(this.gameConfig.getBorderTime() + 10);
+            else if (itemName.contains("§a§l+10m")) {
+                this.gameConfig.setBorderTime(this.gameConfig.getBorderTime() + 600);
+            } else if (itemName.contains("§a§l+5m")) {
+                this.gameConfig.setBorderTime(this.gameConfig.getBorderTime() + 300);
             } else if (itemName.contains("§a§l+1m")) {
                 this.gameConfig.setBorderTime(this.gameConfig.getBorderTime() + 60);
-            } else if (itemName.contains("§a§l+2m")) {
-                this.gameConfig.setBorderTime(this.gameConfig.getBorderTime() + 120);
             }
             // Gestion du retour
             else if (itemName.contains("§fRevenir en arrière")) {

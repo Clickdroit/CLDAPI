@@ -1,5 +1,6 @@
 package fr.clickdroit.api.config.common.ores;
 
+import fr.clickdroit.api.config.ConfigMainGUI;
 import fr.clickdroit.api.config.GameConfig;
 import fr.clickdroit.api.config.value.CommonItems;
 import fr.clickdroit.api.config.value.OpenVar;
@@ -62,7 +63,7 @@ public class DiamondMaxGUI implements CustomInventory {
                 this.gameManager.getApi().openInventory(player, getClass());
                 break;
             case ARROW:
-                this.gameManager.getApi().openInventory(player, OresLimitGUI.class);
+                this.gameManager.getApi().openInventory(player, ConfigMainGUI.class);
                 break;
         }
     }

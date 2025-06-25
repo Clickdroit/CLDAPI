@@ -14,18 +14,15 @@ import fr.clickdroit.api.config.borderValue.BorderManagerGUI;
 import fr.clickdroit.api.config.borderValue.BorderSpeedGUI;
 import fr.clickdroit.api.config.borderValue.BorderStartSizeGUI;
 import fr.clickdroit.api.config.common.CycleManagerGUI;
+import fr.clickdroit.api.config.common.rules.ForbiddenItemsGUI;
+import fr.clickdroit.api.config.common.rules.GameRulesManagerGUI;
 import fr.clickdroit.api.listener.GameAccessListener;
 import fr.clickdroit.api.config.common.DefaultDeathInvGUI;
 import fr.clickdroit.api.config.common.DefaultInvGUI;
-import fr.clickdroit.api.config.common.EnchantMaxGUI;
 import fr.clickdroit.api.config.common.ores.DiamondMaxGUI;
-import fr.clickdroit.api.config.common.ores.GoldMaxGUI;
-import fr.clickdroit.api.config.common.ores.OresLimitGUI;
 import fr.clickdroit.api.config.common.potion.PotionManagerGUI;
 import fr.clickdroit.api.config.common.rules.DropItemRateGUI;
 import fr.clickdroit.api.config.common.rules.GeneralRulesGUI;
-import fr.clickdroit.api.config.intValue.DamageGUI;
-import fr.clickdroit.api.config.intValue.DateGUI;
 import fr.clickdroit.api.config.intValue.DeconnexionTimeGUI;
 import fr.clickdroit.api.config.intValue.SlotsGUI;
 import fr.clickdroit.api.config.scenario.ScenarioTimeGUI;
@@ -158,15 +155,12 @@ public class Common {
         this.main.getRegisteredInventories().put(GeneralRulesGUI.class, new GeneralRulesGUI(this.gameManager));
         this.main.getRegisteredInventories().put(DropItemRateGUI.class, new DropItemRateGUI(this.gameManager));
         this.main.getRegisteredInventories().put(DiamondMaxGUI.class, new DiamondMaxGUI(this.gameManager));
-        this.main.getRegisteredInventories().put(GoldMaxGUI.class, new GoldMaxGUI(this.gameManager));
-        this.main.getRegisteredInventories().put(OresLimitGUI.class, new OresLimitGUI(this.gameManager));
         this.main.getRegisteredInventories().put(InvCommand.class, this.invCommand);
         this.main.getRegisteredInventories().put(RulesInventory.class, new RulesInventory(this.gameManager));
         this.main.getRegisteredInventories().put(PotionManagerGUI.class, new PotionManagerGUI(this.gameManager));
         this.main.getRegisteredInventories().put(AdminPanelGUI.class, new AdminPanelGUI());
-        this.main.getRegisteredInventories().put(EnchantMaxGUI.class, new EnchantMaxGUI());
-        this.main.getRegisteredInventories().put(DamageGUI.class, new DamageGUI());
-        this.main.getRegisteredInventories().put(DateGUI.class, new DateGUI(getMain().getGameManager()));
+        this.main.getRegisteredInventories().put(GameRulesManagerGUI.class, new GameRulesManagerGUI(this.gameManager));
+        this.main.getRegisteredInventories().put(ForbiddenItemsGUI.class, new ForbiddenItemsGUI(this.gameManager));
         this.main.getRegisteredInventories().put(DeconnexionTimeGUI.class, new DeconnexionTimeGUI(this.gameManager));
     }
 

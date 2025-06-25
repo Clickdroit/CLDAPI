@@ -1,20 +1,39 @@
 package fr.clickdroit.api.utils;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 import java.lang.reflect.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.Arrays;
 
 public final class Reflection {
-    private static final Map<String, Class<?>> classCache = new HashMap<>();
+    // Caches thread-safe pour éviter les recherches répétées
+    private static final ConcurrentMap<String, Class<?>> CLASS_CACHE = new ConcurrentHashMap<>(256);
+    private static final ConcurrentMap<String, Constructor<?>> CONSTRUCTOR_CACHE = new ConcurrentHashMap<>(128);
+    private static final ConcurrentMap<String, Method> METHOD_CACHE = new ConcurrentHashMap<>(512);
+    private static final ConcurrentMap<String, Field> FIELD_CACHE = new ConcurrentHashMap<>(256);
+
+    // Cache pour la version du serveur (appelée fréquemment)
+    private static volatile String serverVersion;
+
+    // Cache pour Unsafe
+    private static volatile sun.misc.Unsafe unsafeInstance;
 
     // Constructeurs
     public static Constructor<?> getConstructor(Class<?> clazz, Class<?>... parameterTypes) throws NoSuchMethodException {
+        String key = buildConstructorKey(clazz, parameterTypes);
+        Constructor<?> cached = CONSTRUCTOR_CACHE.get(key);
+        if (cached != null) {
+            return cached;
+        }
+
         Class<?>[] primitiveTypes = DataType.getPrimitive(parameterTypes);
-        for (Constructor<?> constructor : clazz.getConstructors()) {
+        Constructor<?>[] constructors = clazz.getConstructors();
+
+        for (Constructor<?> constructor : constructors) {
             if (DataType.compare(DataType.getPrimitive(constructor.getParameterTypes()), primitiveTypes)) {
+                CONSTRUCTOR_CACHE.put(key, constructor);
                 return constructor;
             }
         }
@@ -35,7 +54,11 @@ public final class Reflection {
         if (constructor == null) {
             throw new RuntimeException("No such constructor");
         }
-        constructor.setAccessible(true);
+
+        if (!constructor.isAccessible()) {
+            constructor.setAccessible(true);
+        }
+
         try {
             return constructor.newInstance(parameters);
         } catch (InvocationTargetException ex) {
@@ -51,10 +74,19 @@ public final class Reflection {
 
     // Méthodes
     public static Method getMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) throws NoSuchMethodException {
+        String key = buildMethodKey(clazz, methodName, parameterTypes);
+        Method cached = METHOD_CACHE.get(key);
+        if (cached != null) {
+            return cached;
+        }
+
         Class<?>[] primitiveTypes = DataType.getPrimitive(parameterTypes);
-        for (Method method : clazz.getMethods()) {
+        Method[] methods = clazz.getMethods();
+
+        for (Method method : methods) {
             if (method.getName().equals(methodName) &&
                     DataType.compare(DataType.getPrimitive(method.getParameterTypes()), primitiveTypes)) {
+                METHOD_CACHE.put(key, method);
                 return method;
             }
         }
@@ -75,7 +107,11 @@ public final class Reflection {
         if (method == null) {
             throw new RuntimeException("No such method");
         }
-        method.setAccessible(true);
+
+        if (!method.isAccessible()) {
+            method.setAccessible(true);
+        }
+
         try {
             return method.invoke(instance, parameters);
         } catch (InvocationTargetException ex) {
@@ -93,9 +129,18 @@ public final class Reflection {
         return getMethod(clazz, methodName, DataType.getPrimitive(arguments)).invoke(instance, arguments);
     }
 
+    // Fields avec cache
     public static Field makeField(Class<?> clazz, String name) {
+        String key = clazz.getName() + "#" + name;
+        Field cached = FIELD_CACHE.get(key);
+        if (cached != null) {
+            return cached;
+        }
+
         try {
-            return clazz.getDeclaredField(name);
+            Field field = clazz.getDeclaredField(name);
+            FIELD_CACHE.put(key, field);
+            return field;
         } catch (NoSuchFieldException ex) {
             return null;
         } catch (Exception ex) {
@@ -107,7 +152,11 @@ public final class Reflection {
         if (field == null) {
             throw new RuntimeException("No such field");
         }
-        field.setAccessible(true);
+
+        if (!field.isAccessible()) {
+            field.setAccessible(true);
+        }
+
         try {
             return (T) field.get(instance);
         } catch (Exception ex) {
@@ -119,7 +168,11 @@ public final class Reflection {
         if (field == null) {
             throw new RuntimeException("No such field");
         }
-        field.setAccessible(true);
+
+        if (!field.isAccessible()) {
+            field.setAccessible(true);
+        }
+
         try {
             field.set(instance, value);
         } catch (Exception ex) {
@@ -128,29 +181,43 @@ public final class Reflection {
     }
 
     public static Object getValue(Object instance, Class<?> clazz, boolean declared, String fieldName) throws NoSuchFieldException, IllegalAccessException {
-        Field field = declared ? clazz.getDeclaredField(fieldName) : clazz.getField(fieldName);
-        field.setAccessible(true);
+        String key = clazz.getName() + "#" + fieldName + "#" + declared;
+        Field field = FIELD_CACHE.get(key);
+
+        if (field == null) {
+            field = declared ? clazz.getDeclaredField(fieldName) : clazz.getField(fieldName);
+            field.setAccessible(true);
+            FIELD_CACHE.put(key, field);
+        }
+
         return field.get(instance);
     }
 
     public static Field getField(Class<?> clazz, boolean declared, String fieldName) throws NoSuchFieldException {
+        String key = clazz.getName() + "#" + fieldName + "#" + declared;
+        Field cached = FIELD_CACHE.get(key);
+
+        if (cached != null) {
+            return cached;
+        }
+
         Field field = declared ? clazz.getDeclaredField(fieldName) : clazz.getField(fieldName);
         field.setAccessible(true);
+        FIELD_CACHE.put(key, field);
         return field;
     }
 
     public static void setValue(Object instance, Class<?> clazz, boolean declared, String fieldName, Object value) throws NoSuchFieldException, IllegalAccessException {
-        Field field = declared ? clazz.getDeclaredField(fieldName) : clazz.getField(fieldName);
-        field.setAccessible(true);
+        Field field = getField(clazz, declared, fieldName);
         field.set(instance, value);
     }
 
-    // NOUVELLE VERSION DE setFinalStatic avec support Unsafe
+    // Optimisation de setFinalStatic avec lazy loading d'Unsafe
     public static void setFinalStatic(Field field, Object newValue) throws Exception {
         field.setAccessible(true);
 
         try {
-            // Essayer la méthode normale d'abord (Java 8 Oracle JDK)
+            // Essayer la méthode normale d'abord
             Field modifiersField = Field.class.getDeclaredField("modifiers");
             modifiersField.setAccessible(true);
             modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
@@ -158,40 +225,43 @@ public final class Reflection {
             return;
         } catch (NoSuchFieldException | IllegalAccessException | SecurityException e) {
             // La méthode normale a échoué, essayer avec Unsafe
-            System.out.println("Standard reflection failed for field " + field.getName() + ", trying Unsafe method...");
         }
 
-        // Méthode alternative avec Unsafe pour Amazon Corretto et autres JDK restrictifs
+        // Méthode alternative avec Unsafe (lazy loading)
         try {
             sun.misc.Unsafe unsafe = getUnsafe();
             Object staticFieldBase = unsafe.staticFieldBase(field);
             long staticFieldOffset = unsafe.staticFieldOffset(field);
             unsafe.putObject(staticFieldBase, staticFieldOffset, newValue);
-            System.out.println("Successfully set field using Unsafe: " + field.getName());
         } catch (Exception e) {
-            System.err.println("Failed to set field " + field.getName() + " using both reflection and Unsafe: " + e.getMessage());
-            throw e;
+            throw new RuntimeException("Failed to set field " + field.getName() + " using both reflection and Unsafe", e);
         }
     }
 
+    // Lazy loading pour Unsafe
     private static sun.misc.Unsafe getUnsafe() throws Exception {
-        try {
-            Field unsafeField = sun.misc.Unsafe.class.getDeclaredField("theUnsafe");
-            unsafeField.setAccessible(true);
-            return (sun.misc.Unsafe) unsafeField.get(null);
-        } catch (Exception e) {
-            throw new RuntimeException("Cannot access Unsafe", e);
+        if (unsafeInstance == null) {
+            synchronized (Reflection.class) {
+                if (unsafeInstance == null) {
+                    Field unsafeField = sun.misc.Unsafe.class.getDeclaredField("theUnsafe");
+                    unsafeField.setAccessible(true);
+                    unsafeInstance = (sun.misc.Unsafe) unsafeField.get(null);
+                }
+            }
         }
+        return unsafeInstance;
     }
 
-    // Classes
+    // Classes avec cache amélioré
     public static Class<?> getClass(String name) {
+        Class<?> cached = CLASS_CACHE.get(name);
+        if (cached != null) {
+            return cached;
+        }
+
         try {
-            if (classCache.containsKey(name)) {
-                return classCache.get(name);
-            }
             Class<?> clazz = Class.forName(name);
-            classCache.put(name, clazz);
+            CLASS_CACHE.put(name, clazz);
             return clazz;
         } catch (ClassNotFoundException ex) {
             return null;
@@ -206,7 +276,40 @@ public final class Reflection {
         }
     }
 
-    // Enum pour les types de données
+    // Méthodes utilitaires pour construire les clés de cache
+    private static String buildConstructorKey(Class<?> clazz, Class<?>... parameterTypes) {
+        StringBuilder sb = new StringBuilder(clazz.getName());
+        sb.append("#<init>#");
+        if (parameterTypes.length > 0) {
+            for (int i = 0; i < parameterTypes.length; i++) {
+                if (i > 0) sb.append(',');
+                sb.append(parameterTypes[i].getName());
+            }
+        }
+        return sb.toString();
+    }
+
+    private static String buildMethodKey(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
+        StringBuilder sb = new StringBuilder(clazz.getName());
+        sb.append('#').append(methodName).append('#');
+        if (parameterTypes.length > 0) {
+            for (int i = 0; i < parameterTypes.length; i++) {
+                if (i > 0) sb.append(',');
+                sb.append(parameterTypes[i].getName());
+            }
+        }
+        return sb.toString();
+    }
+
+    // Méthode pour nettoyer les caches si nécessaire
+    public static void clearCaches() {
+        CLASS_CACHE.clear();
+        CONSTRUCTOR_CACHE.clear();
+        METHOD_CACHE.clear();
+        FIELD_CACHE.clear();
+    }
+
+    // Enum pour les types de données (optimisé)
     public enum DataType {
         BYTE(byte.class, Byte.class),
         SHORT(short.class, Short.class),
@@ -217,7 +320,7 @@ public final class Reflection {
         DOUBLE(double.class, Double.class),
         BOOLEAN(boolean.class, Boolean.class);
 
-        private static final Map<Class<?>, DataType> CLASS_MAP = new HashMap<>();
+        private static final ConcurrentMap<Class<?>, DataType> CLASS_MAP = new ConcurrentHashMap<>();
 
         private final Class<?> primitive;
         private final Class<?> reference;
@@ -248,58 +351,73 @@ public final class Reflection {
 
         public static Class<?> getPrimitive(Class<?> clazz) {
             DataType type = fromClass(clazz);
-            return type == null ? clazz : type.getPrimitive();
+            return type == null ? clazz : type.primitive;
         }
 
         public static Class<?> getReference(Class<?> clazz) {
             DataType type = fromClass(clazz);
-            return type == null ? clazz : type.getReference();
+            return type == null ? clazz : type.reference;
         }
 
         public static Class<?>[] getPrimitive(Class<?>[] classes) {
-            int length = classes == null ? 0 : classes.length;
-            Class<?>[] types = new Class[length];
-            for (int index = 0; index < length; index++) {
-                types[index] = getPrimitive(classes[index]);
+            if (classes == null || classes.length == 0) {
+                return new Class[0];
+            }
+
+            Class<?>[] types = new Class[classes.length];
+            for (int i = 0; i < classes.length; i++) {
+                types[i] = getPrimitive(classes[i]);
             }
             return types;
         }
 
         public static Class<?>[] getReference(Class<?>[] classes) {
-            int length = classes == null ? 0 : classes.length;
-            Class<?>[] types = new Class[length];
-            for (int index = 0; index < length; index++) {
-                types[index] = getReference(classes[index]);
+            if (classes == null || classes.length == 0) {
+                return new Class[0];
+            }
+
+            Class<?>[] types = new Class[classes.length];
+            for (int i = 0; i < classes.length; i++) {
+                types[i] = getReference(classes[i]);
             }
             return types;
         }
 
         public static Class<?>[] getPrimitive(Object[] objects) {
-            int length = objects == null ? 0 : objects.length;
-            Class<?>[] types = new Class[length];
-            for (int index = 0; index < length; index++) {
-                types[index] = getPrimitive(objects[index].getClass());
+            if (objects == null || objects.length == 0) {
+                return new Class[0];
+            }
+
+            Class<?>[] types = new Class[objects.length];
+            for (int i = 0; i < objects.length; i++) {
+                types[i] = getPrimitive(objects[i].getClass());
             }
             return types;
         }
 
         public static Class<?>[] getReference(Object[] objects) {
-            int length = objects == null ? 0 : objects.length;
-            Class<?>[] types = new Class[length];
-            for (int index = 0; index < length; index++) {
-                types[index] = getReference(objects[index].getClass());
+            if (objects == null || objects.length == 0) {
+                return new Class[0];
+            }
+
+            Class<?>[] types = new Class[objects.length];
+            for (int i = 0; i < objects.length; i++) {
+                types[i] = getReference(objects[i].getClass());
             }
             return types;
         }
 
+        // Optimisation de la méthode compare
         public static boolean compare(Class<?>[] primary, Class<?>[] secondary) {
+            if (primary == secondary) return true;
             if (primary == null || secondary == null || primary.length != secondary.length) {
                 return false;
             }
-            for (int index = 0; index < primary.length; index++) {
-                Class<?> primaryClass = primary[index];
-                Class<?> secondaryClass = secondary[index];
-                if (!primaryClass.equals(secondaryClass) && !primaryClass.isAssignableFrom(secondaryClass)) {
+
+            for (int i = 0; i < primary.length; i++) {
+                Class<?> primaryClass = primary[i];
+                Class<?> secondaryClass = secondary[i];
+                if (primaryClass != secondaryClass && !primaryClass.isAssignableFrom(secondaryClass)) {
                     return false;
                 }
             }
@@ -307,34 +425,54 @@ public final class Reflection {
         }
     }
 
-    // Enum pour les types de packages
+    // Enum pour les types de packages (optimisé avec lazy loading)
     public enum PackageType {
-        MINECRAFT_SERVER("net.minecraft.server." + getServerVersion()),
-        CRAFTBUKKIT("org.bukkit.craftbukkit." + getServerVersion()),
+        MINECRAFT_SERVER("net.minecraft.server."),
+        CRAFTBUKKIT("org.bukkit.craftbukkit."),
         BUKKIT("org.bukkit"),
-        NMS("net.minecraft.server." + getServerVersion());
+        NMS("net.minecraft.server.");
 
-        private final String path;
+        private final String basePath;
+        private volatile String fullPath;
 
-        PackageType(String path) {
-            this.path = path;
+        PackageType(String basePath) {
+            this.basePath = basePath;
         }
 
         public String getPath() {
-            return path;
+            if (fullPath == null) {
+                synchronized (this) {
+                    if (fullPath == null) {
+                        if (this == BUKKIT) {
+                            fullPath = basePath;
+                        } else {
+                            fullPath = basePath + getServerVersion();
+                        }
+                    }
+                }
+            }
+            return fullPath;
         }
 
         public Class<?> getClass(String className) throws ClassNotFoundException {
-            return Class.forName(this + "." + className);
+            return Class.forName(getPath() + "." + className);
         }
 
         @Override
         public String toString() {
-            return path;
+            return getPath();
         }
 
+        // Lazy loading pour la version du serveur
         public static String getServerVersion() {
-            return Bukkit.getServer().getClass().getPackage().getName().substring(23);
+            if (serverVersion == null) {
+                synchronized (PackageType.class) {
+                    if (serverVersion == null) {
+                        serverVersion = Bukkit.getServer().getClass().getPackage().getName().substring(23);
+                    }
+                }
+            }
+            return serverVersion;
         }
     }
 }

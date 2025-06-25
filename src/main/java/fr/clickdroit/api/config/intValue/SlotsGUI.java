@@ -151,20 +151,20 @@ public class SlotsGUI implements CustomInventory {
             String itemName = clickedItem.getItemMeta().getDisplayName();
 
             // Gestion des têtes de diminution (rouges)
-            if (itemName.contains("§c§l-1")) {
-                this.gameConfig.setGameSlot(this.gameConfig.getGameSlot() - 1);
+            if (itemName.contains("§c§l-10")) {
+                this.gameConfig.setGameSlot(this.gameConfig.getGameSlot() - 10);
             } else if (itemName.contains("§c§l-5")) {
                 this.gameConfig.setGameSlot(this.gameConfig.getGameSlot() - 5);
-            } else if (itemName.contains("§c§l-10")) {
-                this.gameConfig.setGameSlot(this.gameConfig.getGameSlot() - 10);
+            } else if (itemName.contains("§c§l-1")) {
+                this.gameConfig.setGameSlot(this.gameConfig.getGameSlot() - 1);
             }
             // Gestion des têtes d'augmentation (vertes)
-            else if (itemName.contains("§a§l+1")) {
-                this.gameConfig.setGameSlot(this.gameConfig.getGameSlot() + 1);
+            else if (itemName.contains("§a§l+10")) {
+                this.gameConfig.setGameSlot(this.gameConfig.getGameSlot() + 10);
             } else if (itemName.contains("§a§l+5")) {
                 this.gameConfig.setGameSlot(this.gameConfig.getGameSlot() + 5);
-            } else if (itemName.contains("§a§l+10")) {
-                this.gameConfig.setGameSlot(this.gameConfig.getGameSlot() + 10);
+            } else if (itemName.contains("§a§l+1")) {
+                this.gameConfig.setGameSlot(this.gameConfig.getGameSlot() + 1);
             }
             // Gestion du retour
             else if (itemName.contains("§fRevenir en arrière")) {

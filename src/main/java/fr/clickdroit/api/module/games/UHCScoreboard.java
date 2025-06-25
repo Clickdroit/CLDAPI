@@ -75,20 +75,20 @@ public class UHCScoreboard implements ScoreboardContents {
 
     public void setLines(BPlayerBoard board, UUID uuid, String ip) {
         int line = 14;
-        board.setName("§c§lUHC");
+        board.setName("§d§lSOLO LEVELING UHC");
         board.set("§a", Integer.valueOf(line--));
-        board.set(" §8| §fépisode §f: §c"+ this.episode, Integer.valueOf(line--));
-        board.set(" §8| §fDurée §f: §c "+ Chrono.timeToDigitalString(this.seconds), Integer.valueOf(line--));
-        board.set(((this.playersSize == 1) ? " §8| §fJoueur": " §8| §fJoueurs" ) + " §f: §c" + this.playersSize, Integer.valueOf(line--));
+        board.set(" §5| §fépisode §f: §d"+ this.episode, Integer.valueOf(line--));
+        board.set(" §5| §fDurée §f: §d "+ Chrono.timeToDigitalString(this.seconds), Integer.valueOf(line--));
+        board.set(((this.playersSize == 1) ? " §5| §fJoueur": " §5| §fJoueurs" ) + " §f: §d" + this.playersSize, Integer.valueOf(line--));
         board.set("§b", Integer.valueOf(line--));
-        board.set(" §8| §fPvP §f: §c" + (!this.isPvp ? this.pvpTime : "§a✔"), Integer.valueOf(line--));
-        board.set(" §8| §fBordure §f: §c ", Integer.valueOf(line--));
-        board.set("   §8• §c"+ (!this.isBorder ? this.borderTime : "§a✔"), Integer.valueOf(line--));
-        board.set("   §8• §c" + this.borderSize + " §f/ §c-"+ this.borderSize, Integer.valueOf(line--));
-        board.set("§c", Integer.valueOf(line--));
-        board.set(" §8| §fCentre §f: §c "+ this.locCenterPlayer + "m " + this.arrow, Integer.valueOf(line--));
+        board.set(" §5| §fPvP §f: §d" + (!this.isPvp ? this.pvpTime : "§a✔"), Integer.valueOf(line--));
+        board.set(" §5| §fBordure §f: §d ", Integer.valueOf(line--));
+        board.set("   §8• §d"+ (!this.isBorder ? this.borderTime : "§a✔"), Integer.valueOf(line--));
+        board.set("   §8• §d" + this.borderSize + " §f/ §d-"+ this.borderSize, Integer.valueOf(line--));
+        board.set("§d", Integer.valueOf(line--));
+        board.set(" §5| §fCentre §f: §d "+ this.locCenterPlayer + "m " + this.arrow, Integer.valueOf(line--));
         if (this.kills > 0)
-            board.set(((this.kills == 1) ? " §8| §fKill": " §8| §fKills" ) + " §f: §c" + this.kills, Integer.valueOf(line--));
+            board.set(((this.kills == 1) ? " §5| §fKill": " §5| §fKills" ) + " §f: §d" + this.kills, Integer.valueOf(line--));
         board.set("§f", Integer.valueOf(line--));
         board.set(ChatColor.RED + ip, Integer.valueOf(line--));
     }
