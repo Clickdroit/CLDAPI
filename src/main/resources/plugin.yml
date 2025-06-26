@@ -33,3 +33,16 @@ commands:
     aliases: [ groupes ]
   near:
     aliases: [ playersnear,playernear ]
+permissions:
+  uhc.host:
+    description: Accès aux commandes host
+    default: op
+  uhc.staff:
+    description: Accès aux commandes staff
+    default: op
+  uhc.spectator:
+    description: Commandes spectateur
+    default: true
+  uhc.player:
+    description: Commandes joueur de base
+    default: true
