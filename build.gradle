@@ -13,7 +13,6 @@ targetCompatibility = JavaVersion.VERSION_1_8
 repositories {
     mavenCentral()
 
-    // Spigot (ou CraftBukkit) via BuildTools
     maven {
         url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
     }
@@ -30,8 +29,11 @@ repositories {
 dependencies {
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
     implementation 'commons-io:commons-io:2.15.1'
-    implementation 'org.slf4j:slf4j-api:2.0.13'
-    implementation 'ch.qos.logback:logback-classic:1.4.14'
+
+    // Versions compatibles Java 8
+    implementation 'org.slf4j:slf4j-api:1.7.36'
+    implementation 'ch.qos.logback:logback-classic:1.2.12'
+
     compileOnly 'org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT'
 }
 

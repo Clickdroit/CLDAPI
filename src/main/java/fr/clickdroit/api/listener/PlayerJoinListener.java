@@ -314,19 +314,20 @@ public class PlayerJoinListener implements Listener {
                     GamePlayer.getPlayer(uuid).setLastLocation(player.getLocation());
                     this.api.getGameManager().getApi().getModules().onPlayerDisconnect(player);
 
-                    // Message de déconnexion
-                    int disconnectTime = this.api.getGameManager().getGameConfig().getDisconnectMinute();
+                    // Message de déconnexion avec conversion en minutes
+                    int disconnectTimeSeconds = this.api.getGameManager().getGameConfig().getDisconnectMinute();
+                    int disconnectTimeMinutes = disconnectTimeSeconds / 60;
                     event.setQuitMessage(
                             "§f[§c§l?§f] §c" + player.getName() + " §fs'est déconnecté, il dispose de §b" +
-                                    disconnectTime + " minute(s) §fpour se reconnecter ou il sera éliminé."
+                                    disconnectTimeMinutes + " minute(s) §fpour se reconnecter ou il sera éliminé."
                     );
 
                     // Ajouter à la liste des joueurs hors ligne
                     this.api.getGameManager().getOfflinePlayers().add(uuid);
                     TabHandler.removePrefixFor(player);
 
-                    // Timer de déconnexion
-                    startDisconnectTimer(uuid, disconnectTime);
+                    // Timer de déconnexion - passer les secondes au timer
+                    startDisconnectTimer(uuid, disconnectTimeSeconds);
                 } else {
                     // Spectateur qui quitte
                     event.setQuitMessage("");
@@ -343,7 +344,9 @@ public class PlayerJoinListener implements Listener {
     /**
      * Démarre le timer de déconnexion pour un joueur
      */
-    private void startDisconnectTimer(UUID uuid, int disconnectMinutes) {
+    private void startDisconnectTimer(UUID uuid, int disconnectSeconds) {
+        int disconnectMinutes = disconnectSeconds / 60; // Convertir en minutes pour le timer
+
         (new BukkitRunnable() {
             int time = 0;
 

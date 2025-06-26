@@ -5,7 +5,7 @@ public class BlinkEffect {
 
     private boolean back = false;
 
-    private String text = "bonne-game";
+    private String text = "localhost";
 
     public void next() {
         if (this.count == 0) {
