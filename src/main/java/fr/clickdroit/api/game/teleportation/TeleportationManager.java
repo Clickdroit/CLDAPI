@@ -3,6 +3,7 @@ package fr.clickdroit.api.game.teleportation;
 import fr.clickdroit.api.API;
 import fr.clickdroit.api.common.rules.Rules;
 import fr.clickdroit.api.game.teleportation.form.Form;
+import fr.clickdroit.api.game.teleportation.plate.CirclePlate;
 import fr.clickdroit.api.game.teleportation.plate.Plate;
 import fr.clickdroit.api.game.teleportation.plate.SquarePlate;
 import fr.clickdroit.api.game.teleportation.player.PlayerPlate;
@@ -246,9 +247,10 @@ public class TeleportationManager {
      * Version optimisée de initPlate
      */
     private Plate initPlateOptimized(PlayerPlate playerPlate, Location location) {
-        SquarePlate squarePlate = new SquarePlate(location, PLATE_SIZE, PLATE_MATERIAL, PLATE_DATA);
-        playerPlate.assignPlate(squarePlate);
-        return squarePlate;
+        // Simple remplacement dans TeleportationManager :
+        CirclePlate bluePortal = new CirclePlate(location, PLATE_SIZE, PLATE_MATERIAL, PLATE_DATA);
+        playerPlate.assignPlate(bluePortal);
+        return bluePortal;
     }
 
     /**
