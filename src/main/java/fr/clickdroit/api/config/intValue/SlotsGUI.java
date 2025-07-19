@@ -169,6 +169,7 @@ public class SlotsGUI implements CustomInventory {
             // Gestion du retour
             else if (itemName.contains("§fRevenir en arrière")) {
                 this.gameManager.getApi().openInventory(player, ConfigMainGUI.class);
+                player.playSound(player.getLocation(), Sound.NOTE_STICKS,1.0F,0.8F);
                 return;
             }
 

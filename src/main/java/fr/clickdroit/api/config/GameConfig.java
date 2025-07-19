@@ -78,7 +78,7 @@ public class GameConfig {
         this.diamondMax = 0;
         this.goldMax = 0;
         this.enderpearlDamage = 2;
-        this.gameAccess = GameAccess.CLOSE;
+        this.gameAccess = GameAccess.OPEN;
         this.chat = false;
         this.gameDev = false;
         this.openDate = Date.from(Instant.now());

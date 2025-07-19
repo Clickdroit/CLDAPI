@@ -16,6 +16,7 @@ import fr.clickdroit.api.utils.CommonString;
 import fr.clickdroit.api.utils.CustomInventory;
 import fr.clickdroit.api.utils.ItemCreator;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
@@ -142,34 +143,44 @@ public class ConfigOptionsGUI implements CustomInventory {
         switch (clickedItem.getType()) {
             case DIAMOND_SWORD:
                 this.gameManager.getApi().openInventory(player, PvPTimeGUI.class);
+                player.playSound(player.getLocation(), Sound.NOTE_STICKS,1.0F,1.0F);
                 break;
             case STAINED_GLASS:
                 this.gameManager.getApi().openInventory(player, BorderTimeGUI.class);
+                player.playSound(player.getLocation(), Sound.NOTE_STICKS,1.0F,1.0F);
                 break;
             case CHEST:
                 if (slot == 30)
                     this.gameManager.getApi().openInventory(player, DefaultInvGUI.class);
+                player.playSound(player.getLocation(), Sound.NOTE_STICKS,1.0F,1.0F);
                 if (slot == 32)
                     this.gameManager.getApi().openInventory(player, DefaultDeathInvGUI.class);
+                player.playSound(player.getLocation(), Sound.NOTE_STICKS,1.0F,1.0F);
                 break;
             case WATCH:
                 this.gameManager.getApi().openInventory(player, CycleManagerGUI.class);
+                player.playSound(player.getLocation(), Sound.NOTE_STICKS,1.0F,1.0F);
                 break;
             case PAPER:
                 this.gameManager.getApi().openInventory(player, GameRulesManagerGUI.class);
+                player.playSound(player.getLocation(), Sound.NOTE_STICKS,1.0F,1.0F);
                 break;
             case APPLE:
                 this.gameManager.getApi().openInventory(player, DropItemRateGUI.class);
+                player.playSound(player.getLocation(), Sound.NOTE_STICKS,1.0F,1.0F);
                 break;
             case POTION:
                 this.gameManager.getApi().openInventory(player, PotionManagerGUI.class);
+                player.playSound(player.getLocation(), Sound.NOTE_STICKS,1.0F,1.0F);
                 break;
             case COMPASS:
                 this.gameManager.getApi().openInventory(player, DeconnexionTimeGUI.class);
+                player.playSound(player.getLocation(), Sound.NOTE_STICKS,1.0F,1.0F);
                 break;
         }
         if (clickedItem.getType() == Material.ARROW || slot == 40) {
             this.gameManager.getApi().openInventory(player, ConfigMainGUI.class);
+            player.playSound(player.getLocation(), Sound.NOTE_STICKS,1.0F,0.8F);
         }
     }
 

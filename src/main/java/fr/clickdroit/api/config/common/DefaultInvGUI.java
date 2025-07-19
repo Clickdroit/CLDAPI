@@ -11,6 +11,7 @@ import fr.clickdroit.api.utils.InventoryAPI;
 import java.util.function.Supplier;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
@@ -108,6 +109,7 @@ public class DefaultInvGUI implements CustomInventory {
                 break;
             case 53:
                 API.getAPI().openInventory(player, ConfigOptionsGUI.class);
+                player.playSound(player.getLocation(), Sound.NOTE_STICKS,1.0F,0.8F);
                 break;
         }
     }

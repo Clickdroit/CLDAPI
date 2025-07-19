@@ -10,6 +10,7 @@ import fr.clickdroit.api.utils.CustomInventory;
 import fr.clickdroit.api.utils.ItemCreator;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
@@ -70,6 +71,7 @@ public class TeamManagerGUI implements CustomInventory {
 
             case 22: // Retour
                 this.api.openInventory(player, ConfigMainGUI.class);
+                player.playSound(player.getLocation(), Sound.NOTE_STICKS,1.0F,0.8F);
                 return;
         }
 
