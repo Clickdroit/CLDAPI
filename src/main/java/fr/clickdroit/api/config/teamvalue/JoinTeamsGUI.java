@@ -22,9 +22,9 @@ import java.util.Map;
 
 public class JoinTeamsGUI implements Listener {
     private final API api;
-
     private final GameManager gameManager;
 
+    // Map pour stocker les joueurs qui ont le menu ouvert et leur page
     public static Map<Player, Integer> player_page = new HashMap<>();
 
     public JoinTeamsGUI(API api) {
@@ -90,13 +90,15 @@ public class JoinTeamsGUI implements Listener {
             switch (itemStack.getType()) {
                 case ARROW:
                     player.closeInventory();
+                    player_page.remove(player); // Nettoyer la map
                     break;
                 case BANNER:
-                    player.closeInventory();
                     for (Teams teams : Teams.values()) {
-                        if (teams.getPage() == page && teams
-                                .getSlot() == slot) {
+                        if (teams.getPage() == page && teams.getSlot() == slot) {
                             this.gameManager.getTeamManager().addPlayerToTeam(player, teams);
+
+                            // Actualiser le menu pour tous les joueurs qui l'ont ouvert
+                            refreshAllOpenMenus();
                             break;
                         }
                     }
@@ -116,6 +118,47 @@ public class JoinTeamsGUI implements Listener {
         }
     }
 
+    /**
+     * Actualise le menu pour tous les joueurs qui l'ont ouvert
+     */
+    private void refreshAllOpenMenus() {
+        // Copier la map pour éviter les ConcurrentModificationException
+        Map<Player, Integer> playerPagesCopy = new HashMap<>(player_page);
+
+        for (Map.Entry<Player, Integer> entry : playerPagesCopy.entrySet()) {
+            Player p = entry.getKey();
+            Integer currentPage = entry.getValue();
+
+            // Vérifier que le joueur a toujours le menu ouvert
+            if (p.getOpenInventory() != null &&
+                    p.getOpenInventory().getTitle().contains("Équipes")) {
+
+                // Actualiser le menu directement
+                openInventory(p, currentPage);
+            } else {
+                // Le joueur a fermé le menu, on le retire de la map
+                player_page.remove(p);
+            }
+        }
+    }
+
+    /**
+     * Méthode utilitaire pour fermer proprement le menu d'un joueur
+     */
+    public void closeMenuForPlayer(Player player) {
+        if (player_page.containsKey(player)) {
+            player_page.remove(player);
+            player.closeInventory();
+        }
+    }
+
+    /**
+     * Méthode pour nettoyer la map quand un joueur se déconnecte
+     */
+    public void cleanupPlayer(Player player) {
+        player_page.remove(player);
+    }
+
     public ItemStack getItem(Teams teams) {
         ItemCreator item = teams.getItem();
         item.addLore("");
@@ -129,4 +172,3 @@ public class JoinTeamsGUI implements Listener {
         return item.getItem();
     }
 }
-

@@ -243,7 +243,7 @@ public enum Scenario {
             "§7enchantés avec Haste !"
     }, Material.GOLD_PICKAXE, 0, (ScenarioManager)new HasteyBabies(), false, false),
 
-    SAFEMINER(2, 6, "Safe Miner", new String[] {
+    SAFEMINER(2, 5, "Safe Miner", new String[] {
             "§7Les dégâts de feu/lave sont",
             "§7désactivés, les dégâts de",
             "§7chutes et mobs sont",

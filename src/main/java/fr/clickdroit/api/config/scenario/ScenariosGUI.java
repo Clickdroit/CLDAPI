@@ -31,7 +31,7 @@ public class ScenariosGUI implements Listener {
 
     public Inventory openInventory(Player player, int page) {
         player_page.put(player, Integer.valueOf(page));
-        Inventory inventory = Bukkit.createInventory(null, 54, "- Page " + page);
+        Inventory inventory = Bukkit.createInventory(null, 54, "§f(§c!§f) §cScéna' - Page " + page);
         int[] glass = { 36, 37, 38, 39, 40, 41, 42, 43, 44 };
         for (int i : glass)
             inventory.setItem(i, (new ItemCreator(Material.STAINED_GLASS_PANE)).setDurability(Integer.valueOf(7)).getItem());
@@ -48,9 +48,9 @@ public class ScenariosGUI implements Listener {
             inventory.setItem(((Integer)entry.getKey()).intValue(), ((Scenario)entry.getValue()).getItem());
         ItemStack itemStack = inventory.getItem(35);
         if (itemStack != null && itemStack.getType() != Material.AIR)
-            inventory.setItem(43, (new ItemCreator(Material.ITEM_FRAME)).setName("+ (page + 1) + "+ totalPage + ")").getItem());
+            inventory.setItem(43, (new ItemCreator(Material.ITEM_FRAME)).setName("§8| §fPage §asuivante §f("+ (page + 1) + "§a/§f"+ totalPage + ")").getItem());
         if (page > 1)
-            inventory.setItem(37, (new ItemCreator(Material.ITEM_FRAME)).setName("+ (page - 1) + "+ totalPage + ")").getItem());
+            inventory.setItem(37, (new ItemCreator(Material.ITEM_FRAME)).setName("§8| §fPage §cprécédente §f("+ (page - 1) + "§c/§f" +totalPage + ")").getItem());
         inventory.setItem(49, CommonItems.GUI_BACK_ITEM.getItem());
         player.openInventory(inventory);
         return inventory;
@@ -68,7 +68,7 @@ public class ScenariosGUI implements Listener {
             totalPage = 2;
         if (itemStack == null || !itemStack.hasItemMeta())
             return;
-        if (inventory.getName().contains("- Page")) {
+        if (inventory.getName().contains("§f(§c!§f) §cScéna' - Page")) {
             event.setCancelled(true);
             int slot = event.getSlot();
             int page = ((Integer)player_page.get(player)).intValue();
