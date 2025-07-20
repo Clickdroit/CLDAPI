@@ -7,7 +7,6 @@ import fr.clickdroit.api.config.borderValue.BorderManagerGUI;
 import fr.clickdroit.api.config.common.GameAccess;
 import fr.clickdroit.api.config.intValue.SlotsGUI;
 import fr.clickdroit.api.config.teamvalue.TeamManagerGUI;
-import fr.clickdroit.api.config.value.OpenVar;
 import fr.clickdroit.api.game.GameManager;
 import fr.clickdroit.api.game.GameState;
 import fr.clickdroit.api.module.ModuleType;
@@ -46,18 +45,16 @@ public class ConfigMainGUI implements CustomInventory {
     public Supplier<ItemStack[]> getContents(Player player) {
         ItemStack[] slots = new ItemStack[getSlots()];
         Integer[] arrayOfInteger1 = {
-                Integer.valueOf(0), Integer.valueOf(1), Integer.valueOf(7), Integer.valueOf(8), Integer.valueOf(9), Integer.valueOf(17), Integer.valueOf(36), Integer.valueOf(44), Integer.valueOf(45), Integer.valueOf(46),
+                Integer.valueOf(0), Integer.valueOf(1), Integer.valueOf(7), Integer.valueOf(8), Integer.valueOf(9), Integer.valueOf(17),Integer.valueOf(18),Integer.valueOf(26),Integer.valueOf(27), Integer.valueOf(35),Integer.valueOf(36), Integer.valueOf(44), Integer.valueOf(45), Integer.valueOf(46),
                 Integer.valueOf(52), Integer.valueOf(53) }, glass = arrayOfInteger1;
         int i = arrayOfInteger1.length;
         byte b;
         for (b = 0; b < i; b = (byte)(b + 1)) {
             int j = arrayOfInteger1[b].intValue();
-            slots[j] = (new ItemCreator(Material.STAINED_GLASS_PANE)).setDurability(Integer.valueOf(14)).setName("§f").getItem();
+            slots[j] = (new ItemCreator(Material.STAINED_GLASS_PANE)).setDurability(Integer.valueOf(11)).setName("§f").getItem();
         }
-        slots[2] = (new ItemCreator(Material.RED_ROSE)).setName("§8| §fPanel d'§cAdministration").addLore("").addLore(" §8> §fAccès §f: §c§lAdministration").addLore("").addLore("  §8| §fPermetd'acceder au").addLore("  §8| §fpanel d'§cadministration§f").addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
-
         // REMPLACEMENT DU SAPLING PAR UNE TÊTE PERSONNALISÉE
-        slots[4] = (new ItemCreator(Material.SKULL_ITEM))
+        slots[6] = (new ItemCreator(Material.SKULL_ITEM))
                 .setDurability(3) // Tête de joueur
                 .setSkullURL("http://textures.minecraft.net/texture/cf40942f364f6cbceffcf1151796410286a48b1aeba77243e218026c09cd1")
                 .setName("§8| §fPré-charger")
@@ -72,20 +69,35 @@ public class ConfigMainGUI implements CustomInventory {
                 .getItem();
 
         GameConfig.WaitingTeleportationState waitingState = this.gameConfig.getTeleportationState();
-        slots[6] = (new ItemCreator(waitingState.equals(GameConfig.WaitingTeleportationState.IN_ROOM) ? Material.EYE_OF_ENDER : Material.ENDER_PEARL)).setName(waitingState.equals(GameConfig.WaitingTeleportationState.IN_ROOM) ? "§8| §fTéléportation au §alobby": "§8| §fTéléportation à la §asalle des règles").addLore("").addLore(" §8> §fAccès §f: §6§lHost").addLore("").addLore("  §8| §fPermet de teleporter les §ajoueurs" ).addLore("  §8| §f" + (waitingState.equals(GameConfig.WaitingTeleportationState.IN_ROOM) ? "au point d'apparition" : "dans la salle des r") + "§f").addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
-        slots[10] = OpenVar.SLOTS.getItem();
+        slots[22] = (new ItemCreator(waitingState.equals(GameConfig.WaitingTeleportationState.IN_ROOM) ? Material.EYE_OF_ENDER : Material.ENDER_PEARL)).setName(waitingState.equals(GameConfig.WaitingTeleportationState.IN_ROOM) ? "§8| §fTéléportation au §alobby": "§8| §fTéléportation à la §asalle des règles").addLore("").addLore(" §8> §fAccès §f: §6§lHost").addLore("").addLore("  §8| §fPermet de teleporter les §ajoueurs" ).addLore("  §8| §f" + (waitingState.equals(GameConfig.WaitingTeleportationState.IN_ROOM) ? "au point d'apparition" : "dans la salle des r") + "§f").addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
+        slots[29] = (new ItemCreator(Material.SKULL_ITEM))
+                .setDurability(3) // Tête de joueur
+                .setSkullURL("http://textures.minecraft.net/texture/f0b6986d344be4485434c6501d9d6f815af412b265872263e8cb38fe61ca")
+                .setName("§8| §fSlots")
+                .addLore("")
+                .addLore(" §8> §fAccès §f: §6§lHost")
+                .addLore(" §8> §fNombres de slots: §c§l" + this.gameConfig.getGameSlot())
+                .addLore("")
+                .addLore("  §8| §fVous permet de §cmodifier")
+                .addLore("  §8| §fle nombre de §cjoueurs§f autorisés")
+                .addLore("  §8| §fà se §aconnecter§f à la §cpartie§f.")
+                .addLore("")
+                .addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage())
+                .addLore("")
+                .getItem();
+
 
         if (this.gameManager.getModuleManager().getCurrentModule().hasTeam())
-            slots[25] = (new ItemCreator(Material.BANNER)).setName("§8| §fGestion des §céquipes").setDurability(Integer.valueOf(15)).addLore("").addLore(" §8> §fAccès §f: §6§lHost").addLore("").addLore("  §8| §fPermet de gérer les").addLore("  §8| §coptions §fdes équipes").addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
-        slots[11] = (new ItemCreator(Material.BARRIER)).setName("§8| §fStopper le serveur").setDurability(Integer.valueOf(15)).addLore("").addLore(" §8> §fAccès §f: §6§lHost").addLore("").addLore("  §8| §fPermet de stopper").addLore("  §8| §fle §cserveur").addLore("").addLore("").addLore(" " ).addLore("").addLore(CommonString.CLICK_HERE_TO_ACTIVATE.getMessage()).addLore("").getItem();
-        slots[15] = (new ItemCreator(Material.EYE_OF_ENDER)).setName("§8| §fSpectateurs").addLore("").addLore(" §8> §fAccès §f: §6§lHost").addLore(" §8> §fStatut §f: " + (this.gameConfig.isSpectators() ? "§aActivé": "§cDésactivé")).addLore("").addLore("  §8| §fPermet d'§aaccepter§f ou §cnon§f la présence").addLore("  §8| §fdes spectateurs dans la §cpartie§f ").addLore("").addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage()).addLore("").getItem();
-        slots[16] = (new ItemCreator(Material.NETHERRACK)).setName("§8| §fNether").addLore("").addLore(" §8> §fAccès §f: §6§lHost").addLore(" §8> §fStatut §f: " + (this.gameConfig.isNether() ? "§aActivé": "§cDésactivé")).addLore("").addLore("  §ç| §fPermet d'§aaccepter§f ou §cnon§f").addLore("  §8| §fdes joueurs à aller dans le §cnether§f").addLore("").addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage()).addLore("").getItem();
-        slots[22] = (new ItemCreator(Material.ITEM_FRAME)).setName("§8| §fOptions de la §cpartie").addLore("").addLore(" §8> §fAccès §f: §6§lHost").addLore("").addLore("  §8| §fPermet d'accéder aux").addLore("  §8| §coptions§f/§crègles§f de la partie").addLore("").addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage()).addLore("").getItem();
+            slots[32] = (new ItemCreator(Material.BANNER)).setName("§8| §fGestion des §céquipes").setDurability(Integer.valueOf(15)).addLore("").addLore(" §8> §fAccès §f: §6§lHost").addLore("").addLore("  §8| §fPermet de gérer les").addLore("  §8| §coptions §fdes équipes").addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
+        slots[47] = (new ItemCreator(Material.BARRIER)).setName("§8| §fStopper le serveur").setDurability(Integer.valueOf(15)).addLore("").addLore(" §8> §fAccès §f: §6§lHost").addLore("").addLore("  §8| §fPermet de stopper").addLore("  §8| §fle §cserveur").addLore("").addLore("").addLore(" " ).addLore("").addLore(CommonString.CLICK_HERE_TO_ACTIVATE.getMessage()).addLore("").getItem();
+        slots[31] = (new ItemCreator(Material.EYE_OF_ENDER)).setName("§8| §fSpectateurs").addLore("").addLore(" §8> §fAccès §f: §6§lHost").addLore(" §8> §fStatut §f: " + (this.gameConfig.isSpectators() ? "§aActivé": "§cDésactivé")).addLore("").addLore("  §8| §fPermet d'§aaccepter§f ou §cnon§f la présence").addLore("  §8| §fdes spectateurs dans la §cpartie§f ").addLore("").addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage()).addLore("").getItem();
+        slots[24] = (new ItemCreator(Material.NETHERRACK)).setName("§8| §fNether").addLore("").addLore(" §8> §fAccès §f: §6§lHost").addLore(" §8> §fStatut §f: " + (this.gameConfig.isNether() ? "§aActivé": "§cDésactivé")).addLore("").addLore("  §ç| §fPermet d'§aaccepter§f ou §cnon§f").addLore("  §8| §fdes joueurs à aller dans le §cnether§f").addLore("").addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage()).addLore("").getItem();
+        slots[23] = (new ItemCreator(Material.ITEM_FRAME)).setName("§8| §fOptions de la §cpartie").addLore("").addLore(" §8> §fAccès §f: §6§lHost").addLore("").addLore("  §8| §fPermet d'accéder aux").addLore("  §8| §coptions§f/§crègles§f de la partie").addLore("").addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage()).addLore("").getItem();
 
         if (!this.gameManager.getModuleManager().getCurrentModule().equals(ModuleType.UHC))
-            slots[31] = (new ItemCreator(Material.PRISMARINE_SHARD)).setName("§8| §fMode de §cjeu").addLore("").addLore(" §8> §fAccès §f: §6§lHost").addLore(" §8> §fMode §f: §6§l"+ this.gameManager.getModuleManager().getCurrentModule().getName()).addLore("").addLore("  §8| §fPermet de modifier les options").addLore("  §8| §cliées§f au mode de jeu §aactif§f" ).addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
-        slots[37] = (new ItemCreator(Material.STAINED_GLASS)).setDurability(Integer.valueOf(9)).setName("§8| §fGestion de la §cbordure").addLore("").addLore(" §8> §fAccès §f: §6§lHost").addLore("").addLore("  §8| §fPermet de modifier la §ataille").addLore("  §8| §fet la §bvitesse de la §cbordure§f.").addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
-        slots[43] = (new ItemCreator(Material.BOOK)).setName("§8| §fGestion des §cscénarios").addLore("").addLore(" §8> §fAccès §f: §6§lHost").addLore("").addLore("  §8| §fPermet d'§aajouter§f des scénarios").addLore("  §8| §fquidynamiseront la §cpartie§f." ).addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
+            slots[4] = (new ItemCreator(Material.PRISMARINE_SHARD)).setName("§8| §fMode de §cjeu").addLore("").addLore(" §8> §fAccès §f: §6§lHost").addLore(" §8> §fMode §f: §6§l"+ this.gameManager.getModuleManager().getCurrentModule().getName()).addLore("").addLore("  §8| §fPermet de modifier les options").addLore("  §8| §cliées§f au mode de jeu §aactif§f" ).addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
+        slots[33] = (new ItemCreator(Material.STAINED_GLASS)).setDurability(Integer.valueOf(9)).setName("§8| §fGestion de la §cbordure").addLore("").addLore(" §8> §fAccès §f: §6§lHost").addLore("").addLore("  §8| §fPermet de modifier la §ataille").addLore("  §8| §fet la §bvitesse de la §cbordure§f.").addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
+        slots[51] = (new ItemCreator(Material.BOOK)).setName("§8| §fGestion des §cscénarios").addLore("").addLore(" §8> §fAccès §f: §6§lHost").addLore("").addLore("  §8| §fPermet d'§aajouter§f des scénarios").addLore("  §8| §fquidynamiseront la §cpartie§f." ).addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
         GameAccess currentAccess = this.gameConfig.getGameAccess();
         ItemCreator accessItem = new ItemCreator(Material.WATCH)
                 .setName("§8| §fAccessibilité de la §cpartie")
@@ -112,18 +124,18 @@ public class ConfigMainGUI implements CustomInventory {
                 .addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage())
                 .addLore("");
 
-        slots[47] = accessItem.getItem();
+        slots[20] = accessItem.getItem();
 
         if (this.gameManager.getModuleManager().getCurrentModule().equals(ModuleType.DEMONSLAYER)) {
-            slots[51] = (new ItemCreator(Material.PAPER)).setName("§8| §fPré-Config §f(§c§lDEMONSLAYER§f)").addLore("").addLore(" ").addLore("").addLore("  d'acc").addLore(" " ).addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
+            slots[2] = (new ItemCreator(Material.PAPER)).setName("§8| §fPré-Config §f(§c§lDEMONSLAYER§f)").addLore("").addLore(" ").addLore("").addLore("  d'acc").addLore(" " ).addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
         } else if (this.gameManager.getModuleManager().getCurrentModule().equals(ModuleType.UHC)) {
-            slots[51] = (new ItemCreator(Material.PAPER)).setName("§8| §fPré-Config §f(§c§lUHC§f)").addLore("").addLore(" §8> §fAccès §f: §6§lHost").addLore("").addLore("  §8| §fPermet d'accéder à").addLore(" §8| §fvos §cconfigurations§f.").addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
+            slots[2] = (new ItemCreator(Material.PAPER)).setName("§8| §fPré-Config §f(§c§lUHC§f)").addLore("").addLore(" §8> §fAccès §f: §6§lHost").addLore("").addLore("  §8| §fPermet d'accéder à").addLore(" §8| §fvos §cconfigurations§f.").addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
         } else if (this.gameManager.getModuleManager().getCurrentModule().equals(ModuleType.LG)) {
-            slots[51] = (new ItemCreator(Material.PAPER)).setName("§8| §fPré-Config §f(§c§lLG§f)").addLore("").addLore(" ").addLore("").addLore("  d'acc").addLore(" " ).addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
+            slots[2] = (new ItemCreator(Material.PAPER)).setName("§8| §fPré-Config §f(§c§lLG§f)").addLore("").addLore(" ").addLore("").addLore("  d'acc").addLore(" " ).addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
         } else if (this.gameManager.getModuleManager().getCurrentModule().equals(ModuleType.NARUTO)) {
-            slots[51] = (new ItemCreator(Material.PAPER)).setName("§8| §fPré-Config §f(§c§lNARUTO§f)").addLore("").addLore(" ").addLore("").addLore("  d'acc").addLore(" " ).addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
+            slots[2] = (new ItemCreator(Material.PAPER)).setName("§8| §fPré-Config §f(§c§lNARUTO§f)").addLore("").addLore(" ").addLore("").addLore("  d'acc").addLore(" " ).addLore("").addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
         } else {
-            slots[51] = (new ItemCreator(Material.PAPER)).setName("§8| §fPré-Config §f(§c§lUHC§f)").addLore("").addLore(" dans ce mode.").addLore("").getItem();
+            slots[2] = (new ItemCreator(Material.PAPER)).setName("§8| §fPré-Config §f(§c§lUHC§f)").addLore("").addLore(" dans ce mode.").addLore("").getItem();
         }
         if (this.api.getGameManager().getGameState().equals(GameState.WAITING)) {
             slots[49] = (new ItemCreator(Material.INK_SACK)).setDurability(Integer.valueOf(10)).setName("§8| §fLancement de la §cpartie ").addLore("").addLore(" §8> §fTout est §aprêt§f ?").addLore(" §8> §fAccès §f: §6§lHost").addLore("").addLore("  §8| §fPermet de lancer la §cpartie§f si").addLore("  §8| §fvous avez fini la config de la §cpartie§f.").addLore("").addLore(CommonString.CLICK_HERE_TO_ACTIVATE.getMessage()).addLore("").getItem();
@@ -134,7 +146,7 @@ public class ConfigMainGUI implements CustomInventory {
     }
 
     public void onClick(Player player, Inventory inventory, ItemStack clickedItem, int slot, ClickType clickType) {
-        if (slot == 6) {
+        if (slot == 22) {
             if (this.gameManager.getGameState().equals(GameState.WAITING))
                 if (this.gameConfig.getTeleportationState().equals(GameConfig.WaitingTeleportationState.IN_ROOM)) {
                     this.gameConfig.setTeleportationState(GameConfig.WaitingTeleportationState.IN_LOBBY);
@@ -145,7 +157,7 @@ public class ConfigMainGUI implements CustomInventory {
             return;
         }
 
-        if (slot == 10 && clickedItem.getType() == Material.COMPASS) {
+        if (slot == 29 && clickedItem.getType() == Material.COMPASS) {
             // Clic sur l'item Slots (boussole au slot 10)
             this.api.openInventory(player, SlotsGUI.class);
             return;
@@ -154,7 +166,7 @@ public class ConfigMainGUI implements CustomInventory {
         switch (clickedItem.getType()) {
             case SKULL_ITEM:
                 // Vérifier si c'est la tête de pré-chargement (slot 4)
-                if (slot == 4) {
+                if (slot == 6) {
                     player.closeInventory();
                     if (!this.gameManager.isPreloadFinished() && !this.gameManager.isPreload()) {
                         this.gameManager.setPreload(true);

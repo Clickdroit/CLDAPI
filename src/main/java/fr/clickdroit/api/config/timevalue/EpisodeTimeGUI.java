@@ -161,22 +161,29 @@ public class EpisodeTimeGUI implements CustomInventory {
             // Gestion des têtes de diminution (rouges)
             if (itemName.contains("§c§l-10")) {
                 this.gameConfig.setEpisodeTime(this.gameConfig.getEpisodeTime() - 10);
+                player.playSound(player.getLocation(), Sound.NOTE_PLING,1.0F,0.8F);
             } else if (itemName.contains("§c§l-30")) {
                 this.gameConfig.setEpisodeTime(this.gameConfig.getEpisodeTime() - 30);
+                player.playSound(player.getLocation(), Sound.NOTE_PLING,1.0F,0.8F);
             } else if (itemName.contains("§c§l-60")) {
                 this.gameConfig.setEpisodeTime(this.gameConfig.getEpisodeTime() - 60);
+                player.playSound(player.getLocation(), Sound.NOTE_PLING,1.0F,0.8F);
             }
             // Gestion des têtes d'augmentation (vertes)
             else if (itemName.contains("§a§l+10")) {
                 this.gameConfig.setEpisodeTime(this.gameConfig.getEpisodeTime() + 10);
+                player.playSound(player.getLocation(), Sound.NOTE_PLING,1.0F,1.2F);
             } else if (itemName.contains("§a§l+30")) {
                 this.gameConfig.setEpisodeTime(this.gameConfig.getEpisodeTime() + 30);
+                player.playSound(player.getLocation(), Sound.NOTE_PLING,1.0F,1.2F);
             } else if (itemName.contains("§a§l+60")) {
                 this.gameConfig.setEpisodeTime(this.gameConfig.getEpisodeTime() + 60);
+                player.playSound(player.getLocation(), Sound.NOTE_PLING,1.0F,1.2F);
             }
             // Gestion du retour
             else if (itemName.contains("§fRevenir en arrière")) {
                 this.gameManager.getApi().openInventory(player, ConfigOptionsGUI.class);
+                player.playSound(player.getLocation(), Sound.NOTE_STICKS,1.0F,0.8F);
                 return;
             }
 
@@ -191,9 +198,6 @@ public class EpisodeTimeGUI implements CustomInventory {
                 player.playSound(player.getLocation(), Sound.VILLAGER_NO, 10.0F, 1.0F);
                 player.sendMessage("§c§l✗ §fLa durée minimum d'un épisode est de §c1m§f!");
             }
-
-            // Jouer un son de confirmation
-            player.playSound(player.getLocation(), Sound.CLICK, 1.0F, 1.0F);
 
             // Actualiser l'inventaire
             this.gameManager.getApi().openInventory(player, getClass());

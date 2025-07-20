@@ -43,6 +43,7 @@ public class TeamManager {
         if (getPlayerAmountInTeam(teams) < this.gameConfig.getPlayerPerTeam()) {
             if (getPlayerTeam().containsKey(uuid) && ((Teams)getPlayerTeam().get(uuid)).equals(teams)) {
                 player.sendMessage("§cVous êtes déjà dans cette équipe.");
+                player.playSound(player.getLocation(),Sound.VILLAGER_NO,1.0F, 1.0F);
             } else {
                 GamePlayer.getPlayer(player.getUniqueId()).setTeams(teams);
                 getPlayerTeam().put(uuid, teams);

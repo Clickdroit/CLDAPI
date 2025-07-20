@@ -12,10 +12,6 @@ import org.bukkit.inventory.ItemStack;
 import java.lang.reflect.Field;
 
 public enum OpenVar {
-    // SLOTS maintenant utilise une BOUSSOLE au lieu d'une tête
-    SLOTS("gameSlot", Material.COMPASS, 0, "§8| §fSlots",
-            new String[] { "", "  §8| §fVous permet de §cmodifier", "  §8| §fle nombre de §cjoueurs§f autorisés", "  §8| §fà se §aconnecter§f à la §cpartie§f.", "" },
-            false, true),
 
     PVP_TIME("pvpTime", Material.DIAMOND_SWORD, 0, "§8| §cP§fv§cP",
             new String[] { "", "  §8| §fVous permet de §cmodifier", "  §8| §fle temps avant l'activation", "  §8| §fdu §6PvP§f durant la §cpartie§f.", "" },

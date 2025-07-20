@@ -158,6 +158,7 @@ public class CycleManagerGUI implements CustomInventory {
             selectedMode = CycleMode.ETERNAL_NIGHT;
         } else if (slot == 22) { // Gestion de la flèche de retour par SLOT
             this.gameManager.getApi().openInventory(player, ConfigOptionsGUI.class);
+            player.playSound(player.getLocation(), Sound.NOTE_STICKS,1.0F,0.8F);
             return;
         }
 

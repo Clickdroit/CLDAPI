@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
@@ -106,6 +107,7 @@ public class PotionManagerGUI implements CustomInventory {
     public void onClick(Player player, Inventory inventory, ItemStack clickedItem, int slot, ClickType clickType) {
         if (slot == 40) {
             this.gameManager.getApi().openInventory(player, ConfigOptionsGUI.class);
+            player.playSound(player.getLocation(), Sound.NOTE_STICKS,1.0F,0.8F);
             return;
         }
 

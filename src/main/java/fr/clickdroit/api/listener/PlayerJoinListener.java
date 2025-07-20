@@ -90,6 +90,9 @@ public class PlayerJoinListener implements Listener {
             return;
         }
 
+        // Si le joueur est OP, l'ajouter automatiquement comme host
+        handleOpAutoHost(player, uuid);
+
         // Gérer selon l'état du jeu
         switch (this.api.getGameManager().getGameState()) {
             case WAITING:
@@ -112,11 +115,30 @@ public class PlayerJoinListener implements Listener {
     }
 
     /**
+     * Gère l'attribution automatique du statut host aux joueurs OP
+     */
+    private void handleOpAutoHost(Player player, UUID uuid) {
+        if (player.isOp()) {
+            // Si aucun host principal n'est défini, ce joueur OP devient le host principal
+            if (this.api.getGameManager().getGameHost() == null) {
+                this.api.getGameManager().setGameHost(uuid);
+                player.sendMessage("§a§lVous êtes désormais le host principal de cette partie !");
+            }
+            // Sinon, l'ajouter à la liste des hosts secondaires s'il n'y est pas déjà
+            else if (!this.api.getGameManager().getHosts().contains(uuid) &&
+                    !this.api.getGameManager().getGameHost().equals(uuid)) {
+                this.api.getGameManager().getHosts().add(uuid);
+                player.sendMessage("§6§lVous avez été ajouté comme host secondaire !");
+            }
+        }
+    }
+
+    /**
      * Gère l'arrivée d'un joueur pendant l'attente/démarrage
      */
     private void handleWaitingJoin(Player player, UUID uuid, ModuleType moduleType, PlayerJoinEvent event) {
-        // Définir le host si nécessaire
-        if (this.api.getGameManager().getGameHost() == null) {
+        // Définir le host si nécessaire (maintenant géré par handleOpAutoHost)
+        if (this.api.getGameManager().getGameHost() == null && !player.isOp()) {
             this.api.getGameManager().setGameHost(uuid);
         }
 
@@ -183,7 +205,12 @@ public class PlayerJoinListener implements Listener {
         // Message spécial selon le type d'accès
         if (access == GameAccess.CLOSE) {
             if (player.isOp()) {
-                player.sendMessage("  §8• §6Vous avez rejoint en tant qu'§ladministrateur");
+                // Message spécialisé pour les OPs qui sont automatiquement hosts
+                if (this.api.getGameManager().getGameHost() != null && this.api.getGameManager().getGameHost().equals(uuid)) {
+                    player.sendMessage("  §8• §a§lVous êtes le host principal §a(statut OP)");
+                } else {
+                    player.sendMessage("  §8• §6§lVous êtes host §6(statut OP)");
+                }
             } else if (this.api.getGameManager().hasHostAccess(player)) {
                 player.sendMessage("  §8• §6Vous avez rejoint en tant qu'§lhost");
             } else if (this.api.getGameManager().getWhitelistedPlayers().contains(player.getName())) {
