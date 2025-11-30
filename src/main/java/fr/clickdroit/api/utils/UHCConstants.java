@@ -76,7 +76,7 @@ public final class UHCConstants {
     public static final int DEFAULT_ENDERPEARL_DAMAGE = 2;
     
     /** Nombre de groupes par défaut */
-    public static final int DEFAULT_GROUPE = 6;
+    public static final int DEFAULT_GROUPES = 6;
     
     /** Durée du cache des hosts en millisecondes */
     public static final long HOST_CACHE_DURATION_MS = 5000;
