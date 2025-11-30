@@ -76,7 +76,11 @@ public class HostCommand implements CommandExecutor {
                         break;
                     case "chat":
                         this.gameManager.getGameConfig().setChat(!this.gameManager.getGameConfig().isChat());
-                        player.sendMessage("§8| " + UHCConstants.COLOR_ERROR + "Le chat est désormais" + (this.gameManager.getGameConfig().isChat() ? UHCConstants.COLOR_SUCCESS + "activé" : UHCConstants.COLOR_ERROR + "désactivé") + UHCConstants.COLOR_ERROR + ".");
+                        boolean isChatEnabled = this.gameManager.getGameConfig().isChat();
+                        String chatStatus = isChatEnabled 
+                            ? UHCConstants.COLOR_SUCCESS + "activé" 
+                            : UHCConstants.COLOR_ERROR + "désactivé";
+                        player.sendMessage(UHCConstants.PREFIX + "Le chat est désormais " + chatStatus + UHCConstants.COLOR_SECONDARY + ".");
                         break;
                     case "give":
                         if (GameUtils.isGameStarted()) {
