@@ -8,7 +8,6 @@ import fr.clickdroit.api.utils.msg.ProgressBar;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -136,16 +135,13 @@ public class LoadingChunkTask extends BukkitRunnable {
         }
 
         try {
-            // Créer la location une seule fois
-            Location chunkLocation = new Location(world, cx, 0, cz);
-
             // Obtenir le chunk de manière optimisée
             Chunk chunk = world.getChunkAt(cx >> 4, cz >> 4);
 
             // Ajouter au cache des chunks à garder
             ChunkUnloadListener.keepChunk.add(chunk);
 
-            // Charger le chunk de manière forcée
+            // Charger le chunk de manière forcée seulement s'il n'est pas déjà chargé
             if (!chunk.isLoaded()) {
                 world.loadChunk(chunk.getX(), chunk.getZ(), true);
             }
