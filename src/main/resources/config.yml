@@ -1,0 +1,81 @@
+# ============================================
+# Configuration de CLDAPI - Plugin UHC
+# Version: 1.0
+# Auteur: Clickdroit
+# ============================================
+
+# ===== PARAMÈTRES GÉNÉRAUX =====
+general:
+  # Nombre de slots maximum sur le serveur
+  slots: 60
+  # Durée du cycle jour/nuit en secondes
+  day-night-duration: 600
+  # Nombre de groupes par défaut
+  default-groupe: 6
+
+# ===== PARAMÈTRES DE COMBAT =====
+combat:
+  # Durée pendant laquelle un joueur est considéré en combat (secondes)
+  combat-log-duration: 60
+  # Dégâts des perles de l'Ender
+  enderpearl-damage: 2
+
+# ===== PARAMÈTRES DE TEMPS =====
+timers:
+  # Temps avant activation du PvP (secondes)
+  pvp-time: 1200
+  # Temps avant début de réduction de bordure (secondes)
+  border-time: 6000
+  # Durée d'un épisode (secondes)
+  episode-time: 1200
+  # Temps de déconnexion avant élimination (secondes)
+  disconnect-time: 900
+
+# ===== PARAMÈTRES DE BORDURE =====
+border:
+  # Taille de départ (rayon)
+  start-size: 1250
+  # Taille finale (rayon)
+  end-size: 250
+  # Vitesse de réduction (blocs par seconde)
+  speed: 1
+
+# ===== LIMITES DE MINERAIS =====
+limits:
+  # Limite de diamants minables (0 = pas de limite)
+  diamond-max: 0
+  # Limite d'or minable (0 = pas de limite)
+  gold-max: 0
+
+# ===== MESSAGES PERSONNALISABLES =====
+messages:
+  # Préfixe des messages UHC
+  prefix: "§8[§6UHC§8] §f"
+  # Message de mort en solo
+  death-solo: "§8| §c%player% §fest mort."
+  # Message de kill en solo
+  kill-solo: "§8| §c%player% §fa été tué par §c%killer%§f."
+  # Message de mort en équipe
+  death-team: "§8| §c%teamColor%%teamName% %player% est mort."
+  # Message de kill en équipe
+  kill-team: "§8| §c%teamColor%%teamName% %player% a été tué par %killerColor%%killerTeam% %killer%."
+  # Message d'alerte diamant
+  diamond-alert: "§f[FD] §b%player% §ba trouvé %count% diamant%s%."
+
+# ===== SCÉNARIOS PAR DÉFAUT =====
+default-scenarios:
+  - TIMBER
+  - CUTCLEAN
+  - HASTEYBOYS
+  - SAFEMINER
+  - CAT_EYES
+  - BETAZOMBIE
+
+# ===== PARAMÈTRES AVANCÉS =====
+advanced:
+  # Durée du cache des permissions host (millisecondes)
+  host-cache-duration: 5000
+  # Activer le mode développement
+  dev-mode: false
+  # Activer les logs de debug
+  debug: false

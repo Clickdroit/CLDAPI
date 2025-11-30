@@ -45,7 +45,7 @@ public class CombatLogEntity {
             tag.setBoolean("PersistenceRequired", true);
             ((EntityLiving) nms).a(tag);
         } catch (Exception e) {
-            e.printStackTrace();
+            org.bukkit.Bukkit.getLogger().severe("Failed to set NoAI for combat log entity: " + e.getMessage());
         }
     }
 
