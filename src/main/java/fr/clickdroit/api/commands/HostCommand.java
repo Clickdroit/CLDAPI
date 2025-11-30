@@ -71,7 +71,7 @@ public class HostCommand implements CommandExecutor {
                             player.sendMessage("§6§lUHC §8§l• §fVous venez de changer le nom de votre serveur en §6" + name);
                             break;
                         }
-                        player.sendMessage("§6§lUHC §8§l• §fVous ne pouvez pas changer le nom de l'host, si vous mettez plus de 32 caract");
+                        player.sendMessage("§6§lUHC §8§l• §fVous ne pouvez pas changer le nom de l'host si vous mettez plus de 32 caractères.");
                         break;
                     case "chat":
                         this.gameManager.getGameConfig().setChat(!this.gameManager.getGameConfig().isChat());
@@ -211,7 +211,7 @@ public class HostCommand implements CommandExecutor {
                                     return true;
                                 }
                                 if (this.gameManager.getHosts().contains(player1.getUniqueId())) {
-                                    player.sendMessage("§cCejoueur est déjà co-host.");
+                                    player.sendMessage("§cCe joueur est déjà co-host.");
                                     return true;
                                 }
                                 this.gameManager.getHosts().add(player1.getUniqueId());
@@ -324,7 +324,7 @@ public class HostCommand implements CommandExecutor {
                                 this.gameManager.getOfflinePlayers().remove(gamePlayer.getUuid());
                                 break;
                             }
-                            player.sendMessage("§cCe joueur n'est pas deconnecté.");
+                            player.sendMessage("§cCe joueur n'est pas déconnecté.");
                             break;
                         }
                         player.sendMessage("§cCe joueur n'est pas déconnecté ou n'existe pas.");

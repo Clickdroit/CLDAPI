@@ -56,7 +56,7 @@ public class WorldPopulator {
                                 ProgressBar.getProgressBar(this.progress, 80, 20, "|", ChatColor.YELLOW, ChatColor.GRAY) + "§8]");
                     if (this.progress >= 80) {
                         cancel();
-                        System.out.println("[UHC] Nettoyage du centre de la carte termin!");
+                        System.out.println("[UHC] Nettoyage du centre de la carte terminé !");
                         WorldPopulator.this.addSapling();
                     }
                 }
