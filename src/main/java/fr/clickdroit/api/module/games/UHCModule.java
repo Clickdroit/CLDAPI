@@ -49,10 +49,10 @@ public class UHCModule extends Modules {
             TeamManager teamManager = this.api.getGameManager().getTeamManager();
             Teams playerTeam = (Teams)teamManager.getPlayerTeam().get(player.getUniqueId());
             if (killer == null) {
-                deathMessage = "§8| §c"+ playerTeam.getColor() + playerTeam.getName() + " " + player.getName() + " mort.";
+                deathMessage = "§8| §c"+ playerTeam.getColor() + playerTeam.getName() + " " + player.getName() + " est mort.";
             } else {
                 Teams killerTeam = (Teams)teamManager.getPlayerTeam().get(killer.getUniqueId());
-                deathMessage = "§8| §c"+ playerTeam.getColor() + playerTeam.getName() + " " + player.getName() + " tupar " + killerTeam.getColor() + killerTeam.getName() + " " + killer.getName() + "";
+                deathMessage = "§8| §c"+ playerTeam.getColor() + playerTeam.getName() + " " + player.getName() + " a été tué par " + killerTeam.getColor() + killerTeam.getName() + " " + killer.getName() + ".";
             }
         }
         for (ItemStack item : InventoryAPI.itemsDeath) {

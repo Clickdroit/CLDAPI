@@ -435,7 +435,7 @@ public class GameListener implements Listener {
             }
             for (Player players : Bukkit.getOnlinePlayers()) {
                 if (GamePlayer.getPlayer(players.getUniqueId()).isAlerts())
-                    players.sendMessage("§f[FD] §b"+ player.getName() + "§ba trouvé" + diamonds + " diamant" + ((diamonds > 1) ? "s" : "") + ".");
+                    players.sendMessage("§f[FD] §b" + player.getName() + " §ba trouvé " + diamonds + " diamant" + ((diamonds > 1) ? "s" : "") + ".");
             }
         }
     }

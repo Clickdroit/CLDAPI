@@ -39,6 +39,25 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+/**
+ * Gestionnaire principal de la partie UHC.
+ * <p>
+ * Cette classe centralise la gestion de tous les aspects d'une partie UHC :
+ * <ul>
+ *   <li>État de la partie (attente, démarrage, jeu, fin)</li>
+ *   <li>Gestion des joueurs en jeu et hors ligne</li>
+ *   <li>Configuration de la partie</li>
+ *   <li>Gestion des équipes</li>
+ *   <li>Bordure et téléportation</li>
+ *   <li>Scénarios activés</li>
+ * </ul>
+ * 
+ * @author Clickdroit
+ * @version 1.0
+ * @see GameState
+ * @see GameConfig
+ * @see TeamManager
+ */
 public class GameManager {
     private final API api;
     private final GameConfig gameConfig;

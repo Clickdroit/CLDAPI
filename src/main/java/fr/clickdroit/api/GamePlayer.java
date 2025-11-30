@@ -13,6 +13,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Représente un joueur dans une partie UHC.
+ * <p>
+ * Cette classe encapsule toutes les informations spécifiques à un joueur
+ * pendant une partie UHC, incluant :
+ * <ul>
+ *   <li>Son statut (vivant/mort)</li>
+ *   <li>Son équipe</li>
+ *   <li>Ses statistiques (kills, diamants, ors)</li>
+ *   <li>Son inventaire sauvegardé</li>
+ *   <li>Son entité de combat log</li>
+ * </ul>
+ * 
+ * <p>Les instances sont gérées via une liste statique accessible par
+ * {@link #getGamePlayers()} et {@link #getPlayer(UUID)}.</p>
+ * 
+ * @author Clickdroit
+ * @version 1.0
+ * @see Teams
+ * @see CombatLogEntity
+ */
 public class GamePlayer {
     private final UUID uuid;
 
@@ -84,10 +105,7 @@ public class GamePlayer {
     }
 
     public Player getPlayer() {
-        Player p = Bukkit.getPlayer(this.uuid);
-        if (p != null)
-            return p;
-        return null;
+        return Bukkit.getPlayer(this.uuid);
     }
 
     public UUID getUuid() {

@@ -116,6 +116,7 @@ public class HostCommand implements CommandExecutor {
                                     quantity = Integer.parseInt(arguments[2]);
                                 } catch (NumberFormatException e) {
                                     player.sendMessage("§cMontant invalide.");
+                                    return false;
                                 }
                                 ItemStack giveItem = new ItemStack(itemType, quantity);
                                 for (UUID uuid : this.gameManager.getInGamePlayers()) {

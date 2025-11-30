@@ -25,6 +25,30 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
 
+/**
+ * Classe principale du plugin CLDAPI UHC.
+ * <p>
+ * Cette classe est le point d'entrée du plugin Minecraft pour les serveurs
+ * Spigot/Paper 1.8.8. Elle initialise tous les composants nécessaires au
+ * fonctionnement de l'API UHC :
+ * <ul>
+ *   <li>Gestionnaire de partie ({@link GameManager})</li>
+ *   <li>Modules de jeu ({@link Modules})</li>
+ *   <li>Systèmes communs ({@link Common})</li>
+ *   <li>Génération de monde et lobby</li>
+ * </ul>
+ * 
+ * <p>Exemple d'utilisation :</p>
+ * <pre>{@code
+ * API api = API.getAPI();
+ * GameManager gameManager = api.getGameManager();
+ * }</pre>
+ * 
+ * @author Clickdroit
+ * @version 1.0
+ * @see GameManager
+ * @see Modules
+ */
 public class API extends JavaPlugin {
     private static API api;
 
