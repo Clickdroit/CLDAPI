@@ -26,6 +26,7 @@ import fr.clickdroit.api.module.standard.UHCFinisherGame;
 import fr.clickdroit.api.module.standard.UHCStandard;
 import fr.clickdroit.api.utils.InventoryAPI;
 import fr.clickdroit.api.utils.TabHandler;
+import fr.clickdroit.api.utils.UHCConstants;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
@@ -87,7 +88,6 @@ public class GameManager {
     private final Map<UUID, GamePlayer> gamePlayerCache = new ConcurrentHashMap<>();
     private final Set<UUID> hostAccessCache = ConcurrentHashMap.newKeySet();
     private long hostCacheLastUpdate = 0;
-    private static final long HOST_CACHE_DURATION = 5000; // 5 secondes
 
     // Messages pré-compilés pour éviter les concaténations répétées
     private static final String[] START_MESSAGES = {
@@ -132,7 +132,7 @@ public class GameManager {
         this.border = new SimpleBorder(this.worldPopulator.getGameWorld().getWorldBorder());
         this.cycleManager = new CycleManager(api, this.worldPopulator.getGameWorld());
         this.combatLogManager = new CombatLogManager(this);
-        this.groupe = 6;
+        this.groupe = UHCConstants.DEFAULT_GROUPES;
         this.beforeStartTask = new BeforeStartTask(this);
         this.beforeStartTask.runTaskTimer((Plugin)api, 60L, 40L);
         this.announcedOnHub = false;
@@ -624,7 +624,7 @@ public class GameManager {
         long currentTime = System.currentTimeMillis();
 
         // Vérifier le cache
-        if ((currentTime - hostCacheLastUpdate) < HOST_CACHE_DURATION) {
+        if ((currentTime - hostCacheLastUpdate) < UHCConstants.HOST_CACHE_DURATION_MS) {
             if (hostAccessCache.contains(playerId)) {
                 return true;
             }

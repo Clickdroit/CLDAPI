@@ -2,6 +2,7 @@ package fr.clickdroit.api.config;
 
 import fr.clickdroit.api.config.common.GameAccess;
 import fr.clickdroit.api.game.GameManager;
+import fr.clickdroit.api.utils.UHCConstants;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -62,29 +63,29 @@ public class GameConfig {
 
     public GameConfig(GameManager gameManager) {
         this.gameManager = gameManager;
-        this.gameSlot = 60;
+        this.gameSlot = UHCConstants.DEFAULT_SLOTS;
         this.playerPerTeam = 1;
-        this.pvpTime = 1200;
+        this.pvpTime = UHCConstants.DEFAULT_PVP_TIME;
         this.roleTime = 0;
-        this.borderTime = 6000;
-        this.borderStartSize = 1250;
-        this.borderBlocksPerSecond = 1;
-        this.borderEndSize = 250;
+        this.borderTime = UHCConstants.DEFAULT_BORDER_TIME;
+        this.borderStartSize = UHCConstants.DEFAULT_BORDER_START_SIZE;
+        this.borderBlocksPerSecond = UHCConstants.DEFAULT_BORDER_SPEED;
+        this.borderEndSize = UHCConstants.DEFAULT_BORDER_END_SIZE;
         this.showAllTeams = true;
         this.friendlyfire = true;
         this.spectators = true;
         this.nether = true;
-        this.dayNightDuration = 600L;
-        this.diamondMax = 0;
-        this.goldMax = 0;
-        this.enderpearlDamage = 2;
+        this.dayNightDuration = UHCConstants.DEFAULT_DAY_NIGHT_DURATION;
+        this.diamondMax = UHCConstants.DEFAULT_DIAMOND_MAX;
+        this.goldMax = UHCConstants.DEFAULT_GOLD_MAX;
+        this.enderpearlDamage = UHCConstants.DEFAULT_ENDERPEARL_DAMAGE;
         this.gameAccess = GameAccess.OPEN;
         this.chat = false;
         this.gameDev = false;
         this.openDate = Date.from(Instant.now());
         this.serverHourSetup = true;
-        this.episodeTime = 1200;
-        this.disconnectMinute = 900;
+        this.episodeTime = UHCConstants.DEFAULT_EPISODE_TIME;
+        this.disconnectMinute = UHCConstants.DEFAULT_DISCONNECT_TIME;
         this.teleportationState = WaitingTeleportationState.IN_LOBBY;
     }
 

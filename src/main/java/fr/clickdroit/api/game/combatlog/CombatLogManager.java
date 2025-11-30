@@ -4,6 +4,7 @@ import fr.clickdroit.api.GamePlayer;
 import fr.clickdroit.api.game.GameManager;
 import fr.clickdroit.api.game.GameUtils;
 import fr.clickdroit.api.utils.CombatUtilsAPI;
+import fr.clickdroit.api.utils.UHCConstants;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -14,7 +15,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class CombatLogManager implements Listener {
     private final GameManager gameManager;
-    private static final long COMBAT_TIME = 60L; // 60 secondes de combat
 
     public CombatLogManager(GameManager gameManager) {
         this.gameManager = gameManager;
@@ -35,11 +35,11 @@ public class CombatLogManager implements Listener {
                 return;
 
             long lastFight = CombatUtilsAPI.getTimeBeforeLastFight(gamePlayer);
-            if (lastFight <= COMBAT_TIME) {
+            if (lastFight <= UHCConstants.COMBAT_TIME_SECONDS) {
                 CombatLogEntity combatLog = new CombatLogEntity(player);
                 gamePlayer.setCombatLogEntity(combatLog);
 
-                this.gameManager.broadcastWithPrefix("§c" + gamePlayer.getName() + " est mort en étant déconnecté !");
+                this.gameManager.broadcastWithPrefix(UHCConstants.COLOR_ERROR + gamePlayer.getName() + " est mort en étant déconnecté !");
             }
         }
     }

@@ -11,6 +11,7 @@ import fr.clickdroit.api.config.scenario.Scenario;
 import fr.clickdroit.api.game.team.Teams;
 import fr.clickdroit.api.utils.ItemCreator;
 import fr.clickdroit.api.utils.Title;
+import fr.clickdroit.api.utils.UHCConstants;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
@@ -57,7 +58,7 @@ public class GameListener implements Listener {
         LivingEntity livingEntity = event.getEntity();
         CreatureSpawnEvent.SpawnReason spawnReason = event.getSpawnReason();
         if (spawnReason.equals(CreatureSpawnEvent.SpawnReason.NATURAL)) {
-            if (livingEntity.getWorld().getName().equalsIgnoreCase("Lobby")) {
+            if (livingEntity.getWorld().getName().equalsIgnoreCase(UHCConstants.LOBBY_WORLD_NAME)) {
                 event.setCancelled(true);
                 return;
             }
@@ -69,7 +70,7 @@ public class GameListener implements Listener {
                 }
             }
             World entityWorld = event.getEntity().getWorld();
-            if (entityWorld.getName().equalsIgnoreCase("Lobby"))
+            if (entityWorld.getName().equalsIgnoreCase(UHCConstants.LOBBY_WORLD_NAME))
                 event.setCancelled(true);
         }
     }

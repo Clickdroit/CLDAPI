@@ -9,6 +9,7 @@ import fr.clickdroit.api.config.ConfigMainGUI;
 import fr.clickdroit.api.game.GameManager;
 import fr.clickdroit.api.game.GameUtils;
 import fr.clickdroit.api.utils.CommonString;
+import fr.clickdroit.api.utils.UHCConstants;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -67,15 +68,15 @@ public class HostCommand implements CommandExecutor {
                         for (String str : arguments)
                             stringBuilder.append(str).append(" ");
                         name = stringBuilder.toString().replace("name", "").replace("&", "§").substring(1);
-                        if (name.length() <= 32) {
-                            player.sendMessage("§6§lUHC §8§l• §fVous venez de changer le nom de votre serveur en §6" + name);
+                        if (name.length() <= UHCConstants.MAX_HOST_NAME_LENGTH) {
+                            player.sendMessage(UHCConstants.PREFIX + "Vous venez de changer le nom de votre serveur en " + UHCConstants.COLOR_PRIMARY + name);
                             break;
                         }
-                        player.sendMessage("§6§lUHC §8§l• §fVous ne pouvez pas changer le nom de l'host si vous mettez plus de 32 caractères.");
+                        player.sendMessage(UHCConstants.PREFIX + "Vous ne pouvez pas changer le nom de l'host si vous mettez plus de " + UHCConstants.MAX_HOST_NAME_LENGTH + " caractères.");
                         break;
                     case "chat":
                         this.gameManager.getGameConfig().setChat(!this.gameManager.getGameConfig().isChat());
-                        player.sendMessage("§8| §cLe chat est désormais" + (this.gameManager.getGameConfig().isChat() ? "§aactivé": "§cdésactivé") + "§c.");
+                        player.sendMessage("§8| " + UHCConstants.COLOR_ERROR + "Le chat est désormais" + (this.gameManager.getGameConfig().isChat() ? UHCConstants.COLOR_SUCCESS + "activé" : UHCConstants.COLOR_ERROR + "désactivé") + UHCConstants.COLOR_ERROR + ".");
                         break;
                     case "give":
                         if (GameUtils.isGameStarted()) {

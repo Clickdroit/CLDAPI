@@ -12,6 +12,7 @@ import fr.clickdroit.api.module.games.UHCModule;
 import fr.clickdroit.api.utils.CustomInventory;
 import fr.clickdroit.api.utils.HologramCreate;
 import fr.clickdroit.api.utils.TabHandler;
+import fr.clickdroit.api.utils.UHCConstants;
 import fr.clickdroit.api.worlds.BiomeChanger;
 import fr.clickdroit.api.worlds.Generator;
 import fr.clickdroit.api.worlds.LobbyPopulator;
@@ -88,7 +89,7 @@ public class API extends JavaPlugin {
             world.setDifficulty(Difficulty.NORMAL);
             world.setGameRuleValue("naturalRegeneration", "false");
         }
-        Bukkit.getWorld("Lobby").setDifficulty(Difficulty.PEACEFUL);
+        Bukkit.getWorld(UHCConstants.LOBBY_WORLD_NAME).setDifficulty(Difficulty.PEACEFUL);
         (new HologramCreate()).create();
         Bukkit.getPluginManager().registerEvents((Listener)new ReconnectListener(this.gameManager), (Plugin)this);
     }
