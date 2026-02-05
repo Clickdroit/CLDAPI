@@ -45,12 +45,12 @@ import java.util.stream.Collectors;
  * <p>
  * Cette classe centralise la gestion de tous les aspects d'une partie UHC :
  * <ul>
- *   <li>État de la partie (attente, démarrage, jeu, fin)</li>
- *   <li>Gestion des joueurs en jeu et hors ligne</li>
- *   <li>Configuration de la partie</li>
- *   <li>Gestion des équipes</li>
- *   <li>Bordure et téléportation</li>
- *   <li>Scénarios activés</li>
+ * <li>État de la partie (attente, démarrage, jeu, fin)</li>
+ * <li>Gestion des joueurs en jeu et hors ligne</li>
+ * <li>Configuration de la partie</li>
+ * <li>Gestion des équipes</li>
+ * <li>Bordure et téléportation</li>
+ * <li>Scénarios activés</li>
  * </ul>
  * 
  * @author Clickdroit
@@ -134,7 +134,7 @@ public class GameManager {
         this.combatLogManager = new CombatLogManager(this);
         this.groupe = UHCConstants.DEFAULT_GROUPES;
         this.beforeStartTask = new BeforeStartTask(this);
-        this.beforeStartTask.runTaskTimer((Plugin)api, 60L, 40L);
+        this.beforeStartTask.runTaskTimer((Plugin) api, 60L, 40L);
         this.announcedOnHub = false;
         this.preload = false;
         this.preloadFinished = false;
@@ -160,14 +160,14 @@ public class GameManager {
     public void startWithTimer() {
         setGameState(GameState.STARTING);
         this.startGameCountDown = new StartGameCountDown(this);
-        this.startGameCountDown.runTaskTimer((Plugin)this.api, 0L, 20L);
+        this.startGameCountDown.runTaskTimer((Plugin) this.api, 0L, 20L);
     }
 
     public void startGame() {
         setGameState(GameState.PLAYING);
         this.api.getModules().onStart(this.api);
         this.globalTask = new GlobalTask(this);
-        this.globalTask.runTaskTimer((Plugin)this.api, 0L, 20L);
+        this.globalTask.runTaskTimer((Plugin) this.api, 0L, 20L);
         this.cycleManager.startDayCycle(this.gameConfig.getDayNightDuration());
 
         // Diffusion optimisée des messages
@@ -202,7 +202,8 @@ public class GameManager {
 
         for (UUID uuid : inGamePlayersCopy) {
             Player player = Bukkit.getPlayer(uuid);
-            if (player == null) continue;
+            if (player == null)
+                continue;
 
             // Réinitialisation optimisée du joueur
             resetPlayer(player);
@@ -247,7 +248,8 @@ public class GameManager {
     }
 
     public void tryStartGame() {
-        if (!this.gameState.equals(GameState.STARTING)) return;
+        if (!this.gameState.equals(GameState.STARTING))
+            return;
 
         System.out.println("[UHC] Starting game..");
         setGameState(GameState.TELEPORTATION);
@@ -373,8 +375,7 @@ public class GameManager {
                 (this.gameConfig.getBorderStartSize() - 10),
                 150,
                 gameWorld,
-                gameWorld.getWorldBorder().getCenter()
-        );
+                gameWorld.getWorldBorder().getCenter());
 
         TeleportationManager teleportationManager;
 
@@ -397,9 +398,10 @@ public class GameManager {
                 .limit(100)
                 .filter(team -> teamManager.getPlayerAmountInTeam(team) > 0)
                 .map(team -> {
-                    List<UUID> players = new ArrayList<>();
-                    teamManager.getPlayersInTeam(team);
-                    return new TeamPlayerPlate(players, team.getColor() + "équipe" + team.getColor() + team.getName());
+                    List<UUID> players = teamManager.getPlayersInTeam(team).stream()
+                            .map(Player::getUniqueId)
+                            .collect(Collectors.toList());
+                    return new TeamPlayerPlate(players, team.getColor() + "équipe " + team.getColor() + team.getName());
                 })
                 .toArray(TeamPlayerPlate[]::new);
     }

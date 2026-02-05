@@ -40,15 +40,39 @@ public class GlobalTask extends BukkitRunnable {
                 Rules.noDamage.setActive(false);
                 Bukkit.getOnlinePlayers().forEach(players -> {
                     Title.sendActionBar(players, "§8• §fL'invincibilité est désormais §cdésactivé§f §8•");
-                            players.playSound(players.getLocation(), Sound.VILLAGER_HIT, 3.0F, 1.0F);
+                    players.playSound(players.getLocation(), Sound.VILLAGER_HIT, 3.0F, 1.0F);
                 });
             } else {
                 int timeLeft = 30 - this.globalTime;
-                Bukkit.getOnlinePlayers().forEach(players -> Title.sendActionBar(players, "§8 §fFin de l'§cinvincibilité dans §c"+ timeLeft + "§fseconde" + ((timeLeft > 1) ? "§fs":"§f") + "§8•" ));
+                Bukkit.getOnlinePlayers()
+                        .forEach(players -> Title.sendActionBar(players, "§8 §fFin de l'§cinvincibilité dans §c"
+                                + timeLeft + "§fseconde" + ((timeLeft > 1) ? "§fs" : "§f") + "§8•"));
             }
-        if (!Rules.pvp.isActive() &&
-                getGlobalTime() >= this.gameConfig.getPvpTime())
-            Rules.pvp.setActive(true);
+        // Auto-Heal feature: heal all players 5 seconds before PvP starts
+        if (!Rules.pvp.isActive()) {
+            int pvpTime = this.gameConfig.getPvpTime();
+            int timeUntilPvp = pvpTime - getGlobalTime();
+
+            // Heal all players 5 seconds before PvP
+            if (timeUntilPvp == 5) {
+                Bukkit.getOnlinePlayers().forEach(player -> {
+                    if (this.gameManager.getInGamePlayers().contains(player.getUniqueId())) {
+                        player.setHealth(player.getMaxHealth());
+                        player.setFoodLevel(20);
+                        player.setSaturation(20.0F);
+                        Title.sendActionBar(player, "§8• §a§l❤ AUTO-HEAL ❤ §fVous avez été soigné avant le PvP! §8•");
+                        player.playSound(player.getLocation(), Sound.LEVEL_UP, 1.0F, 1.5F);
+                    }
+                });
+                Bukkit.broadcastMessage(
+                        "§8§l[§a§lAUTO-HEAL§8§l] §fTous les joueurs ont été §asoignés§f 5 secondes avant le PvP!");
+            }
+
+            // Activate PvP when time is reached
+            if (getGlobalTime() >= pvpTime) {
+                Rules.pvp.setActive(true);
+            }
+        }
         for (GamePlayer gamePlayers : GamePlayer.getGamePlayers()) {
             Player players = gamePlayers.getPlayer();
             if (players == null)
@@ -60,14 +84,17 @@ public class GlobalTask extends BukkitRunnable {
         }
         for (Scenario scenario : this.gameManager.getEnabledScenarios()) {
             if (scenario.isEnabled() && (scenario
-                    .getScenarioValueType() == ScenarioValueType.TIME || scenario.getScenarioValueType() == ScenarioValueType.TIMEMIN) && (
-                    (scenario.getScenarioValueType() == ScenarioValueType.TIME) ? scenario.getValue() : (scenario.getValue() * 60)) == this.globalTime)
+                    .getScenarioValueType() == ScenarioValueType.TIME
+                    || scenario.getScenarioValueType() == ScenarioValueType.TIMEMIN)
+                    && ((scenario.getScenarioValueType() == ScenarioValueType.TIME) ? scenario.getValue()
+                            : (scenario.getValue() * 60)) == this.globalTime)
                 scenario.getScenarioManager().init();
         }
         if (!this.gameManager.getBorder().isStart() &&
                 getGlobalTime() >= this.gameConfig.getBorderTime())
-            this.gameManager.getBorder().startReduce((this.gameConfig.getBorderEndSize() * 2), this.gameConfig.getBorderBlocksPerSecond());
-        int sizeBorder = (int)(this.gameManager.getBorder().getWorldBorder().getSize() / 2.0D);
+            this.gameManager.getBorder().startReduce((this.gameConfig.getBorderEndSize() * 2),
+                    this.gameConfig.getBorderBlocksPerSecond());
+        int sizeBorder = (int) (this.gameManager.getBorder().getWorldBorder().getSize() / 2.0D);
         Bukkit.getOnlinePlayers().forEach(players -> {
             if (!this.gameManager.getInGamePlayers().contains(players.getUniqueId())) {
                 if (players.getLocation().getY() < 0.0D)
@@ -112,4 +139,3 @@ public class GlobalTask extends BukkitRunnable {
         this.globalTime = globalTime;
     }
 }
-

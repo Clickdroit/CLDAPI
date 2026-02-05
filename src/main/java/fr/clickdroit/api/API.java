@@ -33,13 +33,16 @@ import org.bukkit.scoreboard.Scoreboard;
  * Spigot/Paper 1.8.8. Elle initialise tous les composants nécessaires au
  * fonctionnement de l'API UHC :
  * <ul>
- *   <li>Gestionnaire de partie ({@link GameManager})</li>
- *   <li>Modules de jeu ({@link Modules})</li>
- *   <li>Systèmes communs ({@link Common})</li>
- *   <li>Génération de monde et lobby</li>
+ * <li>Gestionnaire de partie ({@link GameManager})</li>
+ * <li>Modules de jeu ({@link Modules})</li>
+ * <li>Systèmes communs ({@link Common})</li>
+ * <li>Génération de monde et lobby</li>
  * </ul>
  * 
- * <p>Exemple d'utilisation :</p>
+ * <p>
+ * Exemple d'utilisation :
+ * </p>
+ * 
  * <pre>{@code
  * API api = API.getAPI();
  * GameManager gameManager = api.getGameManager();
@@ -77,21 +80,27 @@ public class API extends JavaPlugin {
 
     public void onEnable() {
         api = this;
-        ((World)getServer().getWorlds().get(0)).getPopulators().add(new Generator());
+        ((World) getServer().getWorlds().get(0)).getPopulators().add(new Generator());
         this.gameManager = new GameManager(this);
         this.lobbyPopulator = new LobbyPopulator(this);
         this.common = new Common(this);
         this.common.load();
-        setModules((Modules)new UHCModule(this));
+        setModules((Modules) new UHCModule(this));
         this.scoreboard = getServer().getScoreboardManager().getMainScoreboard();
         this.tabHandler = new TabHandler();
         for (World world : Bukkit.getWorlds()) {
             world.setDifficulty(Difficulty.NORMAL);
             world.setGameRuleValue("naturalRegeneration", "false");
         }
-        Bukkit.getWorld(UHCConstants.LOBBY_WORLD_NAME).setDifficulty(Difficulty.PEACEFUL);
+        World lobbyWorld = Bukkit.getWorld(UHCConstants.LOBBY_WORLD_NAME);
+        if (lobbyWorld != null) {
+            lobbyWorld.setDifficulty(Difficulty.PEACEFUL);
+        } else {
+            getLogger().warning(
+                    "Lobby world '" + UHCConstants.LOBBY_WORLD_NAME + "' not found! Create it before starting a game.");
+        }
         (new HologramCreate()).create();
-        Bukkit.getPluginManager().registerEvents((Listener)new ReconnectListener(this.gameManager), (Plugin)this);
+        Bukkit.getPluginManager().registerEvents((Listener) new ReconnectListener(this.gameManager), (Plugin) this);
     }
 
     public void onDisable() {
@@ -124,7 +133,8 @@ public class API extends JavaPlugin {
     }
 
     public CustomInventory getInventory(String inventoryName) {
-        return this.registeredInventories.values().stream().filter(inventory -> inventory.getName().equals(inventoryName)).findFirst().orElse(null);
+        return this.registeredInventories.values().stream()
+                .filter(inventory -> inventory.getName().equals(inventoryName)).findFirst().orElse(null);
     }
 
     public Map<Class<? extends CustomInventory>, CustomInventory> getRegisteredInventories() {

@@ -10,7 +10,8 @@ public enum ModuleType {
     HUNTERXHUNTER("Hunter X Hunter", "", Material.VINE, 0, true, false, false),
     LG("Loup-Garou", "§c", Material.VINE, 0, true, false, false),
     JJK("Jujutsu", "§5", Material.BLAZE_POWDER, 0, true, false, false),
-    NARUTO("Naruto", "§e", Material.VINE, 0, true, false, false);
+    NARUTO("Naruto", "§e", Material.VINE, 0, true, false, false),
+    SOLOLEVELING("Solo Leveling", "§5", Material.EYE_OF_ENDER, 0, true, false, true);
 
     private String name;
 
@@ -26,7 +27,8 @@ public enum ModuleType {
 
     private boolean deleteSpawn;
 
-    ModuleType(String name, String color, Material material, int data, boolean hasRole, boolean hasTeam, boolean deleteSpawn) {
+    ModuleType(String name, String color, Material material, int data, boolean hasRole, boolean hasTeam,
+            boolean deleteSpawn) {
         this.name = name;
         this.color = color;
         this.material = material;

@@ -31,7 +31,9 @@ public class TeamManager {
         for (Player players : Bukkit.getOnlinePlayers()) {
             GamePlayer.getPlayer(players.getUniqueId()).setTeams(null);
             if (this.playerTeam.containsKey(players.getUniqueId())) {
-                this.gameManager.getApi().getCommon().getScoreboard().getTeam(((Teams)getPlayerTeam().get(players.getUniqueId())).getName()).removePlayer((OfflinePlayer)players);
+                this.gameManager.getApi().getCommon().getScoreboard()
+                        .getTeam(((Teams) getPlayerTeam().get(players.getUniqueId())).getName())
+                        .removePlayer((OfflinePlayer) players);
                 this.playerTeam.remove(players.getUniqueId());
             }
             PlayerUtils.giveDefaultItems(players);
@@ -41,14 +43,15 @@ public class TeamManager {
     public void addPlayerToTeam(Player player, Teams teams) {
         UUID uuid = player.getUniqueId();
         if (getPlayerAmountInTeam(teams) < this.gameConfig.getPlayerPerTeam()) {
-            if (getPlayerTeam().containsKey(uuid) && ((Teams)getPlayerTeam().get(uuid)).equals(teams)) {
+            if (getPlayerTeam().containsKey(uuid) && ((Teams) getPlayerTeam().get(uuid)).equals(teams)) {
                 player.sendMessage("§cVous êtes déjà dans cette équipe.");
-                player.playSound(player.getLocation(),Sound.VILLAGER_NO,1.0F, 1.0F);
+                player.playSound(player.getLocation(), Sound.VILLAGER_NO, 1.0F, 1.0F);
             } else {
                 GamePlayer.getPlayer(player.getUniqueId()).setTeams(teams);
                 getPlayerTeam().put(uuid, teams);
                 player.playSound(player.getLocation(), Sound.ORB_PICKUP, 3.0F, 1.0F);
-                this.gameManager.getApi().getCommon().getScoreboard().getTeam(teams.getName()).addPlayer((OfflinePlayer)player);
+                this.gameManager.getApi().getCommon().getScoreboard().getTeam(teams.getName())
+                        .addPlayer((OfflinePlayer) player);
                 PlayerUtils.giveDefaultItems(player);
             }
         } else {
@@ -60,7 +63,8 @@ public class TeamManager {
         if (getPlayerAmountInTeam(teams) <= 0) {
             Bukkit.broadcastMessage("§8| §fL'équipe" + teams.getColor() + teams.getName() + " §fest eliminée");
             this.gameManager.getAliveTeams().remove(teams);
-            Bukkit.getOnlinePlayers().forEach(players -> players.playSound(players.getLocation(), Sound.BLAZE_BREATH, 3.0F, 0.0F));
+            Bukkit.getOnlinePlayers()
+                    .forEach(players -> players.playSound(players.getLocation(), Sound.BLAZE_BREATH, 3.0F, 0.0F));
         }
     }
 
@@ -68,14 +72,17 @@ public class TeamManager {
         if (GameUtils.isGameStarted()) {
             List<Player> list = new ArrayList<>();
             for (Player pl : Bukkit.getOnlinePlayers()) {
-                if (this.gameManager.getInGamePlayers().contains(pl.getUniqueId()) && this.playerTeam.containsKey(pl.getUniqueId()) && ((Teams)this.playerTeam.get(pl.getUniqueId())).equals(teams))
+                if (this.gameManager.getInGamePlayers().contains(pl.getUniqueId())
+                        && this.playerTeam.containsKey(pl.getUniqueId())
+                        && ((Teams) this.playerTeam.get(pl.getUniqueId())).equals(teams))
                     list.add(pl);
             }
             return list;
         }
         List<Player> players = new ArrayList<>();
         for (Player pl : Bukkit.getOnlinePlayers()) {
-            if (this.playerTeam.containsKey(pl.getUniqueId()) && ((Teams)this.playerTeam.get(pl.getUniqueId())).equals(teams))
+            if (this.playerTeam.containsKey(pl.getUniqueId())
+                    && ((Teams) this.playerTeam.get(pl.getUniqueId())).equals(teams))
                 players.add(pl);
         }
         return players;
@@ -85,12 +92,15 @@ public class TeamManager {
         int i = 0;
         if (GameUtils.isGameStarted()) {
             for (Player player : Bukkit.getOnlinePlayers()) {
-                if (this.gameManager.getInGamePlayers().contains(player.getUniqueId()) && this.playerTeam.containsKey(player.getUniqueId()) && ((Teams)this.playerTeam.get(player.getUniqueId())).equals(teams))
+                if (this.gameManager.getInGamePlayers().contains(player.getUniqueId())
+                        && this.playerTeam.containsKey(player.getUniqueId())
+                        && ((Teams) this.playerTeam.get(player.getUniqueId())).equals(teams))
                     i++;
             }
         } else {
             for (Player player : Bukkit.getOnlinePlayers()) {
-                if (this.playerTeam.containsKey(player.getUniqueId()) && ((Teams)this.playerTeam.get(player.getUniqueId())).equals(teams))
+                if (this.playerTeam.containsKey(player.getUniqueId())
+                        && ((Teams) this.playerTeam.get(player.getUniqueId())).equals(teams))
                     i++;
             }
         }
@@ -107,12 +117,13 @@ public class TeamManager {
                 for (Player pl : getPlayersInTeam(teams)) {
                     if (pl == players)
                         continue;
-                    if (pl.getLocation().getWorld().getName() == players.getLocation().getWorld().getName()) {
-                        int distance = (int)players.getLocation().distance(pl.getLocation());
-                        send = send + "§a"+ pl.getName() + "§f" + DaMath.getArrow(players.getLocation(), pl.getLocation()) + "§f (" + distance + "m) ";
+                    if (pl.getLocation().getWorld().getName().equals(players.getLocation().getWorld().getName())) {
+                        int distance = (int) players.getLocation().distance(pl.getLocation());
+                        send = send + "§a" + pl.getName() + "§f"
+                                + DaMath.getArrow(players.getLocation(), pl.getLocation()) + "§f (" + distance + "m) ";
                         continue;
                     }
-                    send = send + "§c"+ pl.getName() + " §cPas le même monde ";
+                    send = send + "§c" + pl.getName() + " §cPas le même monde ";
                 }
                 Title.sendActionBar(players, send);
             }

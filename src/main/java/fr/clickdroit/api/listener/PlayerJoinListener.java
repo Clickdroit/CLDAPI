@@ -48,7 +48,8 @@ public class PlayerJoinListener implements Listener {
     }
 
     /**
-     * Méthode simplifiée - la plupart des vérifications sont maintenant gérées par GameAccessListener
+     * Méthode simplifiée - la plupart des vérifications sont maintenant gérées par
+     * GameAccessListener
      */
     @EventHandler(priority = EventPriority.NORMAL)
     private void onPlayerLogin(PlayerLoginEvent event) {
@@ -160,11 +161,9 @@ public class PlayerJoinListener implements Listener {
             int currentPlayers = GameUtils.getPlayerAmount();
             int maxSlots = this.api.getGameManager().getGameConfig().getGameSlot();
 
-            Bukkit.getOnlinePlayers().forEach(players ->
-                    Title.sendActionBar(players,
-                            "§a" + player.getName() + " §fa rejoint la partie §8(§e" +
-                                    currentPlayers + "§8/§e" + maxSlots + "§8)")
-            );
+            Bukkit.getOnlinePlayers().forEach(players -> Title.sendActionBar(players,
+                    "§a" + player.getName() + " §fa rejoint la partie §8(§e" +
+                            currentPlayers + "§8/§e" + maxSlots + "§8)"));
         }
     }
 
@@ -206,7 +205,8 @@ public class PlayerJoinListener implements Listener {
         if (access == GameAccess.CLOSE) {
             if (player.isOp()) {
                 // Message spécialisé pour les OPs qui sont automatiquement hosts
-                if (this.api.getGameManager().getGameHost() != null && this.api.getGameManager().getGameHost().equals(uuid)) {
+                if (this.api.getGameManager().getGameHost() != null
+                        && this.api.getGameManager().getGameHost().equals(uuid)) {
                     player.sendMessage("  §8• §a§lVous êtes le host principal §a(statut OP)");
                 } else {
                     player.sendMessage("  §8• §6§lVous êtes host §6(statut OP)");
@@ -327,11 +327,9 @@ public class PlayerJoinListener implements Listener {
                     int remainingPlayers = GameUtils.getPlayerAmount() - 1;
                     int maxSlots = this.api.getGameManager().getGameConfig().getGameSlot();
 
-                    Bukkit.getOnlinePlayers().forEach(players ->
-                            Title.sendActionBar(players,
-                                    "§c" + player.getName() + " §fa quitté la partie §8(§f" +
-                                            remainingPlayers + "§8/§f" + maxSlots + "§8)")
-                    );
+                    Bukkit.getOnlinePlayers().forEach(players -> Title.sendActionBar(players,
+                            "§c" + player.getName() + " §fa quitté la partie §8(§f" +
+                                    remainingPlayers + "§8/§f" + maxSlots + "§8)"));
                 }
                 break;
 
@@ -346,8 +344,7 @@ public class PlayerJoinListener implements Listener {
                     int disconnectTimeMinutes = disconnectTimeSeconds / 60;
                     event.setQuitMessage(
                             "§f[§c§l?§f] §c" + player.getName() + " §fs'est déconnecté, il dispose de §b" +
-                                    disconnectTimeMinutes + " minute(s) §fpour se reconnecter ou il sera éliminé."
-                    );
+                                    disconnectTimeMinutes + " minute(s) §fpour se reconnecter ou il sera éliminé.");
 
                     // Ajouter à la liste des joueurs hors ligne
                     this.api.getGameManager().getOfflinePlayers().add(uuid);
@@ -370,15 +367,19 @@ public class PlayerJoinListener implements Listener {
 
     /**
      * Démarre le timer de déconnexion pour un joueur
+     * 
+     * @param uuid              UUID du joueur déconnecté
+     * @param disconnectSeconds Temps max de déconnexion en secondes
      */
     private void startDisconnectTimer(UUID uuid, int disconnectSeconds) {
-        int disconnectMinutes = disconnectSeconds / 60; // Convertir en minutes pour le timer
+        // Le timer tourne toutes les minutes (1200 ticks), donc on convertit en minutes
+        final int disconnectMinutes = Math.max(1, disconnectSeconds / 60);
 
         (new BukkitRunnable() {
-            int time = 0;
+            int elapsedMinutes = 0;
 
             public void run() {
-                this.time++;
+                elapsedMinutes++;
 
                 // Si le joueur s'est reconnecté, annuler le timer
                 if (!PlayerJoinListener.this.api.getGameManager().getOfflinePlayers().contains(uuid)) {
@@ -387,7 +388,7 @@ public class PlayerJoinListener implements Listener {
                 }
 
                 // Si le temps est écoulé, éliminer le joueur
-                if (this.time >= disconnectMinutes) {
+                if (elapsedMinutes >= disconnectMinutes) {
                     PlayerJoinListener.this.api.getGameManager().getApi().getModules().onPlayerDieByDisconnect(uuid);
                     cancel();
                 }
