@@ -9,6 +9,7 @@ import fr.clickdroit.api.common.scoreboard.ScoreboardManager;
 import fr.clickdroit.api.config.AdminPanelGUI;
 import fr.clickdroit.api.config.ConfigMainGUI;
 import fr.clickdroit.api.config.ConfigOptionsGUI;
+import fr.clickdroit.api.config.GameModeSelectionGUI;
 import fr.clickdroit.api.config.borderValue.BorderEndSizeGUI;
 import fr.clickdroit.api.config.borderValue.BorderManagerGUI;
 import fr.clickdroit.api.config.borderValue.BorderSpeedGUI;
@@ -162,6 +163,7 @@ public class Common {
         this.main.getRegisteredInventories().put(GameRulesManagerGUI.class, new GameRulesManagerGUI(this.gameManager));
         this.main.getRegisteredInventories().put(ForbiddenItemsGUI.class, new ForbiddenItemsGUI(this.gameManager));
         this.main.getRegisteredInventories().put(DeconnexionTimeGUI.class, new DeconnexionTimeGUI(this.gameManager));
+        this.main.getRegisteredInventories().put(GameModeSelectionGUI.class, new GameModeSelectionGUI());
     }
 
     private void registerNameTag() {
