@@ -8,6 +8,7 @@ import fr.clickdroit.api.config.intValue.SlotsGUI;
 import fr.clickdroit.api.config.teamvalue.TeamManagerGUI;
 import fr.clickdroit.api.game.GameManager;
 import fr.clickdroit.api.game.GameState;
+import fr.clickdroit.api.module.GameModule;
 import fr.clickdroit.api.module.ModuleType;
 import fr.clickdroit.api.utils.CommonString;
 import fr.clickdroit.api.utils.CustomInventory;
@@ -129,10 +130,27 @@ public class ConfigMainGUI implements CustomInventory {
                 .addLore("  §8| §coptions§f/§crègles§f de la partie").addLore("")
                 .addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage()).addLore("").getItem();
 
-        if (!this.gameManager.getModuleManager().getCurrentModule().equals(ModuleType.UHC))
-            slots[4] = (new ItemCreator(Material.PRISMARINE_SHARD)).setName("§8| §fMode de §cjeu").addLore("")
+        // Bouton de sélection de mode de jeu (toujours visible)
+        GameModule activeModule = this.api.getActiveGameModule();
+        String currentModeName = activeModule != null ? 
+                activeModule.getColor() + activeModule.getDisplayName() : 
+                this.gameManager.getModuleManager().getCurrentModule().getColor() + 
+                this.gameManager.getModuleManager().getCurrentModule().getName();
+        int moduleCount = this.api.getModuleRegistry().getModuleCount() + ModuleType.values().length;
+        
+        slots[4] = (new ItemCreator(Material.NETHER_STAR)).setName("§8| §fSélection du §cmode de jeu").addLore("")
+                .addLore(" §8> §fAccès §f: §6§lHost")
+                .addLore(" §8> §fMode actuel §f: " + currentModeName)
+                .addLore(" §8> §fModes disponibles §f: §e" + moduleCount)
+                .addLore("").addLore("  §8| §fPermet de choisir le mode")
+                .addLore("  §8| §fde jeu pour la §cpartie§f.").addLore("")
+                .addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
+                
+        // Bouton de configuration du mode actif (si ce n'est pas UHC standard)
+        if (activeModule != null || !this.gameManager.getModuleManager().getCurrentModule().equals(ModuleType.UHC))
+            slots[3] = (new ItemCreator(Material.PRISMARINE_SHARD)).setName("§8| §fConfig §cmode actif").addLore("")
                     .addLore(" §8> §fAccès §f: §6§lHost")
-                    .addLore(" §8> §fMode §f: §6§l" + this.gameManager.getModuleManager().getCurrentModule().getName())
+                    .addLore(" §8> §fMode §f: " + currentModeName)
                     .addLore("").addLore("  §8| §fPermet de modifier les options")
                     .addLore("  §8| §cliées§f au mode de jeu §aactif§f").addLore("")
                     .addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
@@ -217,6 +235,18 @@ public class ConfigMainGUI implements CustomInventory {
 
     public void onClick(Player player, Inventory inventory, ItemStack clickedItem, int slot, ClickType clickType) {
         if (slot == 2 && clickedItem.getType() == Material.PAPER) {
+            this.api.getModules().openConfig(player);
+            return;
+        }
+
+        // Bouton de sélection de mode de jeu
+        if (slot == 4 && clickedItem.getType() == Material.NETHER_STAR) {
+            this.api.openInventory(player, GameModeSelectionGUI.class);
+            return;
+        }
+        
+        // Bouton de configuration du mode actif
+        if (slot == 3 && clickedItem.getType() == Material.PRISMARINE_SHARD) {
             this.api.getModules().openConfig(player);
             return;
         }
