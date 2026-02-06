@@ -225,13 +225,19 @@ public interface GameModule {
      * @return l'ItemStack de l'icône
      */
     default ItemStack createIcon() {
-        return new fr.clickdroit.api.utils.ItemCreator(getIconMaterial())
+        fr.clickdroit.api.utils.ItemCreator creator = new fr.clickdroit.api.utils.ItemCreator(getIconMaterial())
                 .setDurability(getIconData())
                 .setName(getColor() + getDisplayName())
-                .addLore("")
-                .addLore("§7" + String.join("\n§7", getDescription()))
-                .addLore("")
-                .addLore("§eCliquez pour sélectionner")
-                .getItem();
+                .addLore("");
+        
+        // Ajouter chaque ligne de description séparément
+        for (String line : getDescription()) {
+            creator.addLore("§7" + line);
+        }
+        
+        creator.addLore("")
+                .addLore("§eCliquez pour sélectionner");
+        
+        return creator.getItem();
     }
 }
