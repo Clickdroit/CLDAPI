@@ -20,7 +20,14 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
 
 public class LoadingChunkTask extends BukkitRunnable {
-    private static final Logger LOGGER = API.getAPI() != null ? API.getAPI().getLogger() : Bukkit.getLogger();
+    
+    /**
+     * Obtient le logger de manière lazy pour éviter les problèmes d'initialisation.
+     */
+    private static Logger getLogger() {
+        API api = API.getAPI();
+        return api != null ? api.getLogger() : Bukkit.getLogger();
+    }
     
     // Variables atomiques pour la thread-safety
     private final AtomicLong currentChunkLoad = new AtomicLong(0);
@@ -300,7 +307,7 @@ public class LoadingChunkTask extends BukkitRunnable {
         long elapsedTime = System.currentTimeMillis() - startTime;
         double chunksPerSecond = chunksProcessedInCurrentSecond;
 
-        LOGGER.info(String.format(
+        getLogger().info(String.format(
                 "Pregeneration: %d%% (%d/%d chunks) - %.1f chunks/s - Elapsed: %s",
                 percent, chunksLoaded, totalChunkToLoad, chunksPerSecond, formatTime(elapsedTime)
         ));
@@ -330,7 +337,7 @@ public class LoadingChunkTask extends BukkitRunnable {
             }
 
             // Log final pour le serveur
-            LOGGER.info(String.format(
+            getLogger().info(String.format(
                     "Pregeneration completed! %d chunks loaded in %s",
                     totalChunkToLoad, formatTime(System.currentTimeMillis() - startTime)
             ));
@@ -367,7 +374,7 @@ public class LoadingChunkTask extends BukkitRunnable {
     public void forceStop() {
         finished.set(true);
         cancel();
-        LOGGER.info("Pregeneration force stopped at " + lastProgressPercent + "%");
+        getLogger().info("Pregeneration force stopped at " + lastProgressPercent + "%");
     }
 
     /**

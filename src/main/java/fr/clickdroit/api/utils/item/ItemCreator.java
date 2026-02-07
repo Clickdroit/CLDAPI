@@ -15,9 +15,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ItemCreator {
+    private static final Logger LOGGER = Logger.getLogger(ItemCreator.class.getName());
+    
     private ItemStack item;
     private Player possesseur;
     private String creator_name;
@@ -225,7 +230,7 @@ public class ItemCreator {
                 profileField.set(skullMeta, gameProfile);
                 this.item.setItemMeta(skullMeta);
             } catch (Exception e) {
-                e.printStackTrace();
+                LOGGER.log(Level.WARNING, "Failed to set skull texture", e);
             }
         }
         return this;
@@ -239,7 +244,7 @@ public class ItemCreator {
      */
     private String createTextureValue(String url) {
         String json = "{\"textures\":{\"SKIN\":{\"url\":\"" + url + "\"}}}";
-        return Base64.getEncoder().encodeToString(json.getBytes());
+        return Base64.getEncoder().encodeToString(json.getBytes(StandardCharsets.UTF_8));
     }
 
     /**
@@ -262,7 +267,7 @@ public class ItemCreator {
                 profileField.set(skullMeta, gameProfile);
                 this.item.setItemMeta(skullMeta);
             } catch (Exception e) {
-                e.printStackTrace();
+                LOGGER.log(Level.WARNING, "Failed to set skull texture from URL", e);
             }
         }
         return this;

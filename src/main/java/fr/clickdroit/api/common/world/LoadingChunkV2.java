@@ -11,7 +11,14 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.logging.Logger;
 
 public class LoadingChunkV2 {
-    private static final Logger LOGGER = API.getAPI() != null ? API.getAPI().getLogger() : Bukkit.getLogger();
+    
+    /**
+     * Obtient le logger de manière lazy pour éviter les problèmes d'initialisation.
+     */
+    private static Logger getLogger() {
+        API api = API.getAPI();
+        return api != null ? api.getLogger() : Bukkit.getLogger();
+    }
     
     private final World world;
 
@@ -33,7 +40,7 @@ public class LoadingChunkV2 {
     }
 
     private void load() {
-        LOGGER.info("Starting pregeneration");
+        getLogger().info("Starting pregeneration");
         (new Thread(() -> {
             this.startTime = System.currentTimeMillis();
             this.task = Bukkit.getScheduler().runTaskTimer((Plugin)API.getAPI(), new Runnable() {
@@ -62,7 +69,7 @@ public class LoadingChunkV2 {
                             LoadingChunkV2.this.task.cancel();
                             int calculedTime = Math.round((float)((System.currentTimeMillis() - LoadingChunkV2.this.startTime) / 1000L));
 
-                            LOGGER.info("Finished preload after " + calculedTime + "s");
+                            getLogger().info("Finished preload after " + calculedTime + "s");
                             API.getAPI().getGameManager().setPreloadFinished(true);
 
                             // Notification améliorée aux joueurs
