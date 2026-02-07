@@ -1,0 +1,119 @@
+# Messages français pour CLDAPI
+# Version 1.0
+
+# Préfixes
+prefix: "§8[§6UHC§8] §f"
+error_prefix: "§c"
+success_prefix: "§a"
+
+# Messages généraux
+no_permission: "§cVous n'avez pas la permission d'exécuter cette commande."
+player_only: "§cCette commande ne peut être exécutée que par un joueur."
+player_not_found: "§cJoueur introuvable: {player}"
+invalid_arguments: "§cArguments invalides. Usage: {usage}"
+
+# Messages de jeu
+game:
+  starting: "§eLa partie démarre dans §c{time}§e secondes!"
+  started: "§a§lLA PARTIE A COMMENCÉ!"
+  ended: "§6§lFIN DE LA PARTIE!"
+  already_started: "§cLa partie a déjà commencé."
+  not_started: "§cLa partie n'a pas encore commencé."
+  winner_solo: "§6§l{player} §ea remporté la partie!"
+  winner_team: "§6§lL'équipe {team} §ea remporté la partie!"
+
+# Messages PvP
+pvp:
+  enabled: "§c§l⚔ LE PVP EST DÉSORMAIS ACTIVÉ! ⚔"
+  disabled: "§eLe PvP est désactivé."
+  time_remaining: "§ePvP dans §c{time}"
+  no_pvp: "§cLe PvP n'est pas encore activé!"
+
+# Messages de bordure
+border:
+  shrinking: "§c§l⚠ LA BORDURE COMMENCE À RÉTRÉCIR! ⚠"
+  stopped: "§eLa bordure s'est arrêtée à §c{size}§e blocs."
+  size: "§eTaille de la bordure: §c{size}§e blocs"
+  warning: "§c⚠ Vous êtes proche de la bordure!"
+
+# Messages d'épisode
+episode:
+  change: "§6§l══════ ÉPISODE {episode} ══════"
+  current: "§eÉpisode actuel: §c{episode}"
+
+# Messages de mort
+death:
+  killed_by_player: "§c{player} §fa été tué par §c{killer}§f."
+  killed_by_player_weapon: "§c{player} §fa été tué par §c{killer}§f avec {weapon}§f."
+  killed_by_mob: "§c{player} §fa été tué par un mob."
+  environment: "§c{player} §fest mort."
+  fall: "§c{player} §fest mort de chute."
+  lava: "§c{player} §fa brûlé dans la lave."
+  fire: "§c{player} §fa brûlé vif."
+  drown: "§c{player} §fs'est noyé."
+  disconnect: "§c{player} §fs'est déconnecté trop longtemps et a été éliminé."
+  void: "§c{player} §fest tombé dans le vide."
+
+# Messages d'équipe
+team:
+  joined: "§aVous avez rejoint l'équipe §f{team}§a."
+  left: "§eVous avez quitté votre équipe."
+  full: "§cCette équipe est complète."
+  eliminated: "§cL'équipe §f{team} §ca été éliminée!"
+  already_in: "§cVous êtes déjà dans cette équipe."
+  not_in_team: "§cVous n'êtes pas dans une équipe."
+  chat: "§8[§fÉquipe§8] §f{player}: {message}"
+
+# Messages de scénarios
+scenario:
+  enabled: "§aScénario §f{scenario} §aactivé."
+  disabled: "§eScénario §f{scenario} §edésactivé."
+  list_header: "§6§l═══ SCÉNARIOS ACTIFS ═══"
+  none_active: "§7Aucun scénario actif."
+
+# Messages de configuration
+config:
+  saved: "§aConfiguration sauvegardée."
+  loaded: "§aConfiguration chargée."
+  invalid: "§cConfiguration invalide: {error}"
+  value_changed: "§a{setting} §fmodifié à §c{value}§f."
+
+# Messages d'administration
+admin:
+  host_required: "§cVous devez être host pour exécuter cette commande."
+  host_added: "§a{player} §fest maintenant host."
+  host_removed: "§e{player} §fn'est plus host."
+  player_revived: "§a{player} §fa été ressuscité!"
+  player_kicked: "§c{player} §fa été expulsé."
+  game_force_started: "§eLa partie a été forcée à démarrer."
+
+# Messages de cycle jour/nuit
+cycle:
+  day_start: "§6§l☀ LE SOLEIL SE LÈVE ☀"
+  night_start: "§9§l☾ LA NUIT TOMBE ☾"
+
+# Messages de combat log
+combatlog:
+  enter: "§cVous êtes maintenant en combat! Ne vous déconnectez pas!"
+  exit: "§aVous n'êtes plus en combat."
+  death: "§c{player} §fs'est déconnecté en combat et a été éliminé!"
+
+# Messages de whitelist
+whitelist:
+  added: "§a{player} §fa été ajouté à la whitelist."
+  removed: "§e{player} §fa été retiré de la whitelist."
+  not_whitelisted: "§cVous n'êtes pas sur la whitelist!"
+  enabled: "§aWhitelist activée."
+  disabled: "§eWhitelist désactivée."
+
+# Messages d'inventaire
+inventory:
+  editing: "§eVous êtes maintenant en mode édition."
+  saved: "§aInventaire sauvegardé."
+
+# Messages HelpOp
+helpop:
+  sent: "§aVotre message a été envoyé aux staffs."
+  received: "§c[HelpOp] §f{player}: §e{message}"
+  no_staff: "§cAucun staff en ligne."
+

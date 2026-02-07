@@ -1,0 +1,119 @@
+# English messages for CLDAPI
+# Version 1.0
+
+# Prefixes
+prefix: "§8[§6UHC§8] §f"
+error_prefix: "§c"
+success_prefix: "§a"
+
+# General messages
+no_permission: "§cYou don't have permission to execute this command."
+player_only: "§cThis command can only be executed by a player."
+player_not_found: "§cPlayer not found: {player}"
+invalid_arguments: "§cInvalid arguments. Usage: {usage}"
+
+# Game messages
+game:
+  starting: "§eThe game starts in §c{time}§e seconds!"
+  started: "§a§lTHE GAME HAS STARTED!"
+  ended: "§6§lGAME OVER!"
+  already_started: "§cThe game has already started."
+  not_started: "§cThe game has not started yet."
+  winner_solo: "§6§l{player} §ehas won the game!"
+  winner_team: "§6§lTeam {team} §ehas won the game!"
+
+# PvP messages
+pvp:
+  enabled: "§c§l⚔ PVP IS NOW ENABLED! ⚔"
+  disabled: "§ePvP is disabled."
+  time_remaining: "§ePvP in §c{time}"
+  no_pvp: "§cPvP is not enabled yet!"
+
+# Border messages
+border:
+  shrinking: "§c§l⚠ THE BORDER IS STARTING TO SHRINK! ⚠"
+  stopped: "§eThe border stopped at §c{size}§e blocks."
+  size: "§eBorder size: §c{size}§e blocks"
+  warning: "§c⚠ You are close to the border!"
+
+# Episode messages
+episode:
+  change: "§6§l══════ EPISODE {episode} ══════"
+  current: "§eCurrent episode: §c{episode}"
+
+# Death messages
+death:
+  killed_by_player: "§c{player} §fwas killed by §c{killer}§f."
+  killed_by_player_weapon: "§c{player} §fwas killed by §c{killer}§f with {weapon}§f."
+  killed_by_mob: "§c{player} §fwas killed by a mob."
+  environment: "§c{player} §fdied."
+  fall: "§c{player} §ffell to their death."
+  lava: "§c{player} §fburned in lava."
+  fire: "§c{player} §fburned to death."
+  drown: "§c{player} §fdrowned."
+  disconnect: "§c{player} §fwas disconnected too long and has been eliminated."
+  void: "§c{player} §ffell into the void."
+
+# Team messages
+team:
+  joined: "§aYou joined team §f{team}§a."
+  left: "§eYou left your team."
+  full: "§cThis team is full."
+  eliminated: "§cTeam §f{team} §chas been eliminated!"
+  already_in: "§cYou are already in this team."
+  not_in_team: "§cYou are not in a team."
+  chat: "§8[§fTeam§8] §f{player}: {message}"
+
+# Scenario messages
+scenario:
+  enabled: "§aScenario §f{scenario} §aenabled."
+  disabled: "§eScenario §f{scenario} §edisabled."
+  list_header: "§6§l═══ ACTIVE SCENARIOS ═══"
+  none_active: "§7No active scenarios."
+
+# Configuration messages
+config:
+  saved: "§aConfiguration saved."
+  loaded: "§aConfiguration loaded."
+  invalid: "§cInvalid configuration: {error}"
+  value_changed: "§a{setting} §fchanged to §c{value}§f."
+
+# Administration messages
+admin:
+  host_required: "§cYou must be host to execute this command."
+  host_added: "§a{player} §fis now host."
+  host_removed: "§e{player} §fis no longer host."
+  player_revived: "§a{player} §fhas been revived!"
+  player_kicked: "§c{player} §fhas been kicked."
+  game_force_started: "§eThe game has been force started."
+
+# Day/Night cycle messages
+cycle:
+  day_start: "§6§l☀ THE SUN RISES ☀"
+  night_start: "§9§l☾ NIGHT FALLS ☾"
+
+# Combat log messages
+combatlog:
+  enter: "§cYou are now in combat! Don't disconnect!"
+  exit: "§aYou are no longer in combat."
+  death: "§c{player} §fdisconnected in combat and has been eliminated!"
+
+# Whitelist messages
+whitelist:
+  added: "§a{player} §fhas been added to the whitelist."
+  removed: "§e{player} §fhas been removed from the whitelist."
+  not_whitelisted: "§cYou are not on the whitelist!"
+  enabled: "§aWhitelist enabled."
+  disabled: "§eWhitelist disabled."
+
+# Inventory messages
+inventory:
+  editing: "§eYou are now in edit mode."
+  saved: "§aInventory saved."
+
+# HelpOp messages
+helpop:
+  sent: "§aYour message has been sent to staff."
+  received: "§c[HelpOp] §f{player}: §e{message}"
+  no_staff: "§cNo staff online."
+

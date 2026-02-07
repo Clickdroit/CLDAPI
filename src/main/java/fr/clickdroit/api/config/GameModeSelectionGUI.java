@@ -4,7 +4,6 @@ import fr.clickdroit.api.API;
 import fr.clickdroit.api.config.value.CommonItems;
 import fr.clickdroit.api.game.GameState;
 import fr.clickdroit.api.module.GameModule;
-import fr.clickdroit.api.module.GameModuleAdapter;
 import fr.clickdroit.api.module.ModuleType;
 import fr.clickdroit.api.utils.CommonString;
 import fr.clickdroit.api.utils.CustomInventory;
@@ -24,8 +23,8 @@ import java.util.function.Supplier;
  * <p>
  * Cette interface permet aux hosts de sélectionner le mode de jeu parmi :
  * <ul>
- *   <li>Les modes intégrés (UHC, LG, etc.)</li>
- *   <li>Les modules externes enregistrés par d'autres plugins</li>
+ * <li>Les modes intégrés (UHC, LG, etc.)</li>
+ * <li>Les modules externes enregistrés par d'autres plugins</li>
  * </ul>
  * </p>
  * 
@@ -33,8 +32,8 @@ import java.util.function.Supplier;
  * @version 1.0
  */
 public class GameModeSelectionGUI implements CustomInventory {
-    
-    private static final String EXTERNAL_MODULE_PREFIX = "EXT_";
+
+    private static final String EXTERNAL_MODULE_LORE_PREFIX = "§0§0§0";
 
     @Override
     public String getName() {
@@ -58,15 +57,16 @@ public class GameModeSelectionGUI implements CustomInventory {
         // Module UHC intégré (toujours en premier)
         ModuleType currentModule = api.getGameManager().getModuleManager().getCurrentModule();
         GameModule activeExternalModule = api.getActiveGameModule();
-        
+
         int slotIndex = 10;
 
         // Ajouter les modules intégrés (ModuleType)
         for (ModuleType moduleType : ModuleType.values()) {
-            if (slotIndex >= 35) break; // Éviter de dépasser les slots disponibles
-            
+            if (slotIndex >= 35)
+                break; // Éviter de dépasser les slots disponibles
+
             boolean isSelected = (activeExternalModule == null && currentModule == moduleType);
-            
+
             ItemCreator item = new ItemCreator(moduleType.getMaterial())
                     .setDurability(moduleType.getData())
                     .setName((isSelected ? "§a§l✓ " : "§f") + moduleType.getColor() + moduleType.getName())
@@ -75,31 +75,34 @@ public class GameModeSelectionGUI implements CustomInventory {
                     .addLore(" §8> §fÉquipes §f: " + (moduleType.hasTeam() ? "§aOui" : "§cNon"))
                     .addLore(" §8> §fRôles §f: " + (moduleType.isHasRole() ? "§aOui" : "§cNon"))
                     .addLore("");
-            
+
             if (isSelected) {
                 item.addLore("  §a§lMODE ACTIF")
-                    .addLore("");
+                        .addLore("");
             } else {
                 item.addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage())
-                    .addLore("");
+                        .addLore("");
             }
-            
+
             slots[slotIndex] = item.getItem();
             slotIndex++;
-            
+
             // Sauter les bordures
-            if (slotIndex == 17) slotIndex = 19;
-            if (slotIndex == 26) slotIndex = 28;
+            if (slotIndex == 17)
+                slotIndex = 19;
+            if (slotIndex == 26)
+                slotIndex = 28;
         }
 
         // Ajouter les modules externes
         Collection<GameModule> externalModules = api.getModuleRegistry().getRegisteredModules();
         for (GameModule module : externalModules) {
-            if (slotIndex >= 35) break;
-            
-            boolean isSelected = (activeExternalModule != null && 
+            if (slotIndex >= 35)
+                break;
+
+            boolean isSelected = (activeExternalModule != null &&
                     activeExternalModule.getId().equals(module.getId()));
-            
+
             ItemCreator item = new ItemCreator(module.getIconMaterial())
                     .setDurability(module.getIconData())
                     .setName((isSelected ? "§a§l✓ " : "§f") + module.getColor() + module.getDisplayName())
@@ -115,25 +118,26 @@ public class GameModeSelectionGUI implements CustomInventory {
                 item.addLore("  §7" + line);
             }
             item.addLore("");
-            
+
             if (isSelected) {
                 item.addLore("  §a§lMODE ACTIF")
-                    .addLore("");
+                        .addLore("");
             } else {
                 item.addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage())
-                    .addLore("");
+                        .addLore("");
             }
-            
-            // Utiliser un identifiant spécial pour les modules externes
-            ItemStack itemStack = item.getItem();
-            ItemCreator creator = new ItemCreator(itemStack);
-            creator.setCreator_name(EXTERNAL_MODULE_PREFIX + module.getId());
-            slots[slotIndex] = creator.getItem();
+
+            // Ajouter une ligne cachée pour identifier le module externe
+            item.addLore(EXTERNAL_MODULE_LORE_PREFIX + module.getId());
+
+            slots[slotIndex] = item.getItem();
             slotIndex++;
-            
+
             // Sauter les bordures
-            if (slotIndex == 17) slotIndex = 19;
-            if (slotIndex == 26) slotIndex = 28;
+            if (slotIndex == 17)
+                slotIndex = 19;
+            if (slotIndex == 26)
+                slotIndex = 28;
         }
 
         // Bouton retour
@@ -145,7 +149,7 @@ public class GameModeSelectionGUI implements CustomInventory {
     @Override
     public void onClick(Player player, Inventory inventory, ItemStack clickedItem, int slot, ClickType clickType) {
         API api = API.getAPI();
-        
+
         // Vérifier que la partie n'est pas en cours
         if (!api.getGameManager().getGameState().equals(GameState.WAITING)) {
             player.sendMessage("§cVous ne pouvez pas changer de mode de jeu pendant une partie !");
@@ -159,36 +163,37 @@ public class GameModeSelectionGUI implements CustomInventory {
             return;
         }
 
-        // Vérifier si c'est un module externe
-        ItemCreator itemCreator = new ItemCreator(clickedItem);
-        String creatorName = itemCreator.getCreator_name();
-        
-        if (creatorName != null && creatorName.startsWith(EXTERNAL_MODULE_PREFIX)) {
-            // C'est un module externe
-            String moduleId = creatorName.substring(EXTERNAL_MODULE_PREFIX.length());
-            GameModule module = api.getModuleRegistry().getModule(moduleId);
-            
-            if (module != null) {
-                // Activer le module externe
-                api.setActiveGameModule(module);
-                player.sendMessage("§aMode de jeu changé vers : " + module.getColor() + module.getDisplayName());
-                player.playSound(player.getLocation(), Sound.ORB_PICKUP, 1.0F, 1.0F);
-                api.openInventory(player, getClass());
+        // Vérifier si c'est un module externe (en cherchant dans le lore)
+        if (clickedItem.hasItemMeta() && clickedItem.getItemMeta().hasLore()) {
+            for (String loreLine : clickedItem.getItemMeta().getLore()) {
+                if (loreLine.startsWith(EXTERNAL_MODULE_LORE_PREFIX)) {
+                    String moduleId = loreLine.substring(EXTERNAL_MODULE_LORE_PREFIX.length());
+                    GameModule module = api.getModuleRegistry().getModule(moduleId);
+
+                    if (module != null) {
+                        // Activer le module externe
+                        api.setActiveGameModule(module);
+                        player.sendMessage(
+                                "§aMode de jeu changé vers : " + module.getColor() + module.getDisplayName());
+                        player.playSound(player.getLocation(), Sound.ORB_PICKUP, 1.0F, 1.0F);
+                        api.openInventory(player, getClass());
+                    }
+                    return;
+                }
             }
-            return;
         }
 
         // Sinon, chercher parmi les ModuleType intégrés
         for (ModuleType moduleType : ModuleType.values()) {
-            if (clickedItem.getType() == moduleType.getMaterial() && 
+            if (clickedItem.getType() == moduleType.getMaterial() &&
                     clickedItem.getDurability() == moduleType.getData()) {
-                
+
                 // Désactiver tout module externe actif
                 api.clearActiveGameModule();
-                
+
                 // Définir le module intégré
                 api.getGameManager().getModuleManager().setCurrentModule(moduleType);
-                
+
                 player.sendMessage("§aMode de jeu changé vers : " + moduleType.getColor() + moduleType.getName());
                 player.playSound(player.getLocation(), Sound.ORB_PICKUP, 1.0F, 1.0F);
                 api.openInventory(player, getClass());

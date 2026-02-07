@@ -132,12 +132,11 @@ public class ConfigMainGUI implements CustomInventory {
 
         // Bouton de sélection de mode de jeu (toujours visible)
         GameModule activeModule = this.api.getActiveGameModule();
-        String currentModeName = activeModule != null ? 
-                activeModule.getColor() + activeModule.getDisplayName() : 
-                this.gameManager.getModuleManager().getCurrentModule().getColor() + 
-                this.gameManager.getModuleManager().getCurrentModule().getName();
+        String currentModeName = activeModule != null ? activeModule.getColor() + activeModule.getDisplayName()
+                : this.gameManager.getModuleManager().getCurrentModule().getColor() +
+                        this.gameManager.getModuleManager().getCurrentModule().getName();
         int moduleCount = this.api.getModuleRegistry().getModuleCount() + ModuleType.values().length;
-        
+
         slots[4] = (new ItemCreator(Material.NETHER_STAR)).setName("§8| §fSélection du §cmode de jeu").addLore("")
                 .addLore(" §8> §fAccès §f: §6§lHost")
                 .addLore(" §8> §fMode actuel §f: " + currentModeName)
@@ -145,7 +144,7 @@ public class ConfigMainGUI implements CustomInventory {
                 .addLore("").addLore("  §8| §fPermet de choisir le mode")
                 .addLore("  §8| §fde jeu pour la §cpartie§f.").addLore("")
                 .addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
-                
+
         // Bouton de configuration du mode actif (si ce n'est pas UHC standard)
         if (activeModule != null || !this.gameManager.getModuleManager().getCurrentModule().equals(ModuleType.UHC))
             slots[3] = (new ItemCreator(Material.PRISMARINE_SHARD)).setName("§8| §fConfig §cmode actif").addLore("")
@@ -206,11 +205,6 @@ public class ConfigMainGUI implements CustomInventory {
             slots[2] = (new ItemCreator(Material.PAPER)).setName("§8| §fPré-Config §f(§c§lNARUTO§f)").addLore("")
                     .addLore(" ").addLore("").addLore("  d'acc").addLore(" ").addLore("")
                     .addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
-        } else if (this.gameManager.getModuleManager().getCurrentModule().equals(ModuleType.SOLOLEVELING)) {
-            slots[2] = (new ItemCreator(Material.PAPER)).setName("§8| §fPré-Config §f(§c§lSOLO LEVELING§f)").addLore("")
-                    .addLore(" §8> §fAccès §f: §6§lHost").addLore("").addLore("  §8| §fPermet d'accéder à")
-                    .addLore(" §8| §fvos §cconfigurations§f.").addLore("")
-                    .addLore(CommonString.CLICK_HERE_TO_ACCESS.getMessage()).addLore("").getItem();
         } else {
             slots[2] = (new ItemCreator(Material.PAPER)).setName("§8| §fPré-Config §f(§c§lUHC§f)").addLore("")
                     .addLore(" dans ce mode.").addLore("").getItem();
@@ -244,10 +238,16 @@ public class ConfigMainGUI implements CustomInventory {
             this.api.openInventory(player, GameModeSelectionGUI.class);
             return;
         }
-        
+
         // Bouton de configuration du mode actif
         if (slot == 3 && clickedItem.getType() == Material.PRISMARINE_SHARD) {
-            this.api.getModules().openConfig(player);
+            // Vérifier si un module externe est actif
+            fr.clickdroit.api.module.GameModule activeModule = this.api.getActiveGameModule();
+            if (activeModule != null) {
+                activeModule.openConfig(player);
+            } else {
+                this.api.getModules().openConfig(player);
+            }
             return;
         }
 

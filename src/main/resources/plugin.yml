@@ -2,11 +2,6 @@ name: UHCAPI
 main: fr.clickdroit.api.API
 version: 1.0
 author: clickdroit
-description: API UHC permettant l'intégration de modes de jeu personnalisés
-api-version: 1.8
-load: STARTUP
-loadbefore: []
-softdepend: []
 commands:
   enchant:
   finish:

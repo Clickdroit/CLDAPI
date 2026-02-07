@@ -199,6 +199,22 @@ public class ItemCreator {
         return this;
     }
 
+    /**
+     * Ajoute un effet de brillance (glow) à l'item.
+     * Utilise un enchantement caché pour créer l'effet visuel.
+     *
+     * @return this pour le chaînage
+     */
+    public ItemCreator addGlowEffect() {
+        ItemMeta meta = this.item.getItemMeta();
+        if (meta != null) {
+            meta.addEnchant(Enchantment.DURABILITY, 1, true);
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            this.item.setItemMeta(meta);
+        }
+        return this;
+    }
+
     // Méthodes pour les têtes de joueur
     public ItemCreator setSkull(String textureValue) {
         if (this.item.getType() == Material.SKULL_ITEM) {

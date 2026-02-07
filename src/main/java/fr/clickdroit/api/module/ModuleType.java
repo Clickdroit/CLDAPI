@@ -8,10 +8,9 @@ public enum ModuleType {
     DEMONSLAYER("Demon Slayer", "§6", Material.BLAZE_POWDER, 0, true, false, false),
     CODEGEASS("Code Geass", "", Material.COMPASS, 0, false, false, false),
     HUNTERXHUNTER("Hunter X Hunter", "", Material.VINE, 0, true, false, false),
-    LG("Loup-Garou", "§c", Material.VINE, 0, true, false, false),
+    LG("Loup-Garou", "§c", Material.PUMPKIN, 0, true, false, false),
     JJK("Jujutsu", "§5", Material.BLAZE_POWDER, 0, true, false, false),
-    NARUTO("Naruto", "§e", Material.VINE, 0, true, false, false),
-    SOLOLEVELING("Solo Leveling", "§5", Material.EYE_OF_ENDER, 0, true, false, true);
+    NARUTO("Naruto", "§e", Material.GLOWSTONE_DUST, 0, true, false, false);
 
     private String name;
 

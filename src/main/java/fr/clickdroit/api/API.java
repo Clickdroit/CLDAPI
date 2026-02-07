@@ -8,10 +8,15 @@ import fr.clickdroit.api.common.Common;
 import fr.clickdroit.api.game.GameManager;
 import fr.clickdroit.api.listener.ReconnectListener;
 import fr.clickdroit.api.module.GameModule;
-import fr.clickdroit.api.module.GameModuleAdapter;
 import fr.clickdroit.api.module.GameModuleRegistry;
 import fr.clickdroit.api.module.Modules;
 import fr.clickdroit.api.module.games.UHCModule;
+import fr.clickdroit.api.i18n.MessageProvider;
+import fr.clickdroit.api.i18n.Messages;
+import fr.clickdroit.api.registry.CommandRegistry;
+import fr.clickdroit.api.service.GameService;
+import fr.clickdroit.api.service.ServiceManager;
+import fr.clickdroit.api.service.impl.*;
 import fr.clickdroit.api.utils.CustomInventory;
 import fr.clickdroit.api.utils.HologramCreate;
 import fr.clickdroit.api.utils.TabHandler;
@@ -51,21 +56,15 @@ import org.bukkit.scoreboard.Scoreboard;
  * GameManager gameManager = api.getGameManager();
  * }</pre>
  * 
- * <h3>Enregistrer un module externe :</h3>
- * <pre>{@code
- * // Dans votre plugin externe
- * API api = API.getAPI();
- * api.getModuleRegistry().registerModule(new MonModule(this));
- * }</pre>
- * 
  * @author Clickdroit
  * @version 1.0
  * @see GameManager
  * @see Modules
- * @see GameModuleRegistry
  */
 public class API extends JavaPlugin {
     private static API api;
+
+    private ServiceManager serviceManager;
 
     private GameManager gameManager;
 
@@ -85,6 +84,10 @@ public class API extends JavaPlugin {
 
     private GameModule activeGameModule;
 
+    private MessageProvider messageProvider;
+
+    private CommandRegistry commandRegistry;
+
     public static API getAPI() {
         return api;
     }
@@ -95,12 +98,24 @@ public class API extends JavaPlugin {
 
     public void onEnable() {
         api = this;
+
+        // Initialiser le système de messages
+        Messages.init(this);
+        this.messageProvider = Messages.getProvider();
+
+        // Initialiser le ServiceManager
+        this.serviceManager = new ServiceManager(this);
+        registerServices();
+
+        // Initialiser le CommandRegistry
+        this.commandRegistry = new CommandRegistry(this);
+
         ((World) getServer().getWorlds().get(0)).getPopulators().add(new Generator());
         this.gameManager = new GameManager(this);
-        this.moduleRegistry = new GameModuleRegistry(this);
         this.lobbyPopulator = new LobbyPopulator(this);
         this.common = new Common(this);
         this.common.load();
+        this.moduleRegistry = new GameModuleRegistry(this);
         setModules((Modules) new UHCModule(this));
         this.scoreboard = getServer().getScoreboardManager().getMainScoreboard();
         this.tabHandler = new TabHandler();
@@ -117,12 +132,51 @@ public class API extends JavaPlugin {
         }
         (new HologramCreate()).create();
         Bukkit.getPluginManager().registerEvents((Listener) new ReconnectListener(this.gameManager), (Plugin) this);
-        
-        getLogger().info("CLDAPI activé - Registre de modules prêt pour les plugins externes");
+
+        // Initialiser tous les services
+        this.serviceManager.initializeAll();
+
+        getLogger().info("CLDAPI v" + getDescription().getVersion() + " activé avec succès!");
+    }
+
+    /**
+     * Enregistre tous les services de l'API.
+     */
+    private void registerServices() {
+        serviceManager.registerService(ConfigService.class, new ConfigService());
+        serviceManager.registerService(PlayerService.class, new PlayerService());
+        serviceManager.registerService(TeamService.class, new TeamService());
+        serviceManager.registerService(ScenarioService.class, new ScenarioService());
+        serviceManager.registerService(BorderService.class, new BorderService());
     }
 
     public void onDisable() {
+        // Arrêter tous les services
+        if (this.serviceManager != null) {
+            this.serviceManager.shutdownAll();
+        }
         this.common.onDisable();
+        getLogger().info("CLDAPI désactivé.");
+    }
+
+    /**
+     * Retourne le gestionnaire de services.
+     *
+     * @return le ServiceManager
+     */
+    public ServiceManager getServiceManager() {
+        return this.serviceManager;
+    }
+
+    /**
+     * Raccourci pour récupérer un service.
+     *
+     * @param <T> le type du service
+     * @param serviceClass la classe du service
+     * @return l'instance du service
+     */
+    public <T extends GameService> T getService(Class<T> serviceClass) {
+        return this.serviceManager.getService(serviceClass);
     }
 
     public Common getCommon() {
@@ -174,73 +228,43 @@ public class API extends JavaPlugin {
         return this.tabHandler;
     }
 
-    /**
-     * Récupère le registre des modules de jeu.
-     * <p>
-     * Utilisez ce registre pour enregistrer des modules de jeu personnalisés
-     * depuis des plugins externes.
-     * </p>
-     * 
-     * @return le registre des modules
-     */
     public GameModuleRegistry getModuleRegistry() {
         return this.moduleRegistry;
     }
 
-    /**
-     * Récupère le module de jeu externe actuellement actif.
-     * 
-     * @return le module externe actif, ou null si un module intégré est utilisé
-     */
     public GameModule getActiveGameModule() {
         return this.activeGameModule;
     }
 
-    /**
-     * Définit et active un module de jeu externe.
-     * <p>
-     * Cette méthode crée un adaptateur pour permettre au module externe
-     * de fonctionner avec le système de modules interne.
-     * </p>
-     * 
-     * @param module le module externe à activer
-     */
     public void setActiveGameModule(GameModule module) {
-        if (module == null) {
-            clearActiveGameModule();
-            return;
-        }
-        
         this.activeGameModule = module;
-        
-        // Créer un adaptateur pour le module externe
-        GameModuleAdapter adapter = new GameModuleAdapter(module, this);
-        setModules(adapter);
-        
-        // Appeler onEnable du module
-        try {
+        if (module != null) {
             module.onEnable(this);
-            getLogger().info("Module externe '" + module.getDisplayName() + "' activé");
-        } catch (Exception e) {
-            getLogger().severe("Erreur lors de l'activation du module '" + module.getId() + "': " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
-    /**
-     * Désactive le module externe actif et revient au module UHC par défaut.
-     */
     public void clearActiveGameModule() {
         if (this.activeGameModule != null) {
-            try {
-                this.activeGameModule.onDisable(this);
-            } catch (Exception e) {
-                getLogger().warning("Erreur lors de la désactivation du module: " + e.getMessage());
-            }
-            this.activeGameModule = null;
+            this.activeGameModule.onDisable(this);
         }
-        
-        // Revenir au module UHC par défaut
-        setModules(new UHCModule(this));
+        this.activeGameModule = null;
+    }
+
+    /**
+     * Retourne le fournisseur de messages internationalisés.
+     *
+     * @return le MessageProvider
+     */
+    public MessageProvider getMessageProvider() {
+        return this.messageProvider;
+    }
+
+    /**
+     * Retourne le registre des commandes.
+     *
+     * @return le CommandRegistry
+     */
+    public CommandRegistry getCommandRegistry() {
+        return this.commandRegistry;
     }
 }
