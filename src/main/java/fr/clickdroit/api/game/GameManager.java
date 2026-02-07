@@ -251,7 +251,7 @@ public class GameManager {
         if (!this.gameState.equals(GameState.STARTING))
             return;
 
-        System.out.println("[UHC] Starting game..");
+        API.getAPI().getLogger().info("Starting game..");
         setGameState(GameState.TELEPORTATION);
 
         // Nettoyage optimisé des listes

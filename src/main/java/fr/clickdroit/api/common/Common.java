@@ -117,6 +117,19 @@ public class Common {
         this.main.getCommand("groupe").setExecutor((CommandExecutor)new GroupeCommand(this.gameManager));
         this.main.getCommand("near").setExecutor((CommandExecutor)new NearCommand(this.gameManager));
         this.main.getCommand("vanish").setExecutor((CommandExecutor)new VanishCommand(this.gameManager));
+        
+        // Nouvelles commandes
+        GameConfigCommand gameConfigCommand = new GameConfigCommand(this.main);
+        this.main.getCommand("gameconfig").setExecutor((CommandExecutor)gameConfigCommand);
+        this.main.getCommand("gameconfig").setTabCompleter(gameConfigCommand);
+        
+        SpectateCommand spectateCommand = new SpectateCommand(this.main);
+        this.main.getCommand("spectate").setExecutor((CommandExecutor)spectateCommand);
+        this.main.getCommand("spectate").setTabCompleter(spectateCommand);
+        
+        HealCommand healCommand = new HealCommand(this.main);
+        this.main.getCommand("heal").setExecutor((CommandExecutor)healCommand);
+        this.main.getCommand("heal").setTabCompleter(healCommand);
     }
 
     private void registerListeners() {

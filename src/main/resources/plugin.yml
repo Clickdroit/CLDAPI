@@ -33,6 +33,14 @@ commands:
     aliases: [ groupes ]
   near:
     aliases: [ playersnear,playernear ]
+  gameconfig:
+    aliases: [ gc, gconfig ]
+    description: Gérer les configurations de partie
+  spectate:
+    aliases: [ spec ]
+    description: Mode spectateur et téléportation
+  heal:
+    description: Soigner un joueur ou tous les joueurs
 permissions:
   uhc.host:
     description: Accès aux commandes host

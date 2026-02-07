@@ -240,7 +240,7 @@ public class GameConfig {
 
     public void setGameAccess(GameAccess gameAccess) {
         this.gameAccess = gameAccess;
-        System.out.println("Game access changed to: " + gameAccess.getMessage());
+        this.gameManager.getApi().getLogger().info("Game access changed to: " + gameAccess.getMessage());
     }
     public void toggleGameAccess() {
         if (this.gameAccess == GameAccess.OPEN) {
