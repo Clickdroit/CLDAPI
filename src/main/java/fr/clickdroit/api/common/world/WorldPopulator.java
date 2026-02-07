@@ -12,11 +12,16 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.logging.Logger;
 
 public class WorldPopulator {
     private final GameManager gameManager;
 
     private final World gameWorld;
+    
+    private Logger getLogger() {
+        return gameManager.getApi().getLogger();
+    }
 
     public WorldPopulator(GameManager gameManager) {
         this.gameManager = gameManager;
@@ -35,7 +40,7 @@ public class WorldPopulator {
                 public void run() {
                     int radius = 250;
                     if (this.progress == 0)
-                        System.out.println("[UHC] Nettoyage du centre de la carte..");
+                        getLogger().info("Nettoyage du centre de la carte..");
                     for (int x = 0 - radius; x <= 0 + radius; x++) {
                         for (int z = 0 - radius; z <= 0 + radius; z++) {
                             Block block = WorldPopulator.this.gameWorld.getBlockAt(x, this.YChange, z);
@@ -56,7 +61,7 @@ public class WorldPopulator {
                                 ProgressBar.getProgressBar(this.progress, 80, 20, "|", ChatColor.YELLOW, ChatColor.GRAY) + "§8]");
                     if (this.progress >= 80) {
                         cancel();
-                        System.out.println("[UHC] Nettoyage du centre de la carte terminé !");
+                        getLogger().info("Nettoyage du centre de la carte terminé !");
                         WorldPopulator.this.addSapling();
                     }
                 }
@@ -67,7 +72,7 @@ public class WorldPopulator {
     }
 
     private void addSapling() {
-        System.out.println("[UHC] Plantage d'arbres au centre de la carte..");
+        getLogger().info("Plantage d'arbres au centre de la carte..");
         (new Thread(() -> (new BukkitRunnable() {
             int yInicial = 50;
 

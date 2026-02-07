@@ -17,6 +17,11 @@ import org.bukkit.inventory.meta.SkullMeta;
 import java.lang.reflect.Field;
 import java.util.*;
 
+/**
+ * @deprecated Cette classe est dupliquée. Utilisez {@link fr.clickdroit.api.utils.item.ItemCreator} à la place.
+ * Cette classe sera supprimée dans une future version.
+ */
+@Deprecated
 public class ItemCreator {
     private ItemStack item;
     private Player possesseur;

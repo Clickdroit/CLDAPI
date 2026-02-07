@@ -17,8 +17,11 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.logging.Logger;
 
 public class LoadingChunkTask extends BukkitRunnable {
+    private static final Logger LOGGER = API.getAPI() != null ? API.getAPI().getLogger() : Bukkit.getLogger();
+    
     // Variables atomiques pour la thread-safety
     private final AtomicLong currentChunkLoad = new AtomicLong(0);
     private final AtomicInteger lastReportedPercent = new AtomicInteger(0);
@@ -297,8 +300,8 @@ public class LoadingChunkTask extends BukkitRunnable {
         long elapsedTime = System.currentTimeMillis() - startTime;
         double chunksPerSecond = chunksProcessedInCurrentSecond;
 
-        System.out.println(String.format(
-                "[UHC] Pregeneration: %d%% (%d/%d chunks) - %.1f chunks/s - Elapsed: %s",
+        LOGGER.info(String.format(
+                "Pregeneration: %d%% (%d/%d chunks) - %.1f chunks/s - Elapsed: %s",
                 percent, chunksLoaded, totalChunkToLoad, chunksPerSecond, formatTime(elapsedTime)
         ));
     }
@@ -327,8 +330,8 @@ public class LoadingChunkTask extends BukkitRunnable {
             }
 
             // Log final pour le serveur
-            System.out.println(String.format(
-                    "[UHC] Pregeneration completed! %d chunks loaded in %s",
+            LOGGER.info(String.format(
+                    "Pregeneration completed! %d chunks loaded in %s",
                     totalChunkToLoad, formatTime(System.currentTimeMillis() - startTime)
             ));
 
@@ -364,7 +367,7 @@ public class LoadingChunkTask extends BukkitRunnable {
     public void forceStop() {
         finished.set(true);
         cancel();
-        System.out.println("[UHC] Pregeneration force stopped at " + lastProgressPercent + "%");
+        LOGGER.info("Pregeneration force stopped at " + lastProgressPercent + "%");
     }
 
     /**
