@@ -15,9 +15,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ItemCreator {
+    private static final Logger LOGGER = Logger.getLogger(ItemCreator.class.getName());
+    
     private ItemStack item;
     private Player possesseur;
     private String creator_name;
@@ -196,11 +201,27 @@ public class ItemCreator {
         return this;
     }
 
+    /**
+     * Ajoute un effet de brillance (glow) à l'item.
+     * Utilise un enchantement caché pour créer l'effet visuel.
+     *
+     * @return this pour le chaînage
+     */
+    public ItemCreator addGlowEffect() {
+        ItemMeta meta = this.item.getItemMeta();
+        if (meta != null) {
+            meta.addEnchant(Enchantment.DURABILITY, 1, true);
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            this.item.setItemMeta(meta);
+        }
+        return this;
+    }
+
     // Méthodes pour les têtes de joueur
     public ItemCreator setSkull(String textureValue) {
         if (this.item.getType() == Material.SKULL_ITEM) {
             SkullMeta skullMeta = (SkullMeta) this.item.getItemMeta();
-            GameProfile gameProfile = new GameProfile(UUID.randomUUID(), "domei_heads");
+            GameProfile gameProfile = new GameProfile(UUID.randomUUID(), "clickdroit_heads");
             gameProfile.getProperties().put("textures", new Property("textures", textureValue));
 
             try {
@@ -209,7 +230,44 @@ public class ItemCreator {
                 profileField.set(skullMeta, gameProfile);
                 this.item.setItemMeta(skullMeta);
             } catch (Exception e) {
-                e.printStackTrace();
+                LOGGER.log(Level.WARNING, "Failed to set skull texture", e);
+            }
+        }
+        return this;
+    }
+
+    /**
+     * Crée une valeur de texture encodée en Base64 à partir d'une URL.
+     *
+     * @param url l'URL de la texture de la tête
+     * @return la valeur de texture encodée en Base64
+     */
+    private String createTextureValue(String url) {
+        String json = "{\"textures\":{\"SKIN\":{\"url\":\"" + url + "\"}}}";
+        return Base64.getEncoder().encodeToString(json.getBytes(StandardCharsets.UTF_8));
+    }
+
+    /**
+     * Définit la texture de la tête à partir d'une URL.
+     *
+     * @param url l'URL de la texture de la tête
+     * @return this pour le chaînage
+     */
+    public ItemCreator setSkullURL(String url) {
+        if (this.item.getType() == Material.SKULL_ITEM) {
+            SkullMeta skullMeta = (SkullMeta) this.item.getItemMeta();
+            String textureValue = createTextureValue(url);
+
+            GameProfile gameProfile = new GameProfile(UUID.randomUUID(), "clickdroit_heads");
+            gameProfile.getProperties().put("textures", new Property("textures", textureValue));
+
+            try {
+                Field profileField = skullMeta.getClass().getDeclaredField("profile");
+                profileField.setAccessible(true);
+                profileField.set(skullMeta, gameProfile);
+                this.item.setItemMeta(skullMeta);
+            } catch (Exception e) {
+                LOGGER.log(Level.WARNING, "Failed to set skull texture from URL", e);
             }
         }
         return this;

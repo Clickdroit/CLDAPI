@@ -18,6 +18,12 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.*;
 
 public class SuperHeroes extends ScenarioManager implements Listener {
+    /**
+     * Durée infinie pour les effets de potion (en ticks).
+     * 255555 ticks ≈ 3.5 heures de jeu.
+     */
+    private static final int INFINITE_POTION_DURATION = 255555;
+    
     private final Map<UUID, String> player_effect = new HashMap<>();
 
     @EventHandler
@@ -60,7 +66,7 @@ public class SuperHeroes extends ScenarioManager implements Listener {
                 list.add(players);
         }
         List<String> effects = new ArrayList<>();
-        effects.add("Strenght");
+        effects.add("Strength");
         effects.add("Speed");
         effects.add("Jump");
         effects.add("DoubleHealth");
@@ -70,20 +76,26 @@ public class SuperHeroes extends ScenarioManager implements Listener {
             String effect = effects.get((new Random()).nextInt(effects.size()));
             this.player_effect.put(players.getUniqueId(), effect);
             switch (effect) {
-                case "Strenght":
-                    players.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 255555, 0, true, false));
+                case "Strength":
+                    players.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, INFINITE_POTION_DURATION, 0, true, false));
+                    break;
                 case "Speed":
-                    players.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 255555, 1, true, false));
+                    players.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, INFINITE_POTION_DURATION, 1, true, false));
+                    break;
                 case "Jump":
-                    players.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 255555, 3, true, false));
-                    players.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 255555, 0, true, false));
+                    players.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, INFINITE_POTION_DURATION, 3, true, false));
+                    players.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, INFINITE_POTION_DURATION, 0, true, false));
+                    break;
                 case "Resistance":
-                    players.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 255555, 0, true, false));
+                    players.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, INFINITE_POTION_DURATION, 0, true, false));
+                    break;
                 case "DoubleHealth":
                     players.setMaxHealth(40.0D);
                     players.setHealth(40.0D);
+                    break;
                 case "Invisibility":
-                    players.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 255555, 0, true, false));
+                    players.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, INFINITE_POTION_DURATION, 0, true, false));
+                    break;
             }
         }
     }
