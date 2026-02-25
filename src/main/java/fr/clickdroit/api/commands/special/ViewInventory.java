@@ -3,7 +3,7 @@ package fr.clickdroit.api.commands.special;
 import fr.clickdroit.api.API;
 import fr.clickdroit.api.GamePlayer;
 import fr.clickdroit.api.utils.Chrono;
-import fr.clickdroit.api.utils.ItemCreator;
+import fr.clickdroit.api.utils.item.ItemCreator;
 import fr.clickdroit.api.utils.TranslateEffect;
 import fr.clickdroit.api.utils.gui.GUIView;
 import java.util.ArrayList;

@@ -12,7 +12,7 @@ import fr.clickdroit.api.module.GameModule;
 import fr.clickdroit.api.module.ModuleType;
 import fr.clickdroit.api.utils.CommonString;
 import fr.clickdroit.api.utils.CustomInventory;
-import fr.clickdroit.api.utils.ItemCreator;
+import fr.clickdroit.api.utils.item.ItemCreator;
 import fr.clickdroit.api.utils.Title;
 import fr.clickdroit.api.worlds.BiomeChanger;
 import org.bukkit.Bukkit;
@@ -340,7 +340,7 @@ public class ConfigMainGUI implements CustomInventory {
                 this.api.openInventory(player, ConfigOptionsGUI.class);
                 break;
             case BOOK:
-                this.api.getCommon().getScenariosGUI().openInventory(player, 1);
+                this.api.getCommon().getScenariosGUI().openInventory(player);
                 break;
             case WATCH:
                 GameAccess currentAccess = this.gameConfig.getGameAccess();

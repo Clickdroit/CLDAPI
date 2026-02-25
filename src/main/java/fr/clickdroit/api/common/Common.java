@@ -34,6 +34,11 @@ import fr.clickdroit.api.config.timevalue.BorderTimeGUI;
 import fr.clickdroit.api.config.timevalue.EpisodeTimeGUI;
 import fr.clickdroit.api.config.timevalue.PvPTimeGUI;
 import fr.clickdroit.api.game.GameListener;
+import fr.clickdroit.api.game.listeners.BlockListener;
+import fr.clickdroit.api.game.listeners.InventoryListener;
+import fr.clickdroit.api.game.listeners.PlayerEnvironmentListener;
+import fr.clickdroit.api.game.listeners.PvPListener;
+import fr.clickdroit.api.game.listeners.WorldListener;
 import fr.clickdroit.api.game.GameManager;
 import fr.clickdroit.api.game.team.Teams;
 import fr.clickdroit.api.listener.*;
@@ -90,63 +95,70 @@ public class Common {
         registerInventories();
         registerNameTag();
         this.gameManager.getWorldPopulator().getGameWorld().setGameRuleValue("doFireTick", "false");
-        InventoryAPI.items = InventoryConvetor.inventoryFromBase64("rO0ABXcEAAAAKHBwcHBwcHNyABpvcmcuYnVra2l0LnV0aWwuaW8uV3JhcHBlcvJQR+zxEm8FAgABTAADbWFwdAAPTGphdmEvdXRpbC9NYXA7eHBzcgA1Y29tLmdvb2dsZS5jb21tb24uY29sbGVjdC5JbW11dGFibGVNYXAkU2VyaWFsaXplZEZvcm0AAAAAAAAAAAIAAlsABGtleXN0ABNbTGphdmEvbGFuZy9PYmplY3Q7WwAGdmFsdWVzcQB+AAR4cHVyABNbTGphdmEubGFuZy5PYmplY3Q7kM5YnxBzKWwCAAB4cAAAAAJ0AAI9PXQABHR5cGV1cQB+AAYAAAACdAAeb3JnLmJ1a2tpdC5pbnZlbnRvcnkuSXRlbVN0YWNrdAAMV0FURVJfQlVDS0VUc3EAfgAAc3EAfgADdXEAfgAGAAAAA3EAfgAIcQB+AAl0AAZhbW91bnR1cQB+AAYAAAADcQB+AAt0AAtDT09LRURfQkVFRnNyABFqYXZhLmxhbmcuSW50ZWdlchLioKT3gYc4AgABSQAFdmFsdWV4cgAQamF2YS5sYW5nLk51bWJlcoaslR0LlOCLAgAAeHAAAABAc3EAfgAAc3EAfgADdXEAfgAGAAAAA3EAfgAIcQB+AAlxAH4AEHVxAH4ABgAAAANxAH4AC3QABEJPT0tzcQB+ABMAAAAHcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcA==");
+        InventoryAPI.items = InventoryConvetor.inventoryFromBase64(
+                "rO0ABXcEAAAAKHBwcHBwcHNyABpvcmcuYnVra2l0LnV0aWwuaW8uV3JhcHBlcvJQR+zxEm8FAgABTAADbWFwdAAPTGphdmEvdXRpbC9NYXA7eHBzcgA1Y29tLmdvb2dsZS5jb21tb24uY29sbGVjdC5JbW11dGFibGVNYXAkU2VyaWFsaXplZEZvcm0AAAAAAAAAAAIAAlsABGtleXN0ABNbTGphdmEvbGFuZy9PYmplY3Q7WwAGdmFsdWVzcQB+AAR4cHVyABNbTGphdmEubGFuZy5PYmplY3Q7kM5YnxBzKWwCAAB4cAAAAAJ0AAI9PXQABHR5cGV1cQB+AAYAAAACdAAeb3JnLmJ1a2tpdC5pbnZlbnRvcnkuSXRlbVN0YWNrdAAMV0FURVJfQlVDS0VUc3EAfgAAc3EAfgADdXEAfgAGAAAAA3EAfgAIcQB+AAl0AAZhbW91bnR1cQB+AAYAAAADcQB+AAt0AAtDT09LRURfQkVFRnNyABFqYXZhLmxhbmcuSW50ZWdlchLioKT3gYc4AgABSQAFdmFsdWV4cgAQamF2YS5sYW5nLk51bWJlcoaslR0LlOCLAgAAeHAAAABAc3EAfgAAc3EAfgADdXEAfgAGAAAAA3EAfgAIcQB+AAlxAH4AEHVxAH4ABgAAAANxAH4AC3QABEJPT0tzcQB+ABMAAAAHcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcA==");
         InventoryAPI.inventoryContents = "rO0ABXcEAAAAKHBwcHBwcHNyABpvcmcuYnVra2l0LnV0aWwuaW8uV3JhcHBlcvJQR+zxEm8FAgABTAADbWFwdAAPTGphdmEvdXRpbC9NYXA7eHBzcgA1Y29tLmdvb2dsZS5jb21tb24uY29sbGVjdC5JbW11dGFibGVNYXAkU2VyaWFsaXplZEZvcm0AAAAAAAAAAAIAAlsABGtleXN0ABNbTGphdmEvbGFuZy9PYmplY3Q7WwAGdmFsdWVzcQB+AAR4cHVyABNbTGphdmEubGFuZy5PYmplY3Q7kM5YnxBzKWwCAAB4cAAAAAJ0AAI9PXQABHR5cGV1cQB+AAYAAAACdAAeb3JnLmJ1a2tpdC5pbnZlbnRvcnkuSXRlbVN0YWNrdAAMV0FURVJfQlVDS0VUc3EAfgAAc3EAfgADdXEAfgAGAAAAA3EAfgAIcQB+AAl0AAZhbW91bnR1cQB+AAYAAAADcQB+AAt0AAtDT09LRURfQkVFRnNyABFqYXZhLmxhbmcuSW50ZWdlchLioKT3gYc4AgABSQAFdmFsdWV4cgAQamF2YS5sYW5nLk51bWJlcoaslR0LlOCLAgAAeHAAAABAc3EAfgAAc3EAfgADdXEAfgAGAAAAA3EAfgAIcQB+AAlxAH4AEHVxAH4ABgAAAANxAH4AC3QABEJPT0tzcQB+ABMAAAAHcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcA==";
     }
 
     private void registerCommands() {
-        this.main.getCommand("host").setExecutor((CommandExecutor)new HostCommand(this.gameManager));
-        this.main.getCommand("finish").setExecutor((CommandExecutor)new FinishCommand(this.gameManager));
-        this.main.getCommand("enchant").setExecutor((CommandExecutor)this.enchantCommand);
-        this.main.getCommand("scenario").setExecutor((CommandExecutor)this.scenarioCommand);
-        this.main.getCommand("helpop").setExecutor((CommandExecutor)new HelpopCommand());
-        this.main.getCommand("revive").setExecutor((CommandExecutor)new ReviveCommand(this.main));
-        this.main.getCommand("inv").setExecutor((CommandExecutor)this.invCommand);
-        this.main.getCommand("view").setExecutor((CommandExecutor)new ViewCommand(this.gameManager));
-        this.main.getCommand("rules").setExecutor((CommandExecutor)new RulesCommand(this.main));
-        this.main.getCommand("tc").setExecutor((CommandExecutor)new TCCommand(this.gameManager));
-        this.main.getCommand("vote").setExecutor((CommandExecutor)new VoteCommand(this.gameManager));
-        this.main.getCommand("preload").setExecutor((CommandExecutor)new PreLoadCommand(this.gameManager));
-        this.main.getCommand("tprandom").setExecutor((CommandExecutor)new TPRandomCommand());
-        this.main.getCommand("whitelist").setExecutor((CommandExecutor)new WhitelistCommand(this.gameManager));
-        this.main.getCommand("alerts").setExecutor((CommandExecutor)new AlertsCommand());
-        this.main.getCommand("tphere").setExecutor((CommandExecutor)new TPHereCommand());
-        this.main.getCommand("health").setExecutor((CommandExecutor)new HealthCommand(this.gameManager));
-        this.main.getCommand("viewoffline").setExecutor((CommandExecutor)new ViewOfflineCommand(this.gameManager));
-        this.main.getCommand("disperse").setExecutor((CommandExecutor)new DisperseCommand(this.gameManager));
-        this.main.getCommand("groupe").setExecutor((CommandExecutor)new GroupeCommand(this.gameManager));
-        this.main.getCommand("near").setExecutor((CommandExecutor)new NearCommand(this.gameManager));
-        this.main.getCommand("vanish").setExecutor((CommandExecutor)new VanishCommand(this.gameManager));
-        
+        this.main.getCommand("host").setExecutor((CommandExecutor) new HostCommand(this.gameManager));
+        this.main.getCommand("finish").setExecutor((CommandExecutor) new FinishCommand(this.gameManager));
+        this.main.getCommand("enchant").setExecutor((CommandExecutor) this.enchantCommand);
+        this.main.getCommand("scenario").setExecutor((CommandExecutor) this.scenarioCommand);
+        this.main.getCommand("helpop").setExecutor((CommandExecutor) new HelpopCommand());
+        this.main.getCommand("revive").setExecutor((CommandExecutor) new ReviveCommand(this.main));
+        this.main.getCommand("inv").setExecutor((CommandExecutor) this.invCommand);
+        this.main.getCommand("view").setExecutor((CommandExecutor) new ViewCommand(this.gameManager));
+        this.main.getCommand("rules").setExecutor((CommandExecutor) new RulesCommand(this.main));
+        this.main.getCommand("tc").setExecutor((CommandExecutor) new TCCommand(this.gameManager));
+        this.main.getCommand("vote").setExecutor((CommandExecutor) new VoteCommand(this.gameManager));
+        this.main.getCommand("preload").setExecutor((CommandExecutor) new PreLoadCommand(this.gameManager));
+        this.main.getCommand("tprandom").setExecutor((CommandExecutor) new TPRandomCommand());
+        this.main.getCommand("whitelist").setExecutor((CommandExecutor) new WhitelistCommand(this.gameManager));
+        this.main.getCommand("alerts").setExecutor((CommandExecutor) new AlertsCommand());
+        this.main.getCommand("tphere").setExecutor((CommandExecutor) new TPHereCommand());
+        this.main.getCommand("health").setExecutor((CommandExecutor) new HealthCommand(this.gameManager));
+        this.main.getCommand("viewoffline").setExecutor((CommandExecutor) new ViewOfflineCommand(this.gameManager));
+        this.main.getCommand("disperse").setExecutor((CommandExecutor) new DisperseCommand(this.gameManager));
+        this.main.getCommand("groupe").setExecutor((CommandExecutor) new GroupeCommand(this.gameManager));
+        this.main.getCommand("near").setExecutor((CommandExecutor) new NearCommand(this.gameManager));
+        this.main.getCommand("vanish").setExecutor((CommandExecutor) new VanishCommand(this.gameManager));
+
         // Nouvelles commandes
         GameConfigCommand gameConfigCommand = new GameConfigCommand(this.main);
-        this.main.getCommand("gameconfig").setExecutor((CommandExecutor)gameConfigCommand);
+        this.main.getCommand("gameconfig").setExecutor((CommandExecutor) gameConfigCommand);
         this.main.getCommand("gameconfig").setTabCompleter(gameConfigCommand);
-        
+
         SpectateCommand spectateCommand = new SpectateCommand(this.main);
-        this.main.getCommand("spectate").setExecutor((CommandExecutor)spectateCommand);
+        this.main.getCommand("spectate").setExecutor((CommandExecutor) spectateCommand);
         this.main.getCommand("spectate").setTabCompleter(spectateCommand);
-        
+
         HealCommand healCommand = new HealCommand(this.main);
-        this.main.getCommand("heal").setExecutor((CommandExecutor)healCommand);
+        this.main.getCommand("heal").setExecutor((CommandExecutor) healCommand);
         this.main.getCommand("heal").setTabCompleter(healCommand);
     }
 
     private void registerListeners() {
         PluginManager pluginManager = this.main.getServer().getPluginManager();
-        pluginManager.registerEvents((Listener)new GameAccessListener(this.gameManager), this.main);
-        pluginManager.registerEvents((Listener)new PlayerJoinListener(this.main), (Plugin)this.main);
-        pluginManager.registerEvents((Listener)new CommonListener(this), (Plugin)this.main);
-        pluginManager.registerEvents((Listener)new GameListener(this.gameManager), (Plugin)this.main);
-        pluginManager.registerEvents((Listener)new PlayerChatListener(this.gameManager), (Plugin)this.main);
-        pluginManager.registerEvents((Listener)new PlayerInteractListener(this.gameManager), (Plugin)this.main);
-        pluginManager.registerEvents((Listener)new UHCStandardListener(this.gameManager.getUhcStandard()), (Plugin)this.main);
-        pluginManager.registerEvents((Listener)this.joinTeamsGUI, (Plugin)this.main);
-        pluginManager.registerEvents((Listener)this.scenariosGUI, (Plugin)this.main);
-        pluginManager.registerEvents((Listener)new ScenarioTimeGUI(), (Plugin)this.main);
-        pluginManager.registerEvents((Listener)new ChunkUnloadListener(), (Plugin)this.main);
-        pluginManager.registerEvents((Listener)new PlayerBrewItemListener(), (Plugin)this.main);
-        pluginManager.registerEvents((Listener)new PlayerEnchantListener(), (Plugin)this.main);
+        pluginManager.registerEvents((Listener) new GameAccessListener(this.gameManager), this.main);
+        pluginManager.registerEvents((Listener) new PlayerJoinListener(this.main), (Plugin) this.main);
+        pluginManager.registerEvents((Listener) new CommonListener(this), (Plugin) this.main);
+        pluginManager.registerEvents((Listener) new GameListener(this.gameManager), (Plugin) this.main);
+        pluginManager.registerEvents((Listener) new BlockListener(this.gameManager), (Plugin) this.main);
+        pluginManager.registerEvents((Listener) new InventoryListener(this.gameManager), (Plugin) this.main);
+        pluginManager.registerEvents((Listener) new PlayerEnvironmentListener(this.gameManager), (Plugin) this.main);
+        pluginManager.registerEvents((Listener) new PvPListener(this.gameManager), (Plugin) this.main);
+        pluginManager.registerEvents((Listener) new WorldListener(this.gameManager), (Plugin) this.main);
+        pluginManager.registerEvents((Listener) new PlayerChatListener(this.gameManager), (Plugin) this.main);
+        pluginManager.registerEvents((Listener) new PlayerInteractListener(this.gameManager), (Plugin) this.main);
+        pluginManager.registerEvents((Listener) new UHCStandardListener(this.gameManager.getUhcStandard()),
+                (Plugin) this.main);
+        pluginManager.registerEvents((Listener) this.joinTeamsGUI, (Plugin) this.main);
+        pluginManager.registerEvents((Listener) this.scenariosGUI, (Plugin) this.main);
+        pluginManager.registerEvents((Listener) new ScenarioTimeGUI(), (Plugin) this.main);
+        pluginManager.registerEvents((Listener) new ChunkUnloadListener(), (Plugin) this.main);
+        pluginManager.registerEvents((Listener) new PlayerBrewItemListener(), (Plugin) this.main);
+        pluginManager.registerEvents((Listener) new PlayerEnchantListener(), (Plugin) this.main);
     }
 
     private void registerInventories() {

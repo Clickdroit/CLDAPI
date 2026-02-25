@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
 
 public class LoadingChunkTask extends BukkitRunnable {
-    
+
     /**
      * Obtient le logger de manière lazy pour éviter les problèmes d'initialisation.
      */
@@ -28,7 +28,7 @@ public class LoadingChunkTask extends BukkitRunnable {
         API api = API.getAPI();
         return api != null ? api.getLogger() : Bukkit.getLogger();
     }
-    
+
     // Variables atomiques pour la thread-safety
     private final AtomicLong currentChunkLoad = new AtomicLong(0);
     private final AtomicInteger lastReportedPercent = new AtomicInteger(0);
@@ -149,7 +149,8 @@ public class LoadingChunkTask extends BukkitRunnable {
             Chunk chunk = world.getChunkAt(cx >> 4, cz >> 4);
 
             // Ajouter au cache des chunks à garder
-            ChunkUnloadListener.keepChunk.add(chunk);
+            long chunkKey = (long) chunk.getX() << 32 | (chunk.getZ() & 0xFFFFFFFFL);
+            ChunkUnloadListener.keepChunk.add(chunkKey);
 
             // Charger le chunk de manière forcée seulement s'il n'est pas déjà chargé
             if (!chunk.isLoaded()) {
@@ -265,7 +266,8 @@ public class LoadingChunkTask extends BukkitRunnable {
      * Estime le temps restant
      */
     private long estimateTimeRemaining(int currentPercent) {
-        if (currentPercent <= 0) return -1;
+        if (currentPercent <= 0)
+            return -1;
 
         long elapsedTime = System.currentTimeMillis() - startTime;
         long totalEstimatedTime = (elapsedTime * 100) / currentPercent;
@@ -309,8 +311,7 @@ public class LoadingChunkTask extends BukkitRunnable {
 
         getLogger().info(String.format(
                 "Pregeneration: %d%% (%d/%d chunks) - %.1f chunks/s - Elapsed: %s",
-                percent, chunksLoaded, totalChunkToLoad, chunksPerSecond, formatTime(elapsedTime)
-        ));
+                percent, chunksLoaded, totalChunkToLoad, chunksPerSecond, formatTime(elapsedTime)));
     }
 
     /**
@@ -339,8 +340,7 @@ public class LoadingChunkTask extends BukkitRunnable {
             // Log final pour le serveur
             getLogger().info(String.format(
                     "Pregeneration completed! %d chunks loaded in %s",
-                    totalChunkToLoad, formatTime(System.currentTimeMillis() - startTime)
-            ));
+                    totalChunkToLoad, formatTime(System.currentTimeMillis() - startTime)));
 
             // Mettre à jour l'état du jeu
             API.getAPI().getGameManager().setGameState(GameState.WAITING);
@@ -364,8 +364,7 @@ public class LoadingChunkTask extends BukkitRunnable {
 
         return String.format(
                 "Progress: %d%% (%d/%d) | Time: %s | Speed: %.1f chunks/s",
-                percent, current, totalChunkToLoad, formatTime(elapsedTime), chunksProcessedInCurrentSecond
-        );
+                percent, current, totalChunkToLoad, formatTime(elapsedTime), chunksProcessedInCurrentSecond);
     }
 
     /**

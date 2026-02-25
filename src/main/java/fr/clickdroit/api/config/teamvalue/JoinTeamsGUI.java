@@ -5,7 +5,7 @@ import fr.clickdroit.api.config.GameConfig;
 import fr.clickdroit.api.config.scenario.Scenario;
 import fr.clickdroit.api.game.GameManager;
 import fr.clickdroit.api.game.team.Teams;
-import fr.clickdroit.api.utils.ItemCreator;
+import fr.clickdroit.api.utils.item.ItemCreator;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

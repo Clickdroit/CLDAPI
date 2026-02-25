@@ -20,18 +20,27 @@ public class CombatLogEntity {
         this.uuid = player.getUniqueId();
         this.name = player.getName();
         this.location = player.getLocation();
-        spawnVillager();
+        spawnVillager(player);
     }
 
-    public void spawnVillager() {
+    public void spawnVillager(Player player) {
         this.entity = (Villager) this.location.getWorld().spawnEntity(this.location, EntityType.VILLAGER);
 
         setEntityNoAI(this.entity);
+        this.entity.setMaxHealth(player.getMaxHealth());
+        this.entity.setHealth(player.getHealth());
         this.entity.setCustomNameVisible(true);
-        this.entity.setCustomName("§8§l•§c§l" + this.name);
+        updateName();
 
         // En 1.8, pas de setProfession(Profession.NITWIT), on utilise l'ID
         this.entity.setProfession(Villager.Profession.FARMER); // ou autre profession disponible en 1.8
+    }
+
+    public void updateName() {
+        if (this.entity != null) {
+            double hp = Math.round(this.entity.getHealth() * 10.0) / 10.0;
+            this.entity.setCustomName("§8§l•§c§l" + this.name + " §c❤ " + hp);
+        }
     }
 
     private void setEntityNoAI(org.bukkit.entity.Entity entity) {

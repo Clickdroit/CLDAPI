@@ -7,7 +7,7 @@ import fr.clickdroit.api.config.value.CommonItems;
 import fr.clickdroit.api.utils.CommonString;
 import fr.clickdroit.api.utils.CustomInventory;
 import fr.clickdroit.api.utils.InventoryAPI;
-import fr.clickdroit.api.utils.ItemCreator;
+import fr.clickdroit.api.utils.item.ItemCreator;
 import java.util.function.Supplier;
 import org.bukkit.GameMode;
 import org.bukkit.Material;

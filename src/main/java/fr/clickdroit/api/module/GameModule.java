@@ -225,7 +225,7 @@ public interface GameModule {
      * @return l'ItemStack de l'icône
      */
     default ItemStack createIcon() {
-        fr.clickdroit.api.utils.ItemCreator creator = new fr.clickdroit.api.utils.ItemCreator(getIconMaterial())
+        fr.clickdroit.api.utils.item.ItemCreator creator = new fr.clickdroit.api.utils.item.ItemCreator(getIconMaterial())
                 .setDurability(getIconData())
                 .setName(getColor() + getDisplayName())
                 .addLore("");

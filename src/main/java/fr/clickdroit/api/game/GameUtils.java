@@ -60,19 +60,26 @@ public class GameUtils {
     public static void registerHealth() {
         if (GeneralRules.HEALTH.isEnabled()) {
             Scoreboard scoreboard = API.getAPI().getServer().getScoreboardManager().getMainScoreboard();
-            Objective objective = (scoreboard.getObjective("health") == null) ? scoreboard.registerNewObjective("health", "health") : scoreboard.getObjective("health");
+            Objective objective = (scoreboard.getObjective("health") == null)
+                    ? scoreboard.registerNewObjective("health", "health")
+                    : scoreboard.getObjective("health");
             objective.setDisplaySlot(DisplaySlot.BELOW_NAME);
             objective.setDisplayName("§4❤");
-                    Objective objectiveTab = (scoreboard.getObjective("vie") == null) ? scoreboard.registerNewObjective("vie", "health") : scoreboard.getObjective("vie");
+            Objective objectiveTab = (scoreboard.getObjective("vie") == null)
+                    ? scoreboard.registerNewObjective("vie", "health")
+                    : scoreboard.getObjective("vie");
             objectiveTab.setDisplaySlot(DisplaySlot.PLAYER_LIST);
             for (Player players : Bukkit.getOnlinePlayers()) {
                 double current = players.getHealth();
-                players.setHealth(current - 1.0D);
+                if (current > 0.1D) {
+                    players.setHealth(current - 0.1D);
+                    Bukkit.getScheduler().runTaskLater((Plugin) API.getAPI(), () -> {
+                        if (players.isOnline()) {
+                            players.setHealth(current);
+                        }
+                    }, 1L);
+                }
             }
-            Bukkit.getScheduler().runTaskLater((Plugin)API.getAPI(), () -> {
-                for (Player players : Bukkit.getOnlinePlayers())
-                    players.setHealth(players.getMaxHealth());
-            },2L);
         }
     }
 }

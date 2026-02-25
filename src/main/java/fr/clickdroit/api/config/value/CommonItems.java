@@ -1,6 +1,6 @@
 package fr.clickdroit.api.config.value;
 
-import fr.clickdroit.api.utils.ItemCreator;
+import fr.clickdroit.api.utils.item.ItemCreator;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 

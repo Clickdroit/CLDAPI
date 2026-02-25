@@ -9,7 +9,7 @@ import fr.clickdroit.api.config.scenario.Scenario;
 import fr.clickdroit.api.game.GameManager;
 import fr.clickdroit.api.utils.Chrono;
 import fr.clickdroit.api.utils.CustomInventory;
-import fr.clickdroit.api.utils.ItemCreator;
+import fr.clickdroit.api.utils.item.ItemCreator;
 import java.util.function.Supplier;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

@@ -1,7 +1,7 @@
 package fr.clickdroit.api.game.team;
 
 import org.bukkit.Material;
-import fr.clickdroit.api.utils.ItemCreator;
+import fr.clickdroit.api.utils.item.ItemCreator;
 
 
 public enum Teams {

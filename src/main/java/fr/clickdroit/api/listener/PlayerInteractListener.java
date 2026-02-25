@@ -5,7 +5,7 @@ import fr.clickdroit.api.commands.ScenarioCommand;
 import fr.clickdroit.api.config.ConfigMainGUI;
 import fr.clickdroit.api.game.GameManager;
 import fr.clickdroit.api.game.GameUtils;
-import fr.clickdroit.api.utils.ItemCreator;
+import fr.clickdroit.api.utils.item.ItemCreator;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;

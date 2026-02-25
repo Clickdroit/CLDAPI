@@ -5,7 +5,7 @@ import fr.clickdroit.api.config.ConfigOptionsGUI;
 import fr.clickdroit.api.game.GameManager;
 import fr.clickdroit.api.utils.CommonString;
 import fr.clickdroit.api.utils.CustomInventory;
-import fr.clickdroit.api.utils.ItemCreator;
+import fr.clickdroit.api.utils.item.ItemCreator;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;

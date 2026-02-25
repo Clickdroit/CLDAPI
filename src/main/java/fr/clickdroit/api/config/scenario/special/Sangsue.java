@@ -3,7 +3,7 @@ package fr.clickdroit.api.config.scenario.special;
 import fr.clickdroit.api.API;
 import fr.clickdroit.api.config.scenario.Scenario;
 import fr.clickdroit.api.config.scenario.ScenarioManager;
-import fr.clickdroit.api.utils.ItemCreator;
+import fr.clickdroit.api.utils.item.ItemCreator;
 import fr.clickdroit.api.utils.Math2;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

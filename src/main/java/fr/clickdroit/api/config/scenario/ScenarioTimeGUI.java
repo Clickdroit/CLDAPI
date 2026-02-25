@@ -37,11 +37,15 @@ public class ScenarioTimeGUI implements Listener {
 
     public Inventory getInventory() {
         Inventory inventory = Bukkit.createInventory(null, 18, "Scénario" + this.scenario.getName());
-        inventory.setItem(0, (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(14)).setName("§c-50").getItem());
-        inventory.setItem(1, (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(11)).setName("§c-1").getItem());
+        inventory.setItem(0,
+                (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(14)).setName("§c-50").getItem());
+        inventory.setItem(1,
+                (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(11)).setName("§c-1").getItem());
         inventory.setItem(4, this.scenario.getItem());
-        inventory.setItem(7, (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(12)).setName("§a+1").getItem());
-        inventory.setItem(8, (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(10)).setName("§a+50").getItem());
+        inventory.setItem(7,
+                (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(12)).setName("§a+1").getItem());
+        inventory.setItem(8,
+                (new ItemCreator(Material.BANNER)).setDurability(Integer.valueOf(10)).setName("§a+50").getItem());
         inventory.setItem(13, (new ItemCreator(Material.ARROW)).setName("§fRevenir en arriere").getItem());
         this.player.openInventory(inventory);
         return inventory;
@@ -50,7 +54,7 @@ public class ScenarioTimeGUI implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         Inventory inv = event.getInventory();
-        Player player = (Player)event.getWhoClicked();
+        Player player = (Player) event.getWhoClicked();
         ItemStack itemStack = event.getCurrentItem();
         InventoryAction action = event.getAction();
         if (itemStack == null || player == null || action == null || inv == null)
@@ -93,7 +97,7 @@ public class ScenarioTimeGUI implements Listener {
                         inv.setItem(4, scenario.getItem());
                         break;
                     case ARROW:
-                        API.getAPI().getCommon().getScenariosGUI().openInventory(player, scenario.getPage());
+                        API.getAPI().getCommon().getScenariosGUI().openInventory(player);
                         break;
                 }
                 break;
@@ -117,4 +121,3 @@ public class ScenarioTimeGUI implements Listener {
         return this.time;
     }
 }
-

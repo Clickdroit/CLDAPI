@@ -1,10 +1,9 @@
 package fr.clickdroit.api.commands;
 
-
 import fr.clickdroit.api.GamePlayer;
 import fr.clickdroit.api.game.GameManager;
 import fr.clickdroit.api.utils.CustomInventory;
-import fr.clickdroit.api.utils.ItemCreator;
+import fr.clickdroit.api.utils.item.ItemCreator;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -106,7 +105,8 @@ public class EnchantCommand implements CommandExecutor, CustomInventory {
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            if (GamePlayer.getPlayer(player.getUniqueId()).isEditing() || GamePlayer.getPlayer(player.getUniqueId()).isEditingDeathInv()) {
+            if (GamePlayer.getPlayer(player.getUniqueId()).isEditing()
+                    || GamePlayer.getPlayer(player.getUniqueId()).isEditingDeathInv()) {
                 if (player.getItemInHand().getType() != Material.AIR) {
                     this.gameManager.getApi().openInventory(player, getClass());
                 } else {
@@ -127,7 +127,9 @@ public class EnchantCommand implements CommandExecutor, CustomInventory {
         ItemStack[] slots = new ItemStack[getSlots()];
         ItemStack current = player.getItemInHand();
         slots[3] = current;
-        slots[5] = (new ItemCreator(Material.DIAMOND_AXE)).setName("§8| §cIncassable : " + (current.getItemMeta().spigot().isUnbreakable() ? "§aOui": "§cNon")).getItem();
+        slots[5] = (new ItemCreator(Material.DIAMOND_AXE))
+                .setName("§8| §cIncassable : " + (current.getItemMeta().spigot().isUnbreakable() ? "§aOui" : "§cNon"))
+                .getItem();
         int slot = 9;
         for (Enchants enchant : Enchants.values()) {
             int level = 0;
@@ -135,7 +137,7 @@ public class EnchantCommand implements CommandExecutor, CustomInventory {
                 level = current.getEnchantmentLevel(enchant.getEnchantment());
             ItemCreator item = (new ItemCreator(ENCHANTED_BOOK)).setName(enchant.getName());
             item.addLore("");
-            item.addLore("  §8| §fNiveau : §c"+ level);
+            item.addLore("  §8| §fNiveau : §c" + level);
             item.addLore("");
             if (level < enchant.getMax())
                 item.addLore(" §8| §fClic-gauche : §aAjouter un niveau");
@@ -153,7 +155,8 @@ public class EnchantCommand implements CommandExecutor, CustomInventory {
         ItemStack item;
         switch (clickedItem.getType()) {
             case DIAMOND_AXE:
-                if (clickedItem.hasItemMeta() && clickedItem.getItemMeta().hasDisplayName() && clickedItem.getItemMeta().getDisplayName().contains("§8| §cIncassable")) {
+                if (clickedItem.hasItemMeta() && clickedItem.getItemMeta().hasDisplayName()
+                        && clickedItem.getItemMeta().getDisplayName().contains("§8| §cIncassable")) {
                     ItemStack itemStack = player.getItemInHand();
                     boolean unbreakable = itemStack.getItemMeta().spigot().isUnbreakable();
                     if (unbreakable) {
@@ -197,6 +200,8 @@ public class EnchantCommand implements CommandExecutor, CustomInventory {
                                 }
                         }
                     }
+                break;
+            default:
                 break;
         }
     }

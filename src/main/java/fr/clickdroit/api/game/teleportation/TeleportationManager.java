@@ -185,7 +185,8 @@ public class TeleportationManager {
     /**
      * Version optimisée de createPlate
      */
-    public void createPlateOptimized(final Runnable runnable, long delay, final Form form, Collection<PlayerPlate> players) {
+    public void createPlateOptimized(final Runnable runnable, long delay, final Form form,
+            Collection<PlayerPlate> players) {
         final int totalPlayers = players.size();
         final List<PlayerPlate> playersList = new ArrayList<>(players);
         final AtomicInteger currentIndex = new AtomicInteger(0);
@@ -217,13 +218,13 @@ public class TeleportationManager {
                         loadChunkOptimized(plateLocation);
 
                         // Message de progression optimisé
-                        String progressMessage = "§c" + playerPlate.getName() + "§f a été téléporté " + progressMessages.get(index);
+                        String progressMessage = "§c" + playerPlate.getName() + "§f a été téléporté "
+                                + progressMessages.get(index);
                         sendProgressMessageToAll(progressMessage);
 
                         currentIndex.incrementAndGet();
 
                     } catch (Exception e) {
-                        // En cas d'erreur, continuer avec le joueur suivant
                         e.printStackTrace();
                         currentIndex.incrementAndGet();
                     }
@@ -236,11 +237,11 @@ public class TeleportationManager {
                     Bukkit.getScheduler().runTaskLater(
                             (Plugin) API.getAPI(),
                             () -> teleportPlayersAndStart(runnable),
-                            40L
-                    );
+                            40L);
                 }
             }
-        }.runTaskTimer((Plugin) API.getAPI(), 0L, delay);
+        }.runTaskTimer((Plugin) API.getAPI(), 0L, Math.max(2L, delay)); // Limité à 2 Ticks minimum pour préserver les
+                                                                        // TPS
     }
 
     /**

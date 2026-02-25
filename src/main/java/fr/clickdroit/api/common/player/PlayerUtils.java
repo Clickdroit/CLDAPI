@@ -5,7 +5,7 @@ import fr.clickdroit.api.game.GameUtils;
 import fr.clickdroit.api.game.team.TeamManager;
 import fr.clickdroit.api.game.team.Teams;
 import fr.clickdroit.api.module.ModuleType;
-import fr.clickdroit.api.utils.ItemCreator;
+import fr.clickdroit.api.utils.item.ItemCreator;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

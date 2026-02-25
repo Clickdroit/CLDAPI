@@ -19,14 +19,21 @@ public class MessageProviderTest {
     private MessageProvider provider;
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         mockApi = mock(API.class);
-        when(mockApi.getLogger()).thenReturn(Logger.getLogger("TestLogger"));
-        when(mockApi.getDataFolder()).thenReturn(new java.io.File("test-data"));
-        when(mockApi.getResource(anyString())).thenReturn(null);
 
         provider = new MessageProvider(mockApi);
         provider.loadLocale("fr");
+
+        // Inject messages via reflection because we cannot mock final methods
+        // getDataFolder/getResource
+        java.lang.reflect.Field messagesField = MessageProvider.class.getDeclaredField("messages");
+        messagesField.setAccessible(true);
+        @SuppressWarnings("unchecked")
+        java.util.Map<String, String> messages = (java.util.Map<String, String>) messagesField.get(provider);
+        messages.put("prefix", "§8[§6UHC§8] §f");
+        messages.put("player_not_found", "§cJoueur introuvable: {player}");
+        messages.put("death.killed_by_player", "§c{player} §fa été tué par §c{killer}§f.");
     }
 
     @Test
@@ -64,4 +71,3 @@ public class MessageProviderTest {
         assertTrue(message.contains("Killer"));
     }
 }
-

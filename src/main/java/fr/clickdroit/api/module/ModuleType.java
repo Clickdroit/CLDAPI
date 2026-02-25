@@ -1,6 +1,6 @@
 package fr.clickdroit.api.module;
 
-import fr.clickdroit.api.utils.ItemCreator;
+import fr.clickdroit.api.utils.item.ItemCreator;
 import org.bukkit.Material;
 
 public enum ModuleType {

@@ -26,8 +26,10 @@ public class CombatLogManager implements Listener {
     }
 
     public void onLogout(Player player) {
-        if (!GameUtils.isGameStarted())
+        if (!GameUtils.isGameStarted()) {
+            GamePlayer.removePlayer(player.getUniqueId());
             return;
+        }
 
         if (this.gameManager.getInGamePlayers().contains(player.getUniqueId())) {
             GamePlayer gamePlayer = GamePlayer.getPlayer(player.getUniqueId());
@@ -39,7 +41,8 @@ public class CombatLogManager implements Listener {
                 CombatLogEntity combatLog = new CombatLogEntity(player);
                 gamePlayer.setCombatLogEntity(combatLog);
 
-                this.gameManager.broadcastWithPrefix(UHCConstants.COLOR_ERROR + gamePlayer.getName() + " est mort en étant déconnecté !");
+                this.gameManager.broadcastWithPrefix(
+                        UHCConstants.COLOR_ERROR + gamePlayer.getName() + " s'est déconnecté en combat !");
             }
         }
     }
@@ -73,8 +76,19 @@ public class CombatLogManager implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerDamage(EntityDamageByEntityEvent event) {
-        if (!(event.getEntity() instanceof Player))
+        if (!(event.getEntity() instanceof Player)) {
+            if (event.getEntity() instanceof org.bukkit.entity.Villager) {
+                org.bukkit.entity.Villager villager = (org.bukkit.entity.Villager) event.getEntity();
+                for (GamePlayer gp : GamePlayer.getGamePlayers()) {
+                    CombatLogEntity log = gp.getCombatLogEntity();
+                    if (log != null && log.getEntity().equals(villager)) {
+                        org.bukkit.Bukkit.getScheduler().runTaskLater(gameManager.getApi(), log::updateName, 1L);
+                        break;
+                    }
+                }
+            }
             return;
+        }
 
         Player damaged = (Player) event.getEntity();
         GamePlayer gamePlayer = GamePlayer.getPlayer(damaged.getUniqueId());

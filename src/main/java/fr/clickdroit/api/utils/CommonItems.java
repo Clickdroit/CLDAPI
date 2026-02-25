@@ -1,6 +1,7 @@
 package fr.clickdroit.api.utils;
 
 import org.bukkit.Material;
+import fr.clickdroit.api.utils.item.ItemCreator;
 
 public enum CommonItems {
     GUI_BACK_ARROW(Material.ARROW, 0, "§fRevenir en arrière");
@@ -32,4 +33,4 @@ public enum CommonItems {
     public ItemCreator getItem() {
         return (new ItemCreator(this.material)).setName(this.name).setDurability(Integer.valueOf(this.data));
     }
-    }
+}

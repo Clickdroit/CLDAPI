@@ -1,7 +1,7 @@
 package fr.clickdroit.api.config.scenario.special.runnable;
 
 import fr.clickdroit.api.API;
-import fr.clickdroit.api.utils.ItemCreator;
+import fr.clickdroit.api.utils.item.ItemCreator;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

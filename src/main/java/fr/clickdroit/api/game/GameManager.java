@@ -27,6 +27,7 @@ import fr.clickdroit.api.module.standard.UHCStandard;
 import fr.clickdroit.api.utils.InventoryAPI;
 import fr.clickdroit.api.utils.TabHandler;
 import fr.clickdroit.api.utils.UHCConstants;
+import fr.clickdroit.api.event.custom.UHCGameStartEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
@@ -153,7 +154,9 @@ public class GameManager {
         };
 
         for (Scenario scenario : defaultScenarios) {
-            scenario.getScenarioManager().activeScenario();
+            if (!scenario.isEnabled()) {
+                scenario.getScenarioManager().activeScenario();
+            }
         }
     }
 
@@ -165,6 +168,11 @@ public class GameManager {
 
     public void startGame() {
         setGameState(GameState.PLAYING);
+
+        // Trigger generic API game start event for other plugins
+        UHCGameStartEvent startEvent = new UHCGameStartEvent();
+        Bukkit.getPluginManager().callEvent(startEvent);
+
         this.api.getModules().onStart(this.api);
         this.globalTask = new GlobalTask(this);
         this.globalTask.runTaskTimer((Plugin) this.api, 0L, 20L);
@@ -379,7 +387,7 @@ public class GameManager {
 
         TeleportationManager teleportationManager;
 
-        if (GameUtils.isSoloMode()) {
+        if (GameUtils.isSoloMode() || fr.clickdroit.api.config.scenario.Scenario.SPLIT_SPAWN.isEnabled()) {
             PlayerPlate[] playerPlates = playerPlatesList.toArray(new SoloPlayerPlate[0]);
             teleportationManager = new TeleportationManager(playerPlates, 2L, circleForm);
         } else {

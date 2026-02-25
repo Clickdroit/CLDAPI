@@ -19,15 +19,17 @@ import java.util.UUID;
  * Cette classe encapsule toutes les informations spécifiques à un joueur
  * pendant une partie UHC, incluant :
  * <ul>
- *   <li>Son statut (vivant/mort)</li>
- *   <li>Son équipe</li>
- *   <li>Ses statistiques (kills, diamants, ors)</li>
- *   <li>Son inventaire sauvegardé</li>
- *   <li>Son entité de combat log</li>
+ * <li>Son statut (vivant/mort)</li>
+ * <li>Son équipe</li>
+ * <li>Ses statistiques (kills, diamants, ors)</li>
+ * <li>Son inventaire sauvegardé</li>
+ * <li>Son entité de combat log</li>
  * </ul>
  * 
- * <p>Les instances sont gérées via une liste statique accessible par
- * {@link #getGamePlayers()} et {@link #getPlayer(UUID)}.</p>
+ * <p>
+ * Les instances sont gérées via une liste statique accessible par
+ * {@link #getGamePlayers()} et {@link #getPlayer(UUID)}.
+ * </p>
  * 
  * @author Clickdroit
  * @version 1.0
@@ -142,7 +144,8 @@ public class GamePlayer {
 
     public void addDiamonds() {
         this.diamonds++;
-        Title.sendActionBar(getPlayer(), "§f[§b*§f] §bLimite de diamants: §f"+ this.diamonds + "§f/§f"+ API.getAPI().getGameManager().getGameConfig().getDiamondMax());
+        Title.sendActionBar(getPlayer(), "§f[§b*§f] §bLimite de diamants: §f" + this.diamonds + "§f/§f"
+                + API.getAPI().getGameManager().getGameConfig().getDiamondMax());
     }
 
     public int getGolds() {
@@ -315,6 +318,10 @@ public class GamePlayer {
 
     public static void addPlayer(GamePlayer up) {
         gamePlayers.add(up);
+    }
+
+    public static void removePlayer(UUID uuid) {
+        gamePlayers.removeIf(p -> p.getUuid().equals(uuid));
     }
 
     public static boolean havePlayer(UUID uuid) {

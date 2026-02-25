@@ -16,15 +16,18 @@ import java.util.logging.Logger;
  * Tests unitaires pour le ServiceManager.
  */
 public class ServiceManagerTest {
-
     private API mockApi;
     private ServiceManager serviceManager;
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         mockApi = mock(API.class);
-        when(mockApi.getLogger()).thenReturn(Logger.getLogger("TestLogger"));
         serviceManager = new ServiceManager(mockApi);
+
+        // Inject a real logger to avoid NPE during tests since getLogger is final
+        java.lang.reflect.Field loggerField = ServiceManager.class.getDeclaredField("logger");
+        loggerField.setAccessible(true);
+        loggerField.set(serviceManager, Logger.getGlobal());
     }
 
     @Test
@@ -197,4 +200,3 @@ public class ServiceManagerTest {
         }
     }
 }
-

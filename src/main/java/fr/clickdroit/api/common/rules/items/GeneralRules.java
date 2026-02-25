@@ -1,6 +1,6 @@
 package fr.clickdroit.api.common.rules.items;
 
-import fr.clickdroit.api.utils.ItemCreator;
+import fr.clickdroit.api.utils.item.ItemCreator;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
