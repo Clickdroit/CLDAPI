@@ -8,6 +8,7 @@ import fr.clickdroit.api.config.scenario.ScenarioValueType;
 import fr.clickdroit.api.game.GameManager;
 import fr.clickdroit.api.module.Modules;
 import fr.clickdroit.api.utils.Title;
+import fr.clickdroit.api.utils.ApolloManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -71,6 +72,7 @@ public class GlobalTask extends BukkitRunnable {
             // Activate PvP when time is reached
             if (getGlobalTime() >= pvpTime) {
                 Rules.pvp.setActive(true);
+                ApolloManager.sendPvPTitle();
             }
         }
         for (GamePlayer gamePlayers : GamePlayer.getGamePlayers()) {
@@ -91,9 +93,11 @@ public class GlobalTask extends BukkitRunnable {
                 scenario.getScenarioManager().init();
         }
         if (!this.gameManager.getBorder().isStart() &&
-                getGlobalTime() >= this.gameConfig.getBorderTime())
+                getGlobalTime() >= this.gameConfig.getBorderTime()) {
             this.gameManager.getBorder().startReduce((this.gameConfig.getBorderEndSize() * 2),
                     this.gameConfig.getBorderBlocksPerSecond());
+            ApolloManager.sendBorderNotification();
+        }
         int sizeBorder = (int) (this.gameManager.getBorder().getWorldBorder().getSize() / 2.0D);
         Bukkit.getOnlinePlayers().forEach(players -> {
             if (!this.gameManager.getInGamePlayers().contains(players.getUniqueId())) {

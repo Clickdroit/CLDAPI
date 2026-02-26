@@ -3,6 +3,7 @@ package fr.clickdroit.api.service.impl;
 import fr.clickdroit.api.API;
 import fr.clickdroit.api.game.team.Teams;
 import fr.clickdroit.api.service.GameService;
+import fr.clickdroit.api.utils.ApolloManager;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -56,6 +57,7 @@ public class TeamService implements GameService {
         playerTeams.put(playerUuid, team);
         teamMembers.get(team).add(playerUuid);
         aliveTeams.add(team);
+        ApolloManager.updateTeam(team, teamMembers.get(team));
     }
 
     public void removePlayerFromTeam(UUID playerUuid) {
@@ -63,6 +65,7 @@ public class TeamService implements GameService {
         if (team != null) {
             teamMembers.get(team).remove(playerUuid);
             updateTeamAliveStatus(team);
+            ApolloManager.removePlayerFromTeam(playerUuid, teamMembers.get(team));
         }
     }
 
@@ -140,4 +143,3 @@ public class TeamService implements GameService {
         return Collections.unmodifiableMap(playerTeams);
     }
 }
-
