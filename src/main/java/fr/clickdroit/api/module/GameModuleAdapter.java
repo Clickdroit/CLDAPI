@@ -6,106 +6,94 @@ import org.bukkit.entity.Player;
 import java.util.UUID;
 
 /**
- * Adaptateur qui permet d'utiliser un {@link GameModule} externe comme un {@link Modules} interne.
- * <p>
- * Cette classe fait le pont entre les modules externes enregistrés par d'autres plugins
- * et le système de modules interne de l'API.
- * </p>
- * 
+ * Adaptateur faisant le pont entre un GameModule (System A) et le cycle de vie Modules interne.
+ * Permet aux plugins externes de s'intégrer au moteur de jeu CLDAPI.
+ *
  * @author Clickdroit
  * @version 1.0
  */
 public class GameModuleAdapter extends Modules {
-    private final GameModule gameModule;
-    private final API api;
 
-    /**
-     * Crée un nouvel adaptateur pour un module externe.
-     * 
-     * @param gameModule le module externe à adapter
-     * @param api l'instance de l'API
-     */
-    public GameModuleAdapter(GameModule gameModule, API api) {
-        this.gameModule = gameModule;
-        this.api = api;
+    private final GameModule module;
+
+    public GameModuleAdapter(GameModule module) {
+        if (module == null) {
+            throw new IllegalArgumentException("Le module externe ne peut pas être null");
+        }
+        this.module = module;
     }
 
-    /**
-     * Récupère le module externe sous-jacent.
-     * 
-     * @return le module externe
-     */
-    public GameModule getGameModule() {
-        return gameModule;
+    public GameModule getModule() {
+        return module;
     }
 
     @Override
     public void onLoad() {
-        // onLoad est déjà appelé lors de l'enregistrement
+        module.onLoad();
+    }
+
+    @Override
+    public void init() {
+        module.onEnable(API.getAPI());
     }
 
     @Override
     public void onStart(API api) {
         super.onStart(api);
-        gameModule.onGameStart(api);
+        module.onGameStart(api);
     }
 
     @Override
     public void onPlayerDeath(Player player, Player killer) {
         super.onPlayerDeath(player, killer);
-        gameModule.onPlayerDeath(player, killer);
+        module.onPlayerDeath(player, killer);
     }
 
     @Override
     public void onPlayerDieByDisconnect(UUID uuid) {
         super.onPlayerDieByDisconnect(uuid);
-        gameModule.onPlayerDeathByDisconnect(uuid);
-    }
-
-    @Override
-    public void onEpisodeSwitch() {
-        gameModule.onEpisodeSwitch();
-    }
-
-    @Override
-    public void init() {
-        // Initialization is handled by onEnable
+        module.onPlayerDeathByDisconnect(uuid);
     }
 
     @Override
     public void onClockUpdate(int gameTime) {
-        gameModule.onClockUpdate(gameTime);
-    }
-
-    @Override
-    public void onPlayerReconnect(Player player) {
-        gameModule.onPlayerReconnect(player);
-    }
-
-    @Override
-    public void onPlayerDisconnect(Player player) {
-        gameModule.onPlayerDisconnect(player);
-    }
-
-    @Override
-    public void onPlayerChat(Player player, String message) {
-        gameModule.onPlayerChat(player, message);
+        module.onClockUpdate(gameTime);
     }
 
     @Override
     public void onDay(boolean sendMessage) {
         super.onDay(sendMessage);
-        gameModule.onDay(sendMessage);
+        module.onDay(sendMessage);
     }
 
     @Override
     public void onNight(boolean sendMessage) {
         super.onNight(sendMessage);
-        gameModule.onNight(sendMessage);
+        module.onNight(sendMessage);
+    }
+
+    @Override
+    public void onEpisodeSwitch() {
+        module.onEpisodeSwitch();
+    }
+
+    @Override
+    public void onPlayerReconnect(Player player) {
+        module.onPlayerReconnect(player);
+    }
+
+    @Override
+    public void onPlayerDisconnect(Player player) {
+        module.onPlayerDisconnect(player);
+    }
+
+    @Override
+    public void onPlayerChat(Player player, String message) {
+        module.onPlayerChat(player, message);
     }
 
     @Override
     public void openConfig(Player player) {
-        gameModule.openConfig(player);
+        module.openConfig(player);
     }
 }

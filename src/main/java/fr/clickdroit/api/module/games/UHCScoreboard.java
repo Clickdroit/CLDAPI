@@ -75,7 +75,7 @@ public class UHCScoreboard implements ScoreboardContents {
 
     public void setLines(BPlayerBoard board, UUID uuid, String ip) {
         int line = 14;
-        board.setName("§d§lSOLO LEVELING UHC");
+        board.setName("§c§lUHC CLDAPI");
         board.set("§a", Integer.valueOf(line--));
         board.set(" §5| §fépisode §f: §d"+ this.episode, Integer.valueOf(line--));
         board.set(" §5| §fDurée §f: §d "+ Chrono.timeToDigitalString(this.seconds), Integer.valueOf(line--));

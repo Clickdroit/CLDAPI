@@ -56,8 +56,13 @@ tasks.withType(JavaCompile).configureEach {
 
 jar {
     archiveBaseName.set('UHC')
+    // Désactiver pour éviter les conflits et forcer l'usage du shadowJar ombré
+    enabled = false
 }
 shadowJar {
     archiveBaseName.set('UHC')
     archiveClassifier.set('')
+    archiveVersion.set('1.0')
 }
+// Le build standard utilise shadowJar pour inclure slf4j et logback à l'exécution
+build.dependsOn shadowJar

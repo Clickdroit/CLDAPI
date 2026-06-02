@@ -30,19 +30,40 @@ public class DefaultScoreboardContents implements ScoreboardContents {
     public void reloadData(UUID player) {
         this.maxplayer = this.api.getGameManager().getGameConfig().getGameSlot();
         this.online = GameUtils.getPlayerAmount();
-        this.moduleName = this.api.getGameManager().getModuleManager().getCurrentModule().getName();
-        this.teams = !GameUtils.isSoloMode();
+        
+        fr.clickdroit.api.module.GameModule activeExternalModule = this.api.getActiveGameModule();
+        if (activeExternalModule != null) {
+            this.moduleName = activeExternalModule.getDisplayName();
+            this.teams = activeExternalModule.hasTeams();
+        } else {
+            this.moduleName = this.api.getGameManager().getModuleManager().getCurrentModule().getName();
+            this.teams = !GameUtils.isSoloMode();
+        }
+        
         this.moduleType = this.api.getGameManager().getModuleManager().getCurrentModule();
         this.hostName = (UHCInfos.hostName == null) ? "Aucun" : UHCInfos.hostName;
     }
 
     public void setLines(BPlayerBoard board, UUID player, String ip) {
         int line = 14;
-        board.setName("§6§lUHC");
+        
+        fr.clickdroit.api.module.GameModule activeExternalModule = this.api.getActiveGameModule();
+        if (activeExternalModule != null) {
+            board.setName(activeExternalModule.getColor() + "§l" + activeExternalModule.getDisplayName().toUpperCase());
+        } else {
+            board.setName("§6§lUHC");
+        }
+        
         board.set("§1", Integer.valueOf(line--));
         board.set(" §8| §fJoueur" + ((this.online == 1) ? "" : "s") + "§f: §c"+ this.online + "§f/§c"+ this.maxplayer, Integer.valueOf(line--));
         board.set(" §8| §fHost §f: §c"+ this.hostName, Integer.valueOf(line--));
-        board.set(" §8| §fJeu §f: §6"+ this.moduleName, Integer.valueOf(line--));
+        
+        if (activeExternalModule != null) {
+            board.set(" §8| §fJeu §f: " + activeExternalModule.getColor() + this.moduleName, Integer.valueOf(line--));
+        } else {
+            board.set(" §8| §fJeu §f: §6"+ this.moduleName, Integer.valueOf(line--));
+        }
+        
         if (this.teams) {
             int am = this.api.getGameManager().getGameConfig().getPlayerPerTeam();
             board.set(" §8| §fÉquipes §f: §c" + am + "§fvs§c"+ am, Integer.valueOf(line--));
