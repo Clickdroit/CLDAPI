@@ -13,7 +13,6 @@ import fr.clickdroit.api.module.Modules;
 import fr.clickdroit.api.module.games.UHCModule;
 import fr.clickdroit.api.i18n.MessageProvider;
 import fr.clickdroit.api.i18n.Messages;
-import fr.clickdroit.api.registry.CommandRegistry;
 import fr.clickdroit.api.service.GameService;
 import fr.clickdroit.api.service.ServiceManager;
 import fr.clickdroit.api.service.impl.*;
@@ -86,7 +85,6 @@ public class API extends JavaPlugin {
 
     private MessageProvider messageProvider;
 
-    private CommandRegistry commandRegistry;
 
     public static API getAPI() {
         return api;
@@ -106,9 +104,6 @@ public class API extends JavaPlugin {
         // Initialiser le ServiceManager
         this.serviceManager = new ServiceManager(this);
         registerServices();
-
-        // Initialiser le CommandRegistry
-        this.commandRegistry = new CommandRegistry(this);
 
         ((World) getServer().getWorlds().get(0)).getPopulators().add(new Generator());
         this.gameManager = new GameManager(this);
@@ -259,12 +254,4 @@ public class API extends JavaPlugin {
         return this.messageProvider;
     }
 
-    /**
-     * Retourne le registre des commandes.
-     *
-     * @return le CommandRegistry
-     */
-    public CommandRegistry getCommandRegistry() {
-        return this.commandRegistry;
-    }
 }

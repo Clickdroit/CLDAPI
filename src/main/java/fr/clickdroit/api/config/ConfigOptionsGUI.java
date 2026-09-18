@@ -177,6 +177,8 @@ public class ConfigOptionsGUI implements CustomInventory {
                 this.gameManager.getApi().openInventory(player, DeconnexionTimeGUI.class);
                 player.playSound(player.getLocation(), Sound.NOTE_STICKS,1.0F,1.0F);
                 break;
+            default:
+                break;
         }
         if (clickedItem.getType() == Material.ARROW || slot == 40) {
             this.gameManager.getApi().openInventory(player, ConfigMainGUI.class);

@@ -5,6 +5,7 @@ import fr.clickdroit.api.common.player.PlayerUtils;
 import fr.clickdroit.api.config.GameConfig;
 import fr.clickdroit.api.game.GameManager;
 import fr.clickdroit.api.game.GameUtils;
+import fr.clickdroit.api.utils.ApolloManager;
 import fr.clickdroit.api.utils.DaMath;
 import fr.clickdroit.api.utils.Title;
 import org.bukkit.Bukkit;
@@ -53,6 +54,15 @@ public class TeamManager {
                 this.gameManager.getApi().getCommon().getScoreboard().getTeam(teams.getName())
                         .addPlayer((OfflinePlayer) player);
                 PlayerUtils.giveDefaultItems(player);
+
+                // Mettre à jour Apollo (glow + team markers) immédiatement
+                Set<UUID> teamMembers = new HashSet<>();
+                for (Map.Entry<UUID, Teams> entry : this.playerTeam.entrySet()) {
+                    if (entry.getValue().equals(teams)) {
+                        teamMembers.add(entry.getKey());
+                    }
+                }
+                ApolloManager.updateTeam(teams, teamMembers);
             }
         } else {
             player.sendMessage("§cCette équipe est complète.");

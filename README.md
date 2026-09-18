@@ -307,3 +307,19 @@ Ce projet est propriétaire. Tous droits réservés © Clickdroit.
 ## Auteur
 
 - **Clickdroit** - Développeur principal
+
+## Compilation depuis PowerShell
+
+Le code cible Java 8. Le wrapper Gradle peut nécessiter un JDK plus récent pour fonctionner. La compilation nécessite les dépendances Spigot et Apollo déclarées dans `build.gradle`.
+
+Depuis la racine du dépôt :
+
+```powershell
+java -version
+.\gradlew.bat --no-daemon test shadowJar
+```
+
+Le wrapper fourni choisit la version de Gradle du projet. Sa première
+exécution peut télécharger Gradle et les dépendances. Une compilation réussie
+ne vérifie pas le comportement sur un serveur réel : tester ensuite sur une
+instance de développement avec sa configuration dédiée.

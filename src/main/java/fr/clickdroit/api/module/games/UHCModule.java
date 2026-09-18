@@ -6,6 +6,7 @@ import fr.clickdroit.api.game.team.TeamManager;
 import fr.clickdroit.api.game.team.Teams;
 import fr.clickdroit.api.module.Modules;
 import fr.clickdroit.api.utils.InventoryAPI;
+import fr.clickdroit.api.utils.ApolloManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -30,29 +31,42 @@ public class UHCModule extends Modules {
     public void onStart(API api) {
         api.getLobbyPopulator().loadCenter();
         api.getCommon().getScoreboardManager().setScoreboardContents(() -> new UHCScoreboard(api.getGameManager()));
+
+        // Envoyer le waypoint Centre (0,0) à tous les joueurs en jeu
+        for (UUID uuid : api.getGameManager().getInGamePlayers()) {
+            Player player = Bukkit.getPlayer(uuid);
+            if (player != null && player.isOnline()) {
+                ApolloManager.displayCenterWaypoint(player);
+            }
+        }
     }
 
-    public void onEpisodeSwitch() {}
+    public void onEpisodeSwitch() {
+    }
 
-    public void init() {}
+    public void init() {
+    }
 
     public void onPlayerDeath(Player player, Player killer) {
         String deathMessage;
         super.onPlayerDeath(player, killer);
         if (GameUtils.isSoloMode()) {
             if (killer == null) {
-                deathMessage = "§8| §c"+ player.getName() + " §fest mort.";
+                deathMessage = "§8| §c" + player.getName() + " §fest mort.";
             } else {
-                deathMessage = "§8| §c"+ player.getName() + " §fa été tué par §c"+ killer.getName() + "§f.";
+                deathMessage = "§8| §c" + player.getName() + " §fa été tué par §c" + killer.getName() + "§f.";
             }
         } else {
             TeamManager teamManager = this.api.getGameManager().getTeamManager();
-            Teams playerTeam = (Teams)teamManager.getPlayerTeam().get(player.getUniqueId());
+            Teams playerTeam = (Teams) teamManager.getPlayerTeam().get(player.getUniqueId());
             if (killer == null) {
-                deathMessage = "§8| §c"+ playerTeam.getColor() + playerTeam.getName() + " " + player.getName() + " est mort.";
+                deathMessage = "§8| §c" + playerTeam.getColor() + playerTeam.getName() + " " + player.getName()
+                        + " est mort.";
             } else {
-                Teams killerTeam = (Teams)teamManager.getPlayerTeam().get(killer.getUniqueId());
-                deathMessage = "§8| §c"+ playerTeam.getColor() + playerTeam.getName() + " " + player.getName() + " a été tué par " + killerTeam.getColor() + killerTeam.getName() + " " + killer.getName() + ".";
+                Teams killerTeam = (Teams) teamManager.getPlayerTeam().get(killer.getUniqueId());
+                deathMessage = "§8| §c" + playerTeam.getColor() + playerTeam.getName() + " " + player.getName()
+                        + " a été tué par " + killerTeam.getColor() + killerTeam.getName() + " " + killer.getName()
+                        + ".";
             }
         }
         for (ItemStack item : InventoryAPI.itemsDeath) {
@@ -72,23 +86,44 @@ public class UHCModule extends Modules {
         if (this.api.getGameManager().getInGamePlayers().contains(player.getUniqueId())) {
             TeamManager teamManager = this.api.getGameManager().getTeamManager();
             if (!GameUtils.isSoloMode() && teamManager.getPlayerTeam().containsKey(player.getUniqueId())) {
-                Teams teams = (Teams)teamManager.getPlayerTeam().get(player.getUniqueId());
+                Teams teams = (Teams) teamManager.getPlayerTeam().get(player.getUniqueId());
                 if (message.startsWith("!")) {
                     for (Player players : Bukkit.getOnlinePlayers()) {
-                        players.sendMessage(teams.getColor() + teams.getName() + " " + player.getName() + " §8> " + (player.isOp() ? "§f": "§f") + message.replaceFirst("!", "").replaceAll(players.getName(), message.contains(players.getName()) ? ("§b@"+ players.getName() + (player.isOp() ? "§f": "§f")) : players.getName()));
+                        players.sendMessage(
+                                teams.getColor() + teams.getName() + " " + player.getName() + " §8> "
+                                        + (player
+                                                .isOp() ? "§f"
+                                                        : "§f")
+                                        + message.replaceFirst("!", "").replaceAll(players.getName(),
+                                                message.contains(players.getName())
+                                                        ? ("§b@" + players.getName() + (player.isOp() ? "§f" : "§f"))
+                                                        : players.getName()));
                         if (message.contains(players.getName()))
                             players.playSound(players.getLocation(), Sound.ORB_PICKUP, 5.0F, 0.0F);
                     }
                 } else {
                     for (Player players : teamManager.getPlayersInTeam(teams)) {
-                        players.sendMessage("§f(§féquipe§f" + teams.getColor() + teams.getName() + " " + player.getName() + " §8> " + (player.isOp() ? "§f": "§f") + message.replaceFirst("!", "").replaceAll(players.getName(), message.contains(players.getName()) ? ("§b@"+ players.getName() + (player.isOp() ? "§f": "§f")) : players.getName()));
+                        players.sendMessage(
+                                "§f(§féquipe§f" + teams.getColor() + teams.getName() + " " + player.getName() + " §8> "
+                                        + (player
+                                                .isOp() ? "§f"
+                                                        : "§f")
+                                        + message.replaceFirst("!", "").replaceAll(players.getName(),
+                                                message.contains(players.getName())
+                                                        ? ("§b@" + players.getName() + (player.isOp() ? "§f" : "§f"))
+                                                        : players.getName()));
                         if (message.contains(players.getName()))
                             players.playSound(players.getLocation(), Sound.ORB_PICKUP, 5.0F, 0.0F);
                     }
                 }
             } else {
                 for (Player players : Bukkit.getOnlinePlayers()) {
-                    players.sendMessage((player.isOp() ? ("§c§lOP" + player.getName()) : ("§f"+ player.getName())) + " §8> " + (player.isOp() ? "§f": "§f") + message.replaceAll(players.getName(), message.contains(players.getName()) ? ("§b@"+ players.getName() + (player.isOp() ? "§f": "§f")) : players.getName()));
+                    players.sendMessage((player.isOp() ? ("§c§lOP" + player.getName()) : ("§f" + player.getName()))
+                            + " §8> " + (player.isOp() ? "§f" : "§f")
+                            + message.replaceAll(players.getName(),
+                                    message.contains(players.getName())
+                                            ? ("§b@" + players.getName() + (player.isOp() ? "§f" : "§f"))
+                                            : players.getName()));
                     if (message.contains(players.getName()))
                         players.playSound(players.getLocation(), Sound.ORB_PICKUP, 5.0F, 0.0F);
                 }
@@ -96,7 +131,10 @@ public class UHCModule extends Modules {
         } else {
             for (Player players : Bukkit.getOnlinePlayers()) {
                 if (!this.api.getGameManager().getInGamePlayers().contains(players.getUniqueId())) {
-                    players.sendMessage("§f[§fSpectateurs§f] §f"+ player.getName() + " §8> §f" + message.replaceAll(players.getName(), message.contains(players.getName()) ? ("§b@"+ players.getName() + "§f") : players.getName()));
+                    players.sendMessage("§f[§fSpectateurs§f] §f" + player.getName() + " §8> §f"
+                            + message.replaceAll(players.getName(),
+                                    message.contains(players.getName()) ? ("§b@" + players.getName() + "§f")
+                                            : players.getName()));
                     if (message.contains(players.getName()))
                         players.playSound(players.getLocation(), Sound.ORB_PICKUP, 5.0F, 0.0F);
                 }
@@ -106,11 +144,18 @@ public class UHCModule extends Modules {
 
     public void onClockUpdate(int gameTime) {
         this.api.getGameManager().getTeamManager().setPlayersTeamArrow();
+        // Mise à jour périodique des positions Apollo (glow + marqueurs)
+        if (!GameUtils.isSoloMode()) {
+            ApolloManager.updateAllTeams(this.api.getGameManager().getTeamManager());
+        }
     }
 
-    public void onPlayerReconnect(Player player) {}
+    public void onPlayerReconnect(Player player) {
+        ApolloManager.displayCenterWaypoint(player);
+    }
 
-    public void onPlayerDisconnect(Player player) {}
+    public void onPlayerDisconnect(Player player) {
+    }
 
     public void onDay(boolean sendMessage) {
         super.onDay(false);

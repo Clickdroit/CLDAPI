@@ -159,6 +159,7 @@ public class Common {
         pluginManager.registerEvents((Listener) new ChunkUnloadListener(), (Plugin) this.main);
         pluginManager.registerEvents((Listener) new PlayerBrewItemListener(), (Plugin) this.main);
         pluginManager.registerEvents((Listener) new PlayerEnchantListener(), (Plugin) this.main);
+        pluginManager.registerEvents((Listener) this.gameManager.getCombatLogManager(), (Plugin) this.main);
     }
 
     private void registerInventories() {

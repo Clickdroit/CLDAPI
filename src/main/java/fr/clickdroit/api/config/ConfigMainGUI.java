@@ -369,6 +369,8 @@ public class ConfigMainGUI implements CustomInventory {
                 // Rafraîchir l'inventaire pour montrer le nouveau statut
                 this.api.openInventory(player, getClass());
                 break;
+            default:
+                break;
         }
 
     }

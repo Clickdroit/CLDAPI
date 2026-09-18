@@ -2,10 +2,8 @@ package fr.clickdroit.api.listener;
 
 import fr.clickdroit.api.API;
 import fr.clickdroit.api.GamePlayer;
-import fr.clickdroit.api.UHCInfos;
 import fr.clickdroit.api.common.player.PlayerUtils;
 import fr.clickdroit.api.config.common.GameAccess;
-import fr.clickdroit.api.game.GameState;
 import fr.clickdroit.api.game.GameUtils;
 import fr.clickdroit.api.module.ModuleType;
 import fr.clickdroit.api.utils.TabHandler;
@@ -17,7 +15,6 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -26,7 +23,6 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
@@ -175,6 +171,7 @@ public class PlayerJoinListener implements Listener {
             // Joueur qui se reconnecte
             event.setJoinMessage("§f[§a§l+§f] §a" + player.getName() + " §fs'est reconnecté.");
             this.api.getGameManager().getOfflinePlayers().remove(uuid);
+            this.api.getGameManager().getCombatLogManager().onLogin(player);
             this.api.getGameManager().getApi().getModules().onPlayerReconnect(player);
             TabHandler.removePrefixFor(player);
         } else {
@@ -193,7 +190,8 @@ public class PlayerJoinListener implements Listener {
      */
     private void sendWelcomeMessage(Player player, ModuleType moduleType, UUID uuid) {
         GameAccess access = this.api.getGameManager().getGameConfig().getGameAccess();
-        String hostName = (UHCInfos.hostName == null) ? "Aucun" : UHCInfos.hostName;
+        UUID hostId = this.api.getGameManager().getGameHost();
+        String hostName = (hostId == null || Bukkit.getOfflinePlayer(hostId).getName() == null) ? "Aucun" : Bukkit.getOfflinePlayer(hostId).getName();
 
         player.sendMessage("");
         player.sendMessage("   §f(§c!§f) §fVous avez rejoint le serveur de §c§l§n" + hostName + "§f.");
@@ -340,7 +338,7 @@ public class PlayerJoinListener implements Listener {
                     this.api.getGameManager().getApi().getModules().onPlayerDisconnect(player);
 
                     // Message de déconnexion avec conversion en minutes
-                    int disconnectTimeSeconds = this.api.getGameManager().getGameConfig().getDisconnectMinute();
+                    int disconnectTimeSeconds = this.api.getGameManager().getGameConfig().getDisconnectSeconds();
                     int disconnectTimeMinutes = disconnectTimeSeconds / 60;
                     event.setQuitMessage(
                             "§f[§c§l?§f] §c" + player.getName() + " §fs'est déconnecté, il dispose de §b" +

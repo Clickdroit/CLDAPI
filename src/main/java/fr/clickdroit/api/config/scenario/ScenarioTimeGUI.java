@@ -99,6 +99,8 @@ public class ScenarioTimeGUI implements Listener {
                     case ARROW:
                         API.getAPI().getCommon().getScenariosGUI().openInventory(player);
                         break;
+                    default:
+                        break;
                 }
                 break;
             }

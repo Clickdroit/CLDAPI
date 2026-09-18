@@ -65,6 +65,8 @@ public class DiamondMaxGUI implements CustomInventory {
             case ARROW:
                 this.gameManager.getApi().openInventory(player, ConfigMainGUI.class);
                 break;
+            default:
+                break;
         }
     }
 

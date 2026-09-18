@@ -103,6 +103,8 @@ public class GamePlayer {
         this.lastFight = -1L;
         this.invincibilityCount = 0;
         this.invincibilityNoFallCount = 0;
+        this.op = false;
+        this.headstaff = false;
         addPlayer(this);
     }
 
@@ -317,7 +319,9 @@ public class GamePlayer {
     }
 
     public static void addPlayer(GamePlayer up) {
-        gamePlayers.add(up);
+        if (!havePlayer(up.getUuid())) {
+            gamePlayers.add(up);
+        }
     }
 
     public static void removePlayer(UUID uuid) {
@@ -336,7 +340,15 @@ public class GamePlayer {
         return this.op;
     }
 
+    public void setOp(boolean op) {
+        this.op = op;
+    }
+
     public boolean isHeadStaff() {
         return this.headstaff;
+    }
+
+    public void setHeadStaff(boolean headstaff) {
+        this.headstaff = headstaff;
     }
 }

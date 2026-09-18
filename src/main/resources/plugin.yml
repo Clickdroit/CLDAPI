@@ -1,4 +1,4 @@
-name: UHCAPI
+name: CLDAPI
 main: fr.clickdroit.api.API
 version: 1.0
 author: clickdroit

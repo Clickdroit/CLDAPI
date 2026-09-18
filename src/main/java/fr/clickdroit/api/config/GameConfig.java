@@ -57,7 +57,7 @@ public class GameConfig {
 
     private int episodeTime;
 
-    private int disconnectMinute;
+    private int disconnectSeconds;
 
     private WaitingTeleportationState teleportationState;
 
@@ -85,7 +85,7 @@ public class GameConfig {
         this.openDate = Date.from(Instant.now());
         this.serverHourSetup = true;
         this.episodeTime = UHCConstants.DEFAULT_EPISODE_TIME;
-        this.disconnectMinute = UHCConstants.DEFAULT_DISCONNECT_TIME;
+        this.disconnectSeconds = UHCConstants.DEFAULT_DISCONNECT_TIME;
         this.teleportationState = WaitingTeleportationState.IN_LOBBY;
     }
 
@@ -285,12 +285,12 @@ public class GameConfig {
         this.openDate = openDate;
     }
 
-    public int getDisconnectMinute() {
-        return this.disconnectMinute;
+    public int getDisconnectSeconds() {
+        return this.disconnectSeconds;
     }
 
-    public void setDisconnectMinute(int disconnectMinute) {
-        this.disconnectMinute = disconnectMinute;
+    public void setDisconnectSeconds(int disconnectSeconds) {
+        this.disconnectSeconds = disconnectSeconds;
     }
 
     public WaitingTeleportationState getTeleportationState() {

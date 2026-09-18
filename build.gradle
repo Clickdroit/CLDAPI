@@ -3,9 +3,9 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
-group = 'fr.clickdroit.uhc'
+group = 'fr.clickdroit.api'
 version = '1.0'
-description = 'UHC Plugin'
+description = 'CLDAPI - UHC API Plugin'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8

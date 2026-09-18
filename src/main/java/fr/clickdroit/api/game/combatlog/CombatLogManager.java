@@ -47,6 +47,32 @@ public class CombatLogManager implements Listener {
         }
     }
 
+    /**
+     * Gère la reconnexion d'un joueur : récupère la vie du villageois et le despawn
+     */
+    public void onLogin(Player player) {
+        GamePlayer gamePlayer = GamePlayer.getPlayer(player.getUniqueId());
+        if (gamePlayer == null)
+            return;
+
+        CombatLogEntity combatLog = gamePlayer.getCombatLogEntity();
+        if (combatLog == null)
+            return;
+
+        // Récupérer la vie du villageois et l'appliquer au joueur
+        double villagerHealth = combatLog.getCurrentHealth();
+        if (villagerHealth > 0) {
+            player.setHealth(Math.min(villagerHealth, player.getMaxHealth()));
+        }
+
+        // Supprimer le villageois
+        combatLog.remove();
+        gamePlayer.setCombatLogEntity(null);
+
+        this.gameManager.broadcastWithPrefix(
+                UHCConstants.COLOR_SUCCESS + gamePlayer.getName() + " s'est reconnecté.");
+    }
+
     @EventHandler(priority = EventPriority.HIGH)
     public void onCombatLogDeath(EntityDeathEvent event) {
         if (!(event.getEntity() instanceof org.bukkit.entity.Villager))
@@ -70,8 +96,31 @@ public class CombatLogManager implements Listener {
         gamePlayer.setAlive(false);
         this.gameManager.getInGamePlayers().remove(gamePlayer.getUuid());
 
+        // Drop des items du joueur
+        if (gamePlayer.getLastLocation() != null) {
+            for (org.bukkit.inventory.ItemStack item : gamePlayer.getPlayerInv()) {
+                if (item != null && item.getType() != org.bukkit.Material.AIR)
+                    gamePlayer.getLastLocation().getWorld().dropItemNaturally(gamePlayer.getLastLocation(), item);
+            }
+            for (org.bukkit.inventory.ItemStack item : gamePlayer.getPlayerArmor()) {
+                if (item != null && item.getType() != org.bukkit.Material.AIR)
+                    gamePlayer.getLastLocation().getWorld().dropItemNaturally(gamePlayer.getLastLocation(), item);
+            }
+        }
+
+        // Élimination de l'équipe si dernier membre
+        if (!GameUtils.isSoloMode() && this.gameManager.getTeamManager().getPlayerTeam().containsKey(gamePlayer.getUuid())) {
+            fr.clickdroit.api.game.team.Teams team = (fr.clickdroit.api.game.team.Teams) this.gameManager.getTeamManager().getPlayerTeam().get(gamePlayer.getUuid());
+            this.gameManager.getTeamManager().killTeam(team);
+        }
+
         this.gameManager.broadcastWithPrefix("§c" + gamePlayer.getName() + " est mort en étant déconnecté !");
 
+        // Vérifier la fin de partie
+        fr.clickdroit.api.API api = this.gameManager.getApi();
+        if (api.getModules() instanceof fr.clickdroit.api.module.games.UHCModule) {
+            ((fr.clickdroit.api.module.games.UHCModule) api.getModules()).getUhcFinisher().tryFinishGame();
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

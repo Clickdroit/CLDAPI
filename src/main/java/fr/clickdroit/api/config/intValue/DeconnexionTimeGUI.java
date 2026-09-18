@@ -56,7 +56,7 @@ public class DeconnexionTimeGUI implements CustomInventory {
                 .addLore("  §8| §fle temps necéssaire pour")
                 .addLore("  §8| §fmourir de déconnexion.")
                 .addLore("")
-                .addLore(" §8> §fConfiguration: §c" + formatTime(this.gameConfig.getDisconnectMinute()))
+                .addLore(" §8> §fConfiguration: §c" + formatTime(this.gameConfig.getDisconnectSeconds()))
                 .addLore("")
                 .addLore(CommonString.CLICK_HERE_TO_MODIFY.getMessage())
                 .addLore("")
@@ -143,19 +143,19 @@ public class DeconnexionTimeGUI implements CustomInventory {
 
             // Gestion des têtes de diminution (rouges)
             if (itemName.contains("§c§l-10")) {
-                this.gameConfig.setDisconnectMinute(this.gameConfig.getDisconnectMinute() - 10);
+                this.gameConfig.setDisconnectSeconds(this.gameConfig.getDisconnectSeconds() - 10);
             } else if (itemName.contains("§c§l-30")) {
-                this.gameConfig.setDisconnectMinute(this.gameConfig.getDisconnectMinute() - 30);
+                this.gameConfig.setDisconnectSeconds(this.gameConfig.getDisconnectSeconds() - 30);
             } else if (itemName.contains("§c§l-60")) {
-                this.gameConfig.setDisconnectMinute(this.gameConfig.getDisconnectMinute() - 60);
+                this.gameConfig.setDisconnectSeconds(this.gameConfig.getDisconnectSeconds() - 60);
             }
             // Gestion des têtes d'augmentation (vertes)
             else if (itemName.contains("§a§l+10")) {
-                this.gameConfig.setDisconnectMinute(this.gameConfig.getDisconnectMinute() + 10);
+                this.gameConfig.setDisconnectSeconds(this.gameConfig.getDisconnectSeconds() + 10);
             } else if (itemName.contains("§a§l+30")) {
-                this.gameConfig.setDisconnectMinute(this.gameConfig.getDisconnectMinute() + 30);
+                this.gameConfig.setDisconnectSeconds(this.gameConfig.getDisconnectSeconds() + 30);
             } else if (itemName.contains("§a§l+60")) {
-                this.gameConfig.setDisconnectMinute(this.gameConfig.getDisconnectMinute() + 60);
+                this.gameConfig.setDisconnectSeconds(this.gameConfig.getDisconnectSeconds() + 60);
             }
             // Gestion du retour
             else if (itemName.contains("§fRevenir en arrière")) {
@@ -165,13 +165,13 @@ public class DeconnexionTimeGUI implements CustomInventory {
             }
 
             // Vérifier les limites
-            if (this.gameConfig.getDisconnectMinute() > 2400) {
-                this.gameConfig.setDisconnectMinute(2400);
+            if (this.gameConfig.getDisconnectSeconds() > 2400) {
+                this.gameConfig.setDisconnectSeconds(2400);
                 player.playSound(player.getLocation(), Sound.VILLAGER_NO, 10.0F, 1.0F);
                 player.sendMessage("§c§l✗ §fLe temps maximum d'activation du PvP est de §c40m§f!");
             }
-            if (this.gameConfig.getDisconnectMinute() < 60) {
-                this.gameConfig.setDisconnectMinute(60);
+            if (this.gameConfig.getDisconnectSeconds() < 60) {
+                this.gameConfig.setDisconnectSeconds(60);
                 player.playSound(player.getLocation(), Sound.VILLAGER_NO, 10.0F, 1.0F);
                 player.sendMessage("§c§l✗ §fLe temps minimum d'activation du PvP est de §c1m§f!");
             }

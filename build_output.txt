@@ -1,0 +1,171 @@
+﻿Starting a Gradle Daemon, 3 incompatible and 9 stopped Daemons could not be reused, use --status for details
+
+> Task :compileJava
+.\gradlew.bat : warning: [options] source value 8 
+is obsolete and will be removed in a future release
+Au caractère Ligne:1 : 1
++ .\gradlew.bat build 2>&1 | Out-File -FilePath 
+build_output.txt -Encod ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (warni 
+   ng: [optio... future release:String) [], Remot  
+  eException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+warning: [options] target value 8 is obsolete and 
+will be removed in a future release
+warning: [options] To suppress warnings about 
+obsolete options, use -Xlint:-options.
+E:\dev\CLDAPI\src\main\java\fr\clickdroit\api\comma
+nds\HostCommand.java:5: error: cannot find symbol
+import fr.clickdroit.api.UHCInfos;
+                        ^
+  symbol:   class UHCInfos
+  location: package fr.clickdroit.api
+E:\dev\CLDAPI\src\main\java\fr\clickdroit\api\commo
+n\scoreboard\DefaultScoreboardContents.java:4: 
+error: cannot find symbol
+import fr.clickdroit.api.UHCInfos;
+                        ^
+  symbol:   class UHCInfos
+  location: package fr.clickdroit.api
+E:\dev\CLDAPI\src\main\java\fr\clickdroit\api\liste
+ner\PlayerJoinListener.java:5: error: cannot find 
+symbol
+import fr.clickdroit.api.UHCInfos;
+                        ^
+  symbol:   class UHCInfos
+  location: package fr.clickdroit.api
+E:\dev\CLDAPI\src\main\java\fr\clickdroit\api\comma
+nds\HostCommand.java:193: error: cannot find symbol
+                                UHCInfos.hostName 
+= player1.getName();
+                                ^
+  symbol:   variable UHCInfos
+  location: class HostCommand
+E:\dev\CLDAPI\src\main\java\fr\clickdroit\api\commo
+n\scoreboard\DefaultScoreboardContents.java:36: 
+error: cannot find symbol
+        this.hostName = (UHCInfos.hostName == 
+null) ? "Aucun" : UHCInfos.hostName;
+                         ^
+  symbol:   variable UHCInfos
+  location: class DefaultScoreboardContents
+E:\dev\CLDAPI\src\main\java\fr\clickdroit\api\commo
+n\scoreboard\DefaultScoreboardContents.java:36: 
+error: cannot find symbol
+        this.hostName = (UHCInfos.hostName == 
+null) ? "Aucun" : UHCInfos.hostName;
+                                                   
+             ^
+  symbol:   variable UHCInfos
+  location: class DefaultScoreboardContents
+E:\dev\CLDAPI\src\main\java\fr\clickdroit\api\confi
+g\intValue\DeconnexionTimeGUI.java:146: error: 
+cannot find symbol
+                this.gameConfig.setDisconnectMinute
+(this.gameConfig.getDisconnectSeconds() - 10);
+                               ^
+  symbol:   method setDisconnectMinute(int)
+  location: variable gameConfig of type GameConfig
+E:\dev\CLDAPI\src\main\java\fr\clickdroit\api\confi
+g\intValue\DeconnexionTimeGUI.java:148: error: 
+cannot find symbol
+                this.gameConfig.setDisconnectMinute
+(this.gameConfig.getDisconnectSeconds() - 30);
+                               ^
+  symbol:   method setDisconnectMinute(int)
+  location: variable gameConfig of type GameConfig
+E:\dev\CLDAPI\src\main\java\fr\clickdroit\api\confi
+g\intValue\DeconnexionTimeGUI.java:150: error: 
+cannot find symbol
+                this.gameConfig.setDisconnectMinute
+(this.gameConfig.getDisconnectSeconds() - 60);
+                               ^
+  symbol:   method setDisconnectMinute(int)
+  location: variable gameConfig of type GameConfig
+E:\dev\CLDAPI\src\main\java\fr\clickdroit\api\confi
+g\intValue\DeconnexionTimeGUI.java:154: error: 
+cannot find symbol
+                this.gameConfig.setDisconnectMinute
+(this.gameConfig.getDisconnectSeconds() + 10);
+                               ^
+  symbol:   method setDisconnectMinute(int)
+  location: variable gameConfig of type GameConfig
+E:\dev\CLDAPI\src\main\java\fr\clickdroit\api\confi
+g\intValue\DeconnexionTimeGUI.java:156: error: 
+cannot find symbol
+                this.gameConfig.setDisconnectMinute
+(this.gameConfig.getDisconnectSeconds() + 30);
+                               ^
+  symbol:   method setDisconnectMinute(int)
+  location: variable gameConfig of type GameConfig
+E:\dev\CLDAPI\src\main\java\fr\clickdroit\api\confi
+g\intValue\DeconnexionTimeGUI.java:158: error: 
+cannot find symbol
+                this.gameConfig.setDisconnectMinute
+(this.gameConfig.getDisconnectSeconds() + 60);
+                               ^
+  symbol:   method setDisconnectMinute(int)
+  location: variable gameConfig of type GameConfig
+E:\dev\CLDAPI\src\main\java\fr\clickdroit\api\confi
+g\intValue\DeconnexionTimeGUI.java:169: error: 
+cannot find symbol
+                
+this.gameConfig.setDisconnectMinute(2400);
+                               ^
+  symbol:   method setDisconnectMinute(int)
+  location: variable gameConfig of type GameConfig
+E:\dev\CLDAPI\src\main\java\fr\clickdroit\api\confi
+g\intValue\DeconnexionTimeGUI.java:174: error: 
+cannot find symbol
+                
+this.gameConfig.setDisconnectMinute(60);
+                               ^
+  symbol:   method setDisconnectMinute(int)
+  location: variable gameConfig of type GameConfig
+E:\dev\CLDAPI\src\main\java\fr\clickdroit\api\liste
+ner\PlayerJoinListener.java:198: error: cannot 
+find symbol
+        String hostName = (UHCInfos.hostName == 
+null) ? "Aucun" : UHCInfos.hostName;
+                           ^
+  symbol:   variable UHCInfos
+  location: class PlayerJoinListener
+E:\dev\CLDAPI\src\main\java\fr\clickdroit\api\liste
+ner\PlayerJoinListener.java:198: error: cannot 
+find symbol
+        String hostName = (UHCInfos.hostName == 
+null) ? "Aucun" : UHCInfos.hostName;
+                                                   
+               ^
+  symbol:   variable UHCInfos
+  location: class PlayerJoinListener
+Note: Some input files use or override a 
+deprecated API.
+Note: Recompile with -Xlint:deprecation for 
+details.
+16 errors
+3 warnings
+
+> Task :compileJava FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':compileJava'.
+> Compilation failed; see the compiler error 
+output for details.
+
+* Try:
+> Run with --info option to get more log output.
+> Run with --scan to get full insights.
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.5/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 17s
+1 actionable task: 1 executed

@@ -72,7 +72,7 @@ public abstract class Modules {
             if (item != null && item.getType() != Material.AIR)
                 gamePlayer.getLastLocation().getWorld().dropItemNaturally(gamePlayer.getLastLocation(), item);
         }
-        int disconnectMinutes = api.getGameManager().getGameConfig().getDisconnectMinute() / 60;
+        int disconnectMinutes = api.getGameManager().getGameConfig().getDisconnectSeconds() / 60;
         Bukkit.broadcastMessage("§f[§c§l!§f] §a" + gamePlayer.getName() + "§fs'est §bdéconnecté pendant plus de "
                 + disconnectMinutes + " minute(s) §fet a été §céliminé§f.");
     }

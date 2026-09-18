@@ -1,0 +1,23 @@
+﻿ M build.gradle
+ M src/main/java/fr/clickdroit/api/API.java
+ M src/main/java/fr/clickdroit/api/GamePlayer.java
+ D src/main/java/fr/clickdroit/api/UHCInfos.java
+ M src/main/java/fr/clickdroit/api/commands/ReviveCommand.java
+ M src/main/java/fr/clickdroit/api/common/Common.java
+ M src/main/java/fr/clickdroit/api/config/GameConfig.java
+ M src/main/java/fr/clickdroit/api/config/GameConfigPersistence.java
+ M src/main/java/fr/clickdroit/api/config/intValue/DeconnexionTimeGUI.java
+ M src/main/java/fr/clickdroit/api/game/combatlog/CombatLogEntity.java
+ M src/main/java/fr/clickdroit/api/game/combatlog/CombatLogManager.java
+ M src/main/java/fr/clickdroit/api/game/team/TeamManager.java
+ M src/main/java/fr/clickdroit/api/game/teleportation/TeleportationManager.java
+ M src/main/java/fr/clickdroit/api/listener/PlayerJoinListener.java
+ M src/main/java/fr/clickdroit/api/module/Modules.java
+ D src/main/java/fr/clickdroit/api/module/external/GameModule.java
+ D src/main/java/fr/clickdroit/api/module/external/GameModuleAdapter.java
+ D src/main/java/fr/clickdroit/api/module/external/GameModuleRegistry.java
+ M src/main/java/fr/clickdroit/api/module/games/UHCModule.java
+ D src/main/java/fr/clickdroit/api/registry/ModuleRegistry.java
+ M src/main/java/fr/clickdroit/api/utils/ApolloManager.java
+ M src/main/resources/plugin.yml
+?? git_status.txt

@@ -1,7 +1,6 @@
 package fr.clickdroit.api.common.scoreboard;
 
 import fr.clickdroit.api.API;
-import fr.clickdroit.api.UHCInfos;
 import fr.clickdroit.api.game.GameUtils;
 import fr.clickdroit.api.module.ModuleType;
 import fr.minuskube.netherboard.bukkit.BPlayerBoard;
@@ -33,7 +32,8 @@ public class DefaultScoreboardContents implements ScoreboardContents {
         this.moduleName = this.api.getGameManager().getModuleManager().getCurrentModule().getName();
         this.teams = !GameUtils.isSoloMode();
         this.moduleType = this.api.getGameManager().getModuleManager().getCurrentModule();
-        this.hostName = (UHCInfos.hostName == null) ? "Aucun" : UHCInfos.hostName;
+        java.util.UUID hostId = this.api.getGameManager().getGameHost();
+        this.hostName = (hostId == null || org.bukkit.Bukkit.getOfflinePlayer(hostId).getName() == null) ? "Aucun" : org.bukkit.Bukkit.getOfflinePlayer(hostId).getName();
     }
 
     public void setLines(BPlayerBoard board, UUID player, String ip) {

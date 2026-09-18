@@ -43,6 +43,8 @@ public class AdminPanelGUI implements CustomInventory {
             case ARROW:
                 API.getAPI().openInventory(player, ConfigMainGUI.class);
                 break;
+            default:
+                break;
         }
     }
 

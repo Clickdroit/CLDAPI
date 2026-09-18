@@ -69,7 +69,7 @@ public class GameConfigPersistence {
             yaml.set("general.player-per-team", config.getPlayerPerTeam());
             yaml.set("general.day-night-duration", config.getDayNightDuration());
             yaml.set("general.episode-time", config.getEpisodeTime());
-            yaml.set("general.disconnect-minute", config.getDisconnectMinute());
+            yaml.set("general.disconnect-seconds", config.getDisconnectSeconds());
             
             // Options de jeu
             yaml.set("options.show-all-teams", config.isShowAllTeams());
@@ -151,8 +151,8 @@ public class GameConfigPersistence {
             if (yaml.contains("general.episode-time")) {
                 config.setEpisodeTime(yaml.getInt("general.episode-time"));
             }
-            if (yaml.contains("general.disconnect-minute")) {
-                config.setDisconnectMinute(yaml.getInt("general.disconnect-minute"));
+            if (yaml.contains("general.disconnect-seconds")) {
+                config.setDisconnectSeconds(yaml.getInt("general.disconnect-seconds"));
             }
             
             // Options de jeu

@@ -295,8 +295,9 @@ public class TeleportationManager {
      * Version optimisée de launchAll
      */
     public static void launchAllOptimized(List<PlayerPlate> players) {
-        // Traitement en parallèle pour de meilleures performances
-        players.parallelStream().forEach(PlayerPlate::removePlate);
+        // Exécution synchrone sur le thread principal (requis par Bukkit pour les
+        // modifications de blocs)
+        players.forEach(PlayerPlate::removePlate);
     }
 
     public Collection<PlayerPlate> getPlayers() {

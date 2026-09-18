@@ -2,7 +2,6 @@ package fr.clickdroit.api.commands;
 
 import com.google.common.base.Joiner;
 import fr.clickdroit.api.GamePlayer;
-import fr.clickdroit.api.UHCInfos;
 import fr.clickdroit.api.common.player.PlayerUtils;
 import fr.clickdroit.api.common.rules.Rules;
 import fr.clickdroit.api.config.ConfigMainGUI;
@@ -35,7 +34,6 @@ public class HostCommand implements CommandExecutor {
             if (this.gameManager.hasHostAccess(player)) {
                 StringBuilder stringBuilder;
                 List<String> hosts;
-                String msg;
                 String name;
                 String target;
                 GamePlayer gamePlayer;
@@ -190,7 +188,6 @@ public class HostCommand implements CommandExecutor {
                                 }
                                 this.gameManager.setGameHost(player1.getUniqueId());
                                 PlayerUtils.giveDefaultItems(player1);
-                                UHCInfos.hostName = player1.getName();
                                 player.sendMessage("§cLe nouvel §6§lHost §cde la partie est désormais §6"+ player1.getName() + "§c.");
                                 player1.sendMessage("§cVous êtes le nouvel §6§lHost §cde la partie !");
                                 break;
@@ -273,7 +270,6 @@ public class HostCommand implements CommandExecutor {
                             return true;
                         }
                         hosts = new ArrayList<>();
-                        msg = " §8|  §7Liste des co-hosts §f: ";
                         for (UUID uuid : this.gameManager.getHosts())
                             hosts.add(Bukkit.getPlayer(uuid).getName());
                         player.sendMessage(CommonString.BAR.getMessage());

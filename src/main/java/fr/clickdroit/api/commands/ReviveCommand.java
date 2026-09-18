@@ -31,7 +31,7 @@ public class ReviveCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments) {
         if (!(sender instanceof Player))
             return false;
-        Player player = (Player)sender;
+        Player player = (Player) sender;
         if (arguments.length > 0) {
             if (GameUtils.isGameStarted()) {
                 if (this.api.getGameManager().hasHostAccess(player)) {
@@ -45,13 +45,14 @@ public class ReviveCommand implements CommandExecutor {
                         player.sendMessage("§cCe joueur n'est pas mort.");
                         return false;
                     }
-                    player.sendMessage("§aVous avez ressucité" + target.getName() + ".");
+                    player.sendMessage("§aVous avez ressuscité " + target.getName() + ".");
                     if (!this.api.getGameManager().getInGamePlayers().contains(target.getUniqueId()))
                         this.api.getGameManager().getInGamePlayers().add(target.getUniqueId());
                     gameTarget.setAlive(true);
                     gameTarget.setInvincible(true);
-                    int size = (int)this.api.getGameManager().getBorder().getWorldBorder().getSize() / 2;
-                    target.teleport(new Location(Bukkit.getWorlds().get(0), ThreadLocalRandom.current().nextInt(size), 150.0D, ThreadLocalRandom.current().nextInt(size)));
+                    int size = (int) this.api.getGameManager().getBorder().getWorldBorder().getSize() / 2;
+                    target.teleport(new Location(Bukkit.getWorlds().get(0), ThreadLocalRandom.current().nextInt(size),
+                            150.0D, ThreadLocalRandom.current().nextInt(size)));
                     target.setGameMode(GameMode.SURVIVAL);
                     target.setHealth(target.getMaxHealth());
                     target.setFoodLevel(20);
@@ -66,14 +67,18 @@ public class ReviveCommand implements CommandExecutor {
                         Teams teams = gameTarget.getTeams();
                         GameManager gameManager = this.api.getGameManager();
                         gameManager.getTeamManager().getPlayerTeam().put(target.getUniqueId(), teams);
-                        gameManager.getApi().getCommon().getScoreboard().getTeam(teams.getName()).addPlayer((OfflinePlayer)target);
+                        gameManager.getApi().getCommon().getScoreboard().getTeam(teams.getName())
+                                .addPlayer((OfflinePlayer) target);
                         if (!gameManager.getAliveTeams().contains(teams))
                             gameManager.getAliveTeams().add(teams);
                     }
-                    target.getInventory().setHelmet(gameTarget.getPlayerArmor()[3]);
-                    target.getInventory().setChestplate(gameTarget.getPlayerArmor()[2]);
-                    target.getInventory().setLeggings(gameTarget.getPlayerArmor()[1]);
-                    target.getInventory().setBoots(gameTarget.getPlayerArmor()[0]);
+                    ItemStack[] armor = gameTarget.getPlayerArmor();
+                    if (armor != null && armor.length >= 4) {
+                        target.getInventory().setHelmet(armor[3]);
+                        target.getInventory().setChestplate(armor[2]);
+                        target.getInventory().setLeggings(armor[1]);
+                        target.getInventory().setBoots(armor[0]);
+                    }
                     target.setLevel(gameTarget.getPlayerExp());
                     target.playSound(target.getLocation(), Sound.ORB_PICKUP, 5.0F, 0.0F);
                     target.sendMessage("§aVous avez été ressuscité par un organisateur de la partie !");
@@ -87,7 +92,7 @@ public class ReviveCommand implements CommandExecutor {
                             }
                             this.current++;
                         }
-                    }).runTaskTimer((Plugin)API.getAPI(), 0L, 20L);
+                    }).runTaskTimer((Plugin) API.getAPI(), 0L, 20L);
                 } else {
                     player.sendMessage("§cPermission insuffisante.");
                     player.playSound(player.getLocation(), Sound.ITEM_BREAK, 3.0F, 0.0F);
@@ -98,6 +103,6 @@ public class ReviveCommand implements CommandExecutor {
         } else {
             player.sendMessage("§cVeuillez fournir le nom d'un joueur.");
         }
-        return false;
+        return true;
     }
 }
