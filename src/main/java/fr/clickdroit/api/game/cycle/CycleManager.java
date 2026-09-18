@@ -13,6 +13,7 @@ public class CycleManager {
     private BukkitRunnable bukkitRunnable;
 
     private boolean start = false;
+    private boolean isNight = false;
 
     public CycleManager(API api, World world) {
         this.api = api;
@@ -27,15 +28,20 @@ public class CycleManager {
         this.start = true;
         this.world.setGameRuleValue("doDaylightCycle", "false");
         this.world.setTime(0L);
+        this.isNight = false;
         int a = 24000;
         long b = a / dayCycleDurationSeconds;
         final long c = b / 4L;
         this.bukkitRunnable = new BukkitRunnable() {
             public void run() {
                 CycleManager.this.world.setTime(CycleManager.this.world.getTime() + c);
-                if (CycleManager.this.world.getTime() == 12000L) {
+                long timeOfDay = CycleManager.this.world.getTime() % 24000L;
+                boolean night = (timeOfDay >= 12000L && timeOfDay < 23800L);
+                if (night && !CycleManager.this.isNight) {
+                    CycleManager.this.isNight = true;
                     CycleManager.this.api.getModules().onNight(false);
-                } else if (CycleManager.this.world.getTime() == 0L) {
+                } else if (!night && CycleManager.this.isNight) {
+                    CycleManager.this.isNight = false;
                     CycleManager.this.api.getModules().onDay(false);
                 }
             }

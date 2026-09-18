@@ -235,6 +235,7 @@ public class API extends JavaPlugin {
         this.activeGameModule = module;
         if (module != null) {
             module.onEnable(this);
+            setModules(new fr.clickdroit.api.module.GameModuleAdapter(module));
         }
     }
 
@@ -243,6 +244,7 @@ public class API extends JavaPlugin {
             this.activeGameModule.onDisable(this);
         }
         this.activeGameModule = null;
+        setModules(new UHCModule(this));
     }
 
     /**
